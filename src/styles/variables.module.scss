@@ -1,0 +1,21 @@
+// src/styles/variables.module.scss
+
+@import './variables'; // Ensure the relative path is correct
+
+:export {
+    primaryColor: $color-primary;
+    secondaryColor: $color-secondary;
+    accentColor: $color-accent;
+    accentDarkColor: $color-accent-dark;
+    textColor: $color-text;
+    textLightColor: $color-text-light;
+    textBrandColor: $color-text-brand;
+    whiteColor: $color-white;
+
+
+    screenSm: $screen-sm;
+    screenMd: $screen-md;
+    screenLg: $screen-lg;
+    screenXl: $screen-xl;
+    screenXxl: $screen-xxl;
+}

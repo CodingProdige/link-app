@@ -1,0 +1,188 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "withButton",
+		"primary": {
+			"text": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Nulla do veniam reprehenderit enim esse consequat irure sunt elit reprehenderit. Non laboris officia non dolore consectetur ad aliquip laboris aliquip aute irure."
+						}
+					}
+				]
+			},
+			"buttonLink": {
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "http://google.com"
+				}
+			},
+			"buttonText": {
+				"__TYPE__": "FieldContent",
+				"value": "joined",
+				"type": "Text"
+			},
+			"image": {
+				"origin": {
+					"id": "main",
+					"url": "https://images.unsplash.com/photo-1587653915936-5623ea0b949a",
+					"width": 4000,
+					"height": 4000
+				},
+				"url": "https://images.unsplash.com/photo-1587653915936-5623ea0b949a",
+				"width": 4000,
+				"height": 4000,
+				"edit": {
+					"zoom": 1,
+					"crop": {
+						"x": 0,
+						"y": 0
+					},
+					"background": "transparent"
+				},
+				"credits": null,
+				"alt": null,
+				"__TYPE__": "ImageContent",
+				"thumbnails": {}
+			},
+			"superText": {
+				"__TYPE__": "FieldContent",
+				"value": "smaller",
+				"type": "Text"
+			},
+			"backgroundColor": {
+				"__TYPE__": "FieldContent",
+				"value": "#1685f9",
+				"type": "Color"
+			},
+			"buttonColor": {
+				"__TYPE__": "FieldContent",
+				"value": "#54fb65",
+				"type": "Color"
+			},
+			"textColor": {
+				"__TYPE__": "FieldContent",
+				"value": "#08ad24",
+				"type": "Color"
+			},
+			"buttonHoverColor": {
+				"__TYPE__": "FieldContent",
+				"value": "#25fd22",
+				"type": "Color"
+			},
+			"blobColor": {
+				"__TYPE__": "FieldContent",
+				"value": "#51b2ad",
+				"type": "Color"
+			},
+			"subText": {
+				"__TYPE__": "FieldContent",
+				"value": "form",
+				"type": "Text"
+			}
+		},
+		"items": [
+			{
+				"__TYPE__": "GroupItemContent",
+				"value": []
+			}
+		]
+	},
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "textWithButtonImageRight",
+		"primary": {
+			"superText": {
+				"__TYPE__": "FieldContent",
+				"value": "say",
+				"type": "Text"
+			},
+			"text": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Esse commodo laboris aute incididunt non dolore aliqua culpa qui sint. Nisi labore do et dolore ullamco amet aliquip eiusmod laborum pariatur do aliqua qui anim. Qui nulla consequat aliqua irure officia."
+						}
+					}
+				]
+			},
+			"subText": {
+				"__TYPE__": "FieldContent",
+				"value": "find",
+				"type": "Text"
+			},
+			"buttonLink": {
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "http://twitter.com"
+				}
+			},
+			"buttonText": {
+				"__TYPE__": "FieldContent",
+				"value": "verb",
+				"type": "Text"
+			},
+			"textColor": {
+				"__TYPE__": "FieldContent",
+				"value": "#a29fc6",
+				"type": "Color"
+			},
+			"backgroundColor": {
+				"__TYPE__": "FieldContent",
+				"value": "#e7ee8c",
+				"type": "Color"
+			},
+			"blobColor": {
+				"__TYPE__": "FieldContent",
+				"value": "#b9bc13",
+				"type": "Color"
+			},
+			"buttonColor": {
+				"__TYPE__": "FieldContent",
+				"value": "#dc7846",
+				"type": "Color"
+			},
+			"buttonHoverColor": {
+				"__TYPE__": "FieldContent",
+				"value": "#07577b",
+				"type": "Color"
+			},
+			"image": {
+				"origin": {
+					"id": "main",
+					"url": "https://images.unsplash.com/photo-1491975474562-1f4e30bc9468",
+					"width": 4000,
+					"height": 6000
+				},
+				"url": "https://images.unsplash.com/photo-1491975474562-1f4e30bc9468",
+				"width": 4000,
+				"height": 6000,
+				"edit": {
+					"zoom": 1,
+					"crop": {
+						"x": 0,
+						"y": 0
+					},
+					"background": "transparent"
+				},
+				"credits": null,
+				"alt": null,
+				"__TYPE__": "ImageContent",
+				"thumbnails": {}
+			}
+		},
+		"items": [
+			{
+				"__TYPE__": "GroupItemContent",
+				"value": []
+			}
+		]
+	}
+]

@@ -1,0 +1,48 @@
+// styles/header.module.scss
+
+@import './variables';
+@import './mixins';
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    
+
+    .headerContainer {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: row;
+        width: 100%;
+
+        background-color: $color-white;
+        border-radius: 50px;
+        height: 5rem;
+        padding: 2rem;
+
+        a {
+            @include flex-center;
+        }
+
+        nav {
+            ul {
+                @include flex-center;
+                justify-content: space-between;
+                height: 100%;
+                list-style: none;
+            }
+        }
+    
+        div {
+            @include flex-center;
+            justify-content: space-between;
+            height: 100%;
+        }
+    }
+}

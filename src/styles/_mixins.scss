@@ -1,0 +1,10 @@
+// styles/_mixins.scss
+@import "./variables";
+
+@mixin flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+  

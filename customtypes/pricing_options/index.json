@@ -1,0 +1,41 @@
+{
+  "format": "custom",
+  "id": "pricing_options",
+  "label": "Pricing Options",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "price_option": {
+        "type": "Group",
+        "config": {
+          "label": "Price Option",
+          "repeat": true,
+          "fields": {
+            "title": {
+              "type": "Text",
+              "config": {
+                "label": "Title",
+                "placeholder": ""
+              }
+            },
+            "description": {
+              "type": "Text",
+              "config": {
+                "label": "Description",
+                "placeholder": ""
+              }
+            },
+            "price": {
+              "type": "Text",
+              "config": {
+                "label": "Price",
+                "placeholder": ""
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
