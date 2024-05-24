@@ -1,10 +1,8 @@
-// next-sitemap.js
-
 import { createClient } from './src/prismicio';
 
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://fansl.ink',
+  siteUrl: 'https://fansl.ink',
   generateRobotsTxt: true,
   robotsTxtOptions: {
     policies: [
@@ -14,7 +12,13 @@ module.exports = {
   },
   additionalPaths: async (config) => {
     const client = createClient();
-    const allPages = await client.getAllByType('page');
+    let allPages = [];
+
+    try {
+      allPages = await client.getAllByType('page');
+    } catch (error) {
+      console.error('Error fetching pages from Prismic:', error);
+    }
 
     const dynamicPaths = allPages.map(page => ({
       loc: `/${page.uid}`, // Adjust this to match your dynamic route structure
@@ -24,16 +28,7 @@ module.exports = {
 
     return [
       ...dynamicPaths,
-    //   {
-    //     loc: '/custom-page',
-    //     changefreq: 'daily',
-    //     priority: 0.7,
-    //   },
-    //   {
-    //     loc: '/another-custom-page',
-    //     changefreq: 'weekly',
-    //     priority: 0.5,
-    //   },
+      // Add any other static paths if necessary
     ];
   },
 };
