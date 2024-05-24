@@ -4,7 +4,8 @@ import { PrismicPreview } from "@prismicio/next";
 import { repositoryName, createClient } from "@/prismicio";
 import { AuthProvider } from '@/contexts/AuthContext';
 import ClientHeader from '@/components/ClientHeader';
-import { usePathname } from "next/navigation";
+import GoogleAnalytics from '@/components/GoogleAnalytics';
+
 
 async function fetchSettingsAndNavigation() {
   const client = createClient();
@@ -38,18 +39,7 @@ export default async function RootLayout({ children }) {
             </>
           )
         }
-         {settings.data.googleAnalyticsTag && (
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${settings.data.googleAnalyticsTag}');
-              `,
-            }}
-          ></script>
-        )}
+        <GoogleAnalytics trackingId={settings.data.googleAnalyticsTag} />
       </head>
       <body>
         <AuthProvider>
