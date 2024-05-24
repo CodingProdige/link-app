@@ -8,7 +8,7 @@ import { PrismicRichText } from "@/components/PrismicRichText";
 import { PrismicNextLink } from "@prismicio/next";
 import styles from "@/styles/textWithImage.module.scss";
 
-const ImageLeft = ({ slice }) => {
+const TextWithImage = ({ slice }) => {
   const image = slice.primary.image;
   const [isHovered, setIsHovered] = useState(false);
 
@@ -30,35 +30,70 @@ const ImageLeft = ({ slice }) => {
   const buttonText = {
     color: isHovered ? slice.primary.textColor : slice.primary.backgroundColor,
     fontWeight: 'bold',
-  }
-  
+  };
+
+  const renderVariation = () => {
+    switch(slice.variation) {
+      case 'withButton':
+        return (
+          <>
+            <div className={styles.imageContainer}>
+              <div className={styles.imageBlob} style={{ backgroundColor: slice.primary.blobColor }}></div>
+              <PrismicNextImage field={image} />
+            </div>
+            <div className={styles.textContainer}>
+              <sup style={{ color: slice.primary.textColor }}>{slice.primary.superText}</sup>
+              <PrismicRichText field={slice.primary.text} components={richTextCustomRender} />
+              <p style={{ color: slice.primary.textColor }}>{slice.primary.subText}</p>
+              <button
+                style={buttonStyle}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
+                <PrismicNextLink field={slice.primary.buttonLink}>
+                  <span style={buttonText}>{slice.primary.buttonText}</span>
+                </PrismicNextLink>
+              </button>
+            </div>
+          </>
+        );
+      case 'textWithButtonImageRight':
+        return (
+          <>
+            <div className={styles.textContainer}>
+              <sup style={{ color: slice.primary.textColor }}>{slice.primary.superText}</sup>
+              <PrismicRichText field={slice.primary.text} components={richTextCustomRender} />
+              <p style={{ color: slice.primary.textColor }}>{slice.primary.subText}</p>
+              <button
+                style={buttonStyle}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+              >
+                <PrismicNextLink field={slice.primary.buttonLink}>
+                  <span style={buttonText}>{slice.primary.buttonText}</span>
+                </PrismicNextLink>
+              </button>
+            </div>
+            <div className={styles.imageContainer}>
+              <div className={styles.imageBlob} style={{ backgroundColor: slice.primary.blobColor }}></div>
+              <PrismicNextImage field={image} />
+            </div>
+          </>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
-    <section className={styles.textWithImage} style={{backgroundColor: slice.primary.backgroundColor}}>
+    <section className={styles.textWithImage} style={{ backgroundColor: slice.primary.backgroundColor }}>
       <Bounded as="section" className="bg-white">
         <div className={styles.container}>
-          <div className={styles.imageContainer}>
-            <div className={styles.imageBlob} style={{backgroundColor: slice.primary.blobColor}}></div>
-            <PrismicNextImage field={image}/>
-          </div>
-          <div className={styles.textContainer}>
-            <sup style={{color: slice.primary.textColor}}>{slice.primary.superText}</sup>
-            <PrismicRichText field={slice.primary.text} components={richTextCustomRender}/>
-            <p style={{color: slice.primary.textColor}}>{slice.primary.subText}</p>
-            <button
-              style={buttonStyle}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-            >
-              <PrismicNextLink field={slice.primary.buttonLink}>
-                <span style={buttonText}>{slice.primary.buttonText}</span>
-              </PrismicNextLink>
-            </button>
-          </div>
+          {renderVariation()}
         </div>
       </Bounded>
     </section>
   );
 };
 
-export default ImageLeft;
+export default TextWithImage;

@@ -17,6 +17,9 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en">
+      <head>
+        <meta name="robots" content="noindex, nofollow" />
+      </head>
       <body>
         <AuthProvider>
           <ClientHeader settings={settings} navigation={navigation} />

@@ -33,6 +33,8 @@ export async function generateMetadata({ params }) {
         },
       ],
     },
+    noIndex: settings.data.noIndex,
+    noFollow: settings.data.noFollow,
   };
 }
 
