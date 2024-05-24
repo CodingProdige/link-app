@@ -9,16 +9,20 @@ async function fetchSettingsAndNavigation() {
   const client = createClient();
   const settings = await client.getSingle("settings");
   const navigation = await client.getSingle("navigation");
-  return { settings, navigation };
+  const page = await client.getByUID("page", "home");
+  return { settings, navigation, page };
 }
 
 export default async function RootLayout({ children }) {
-  const { settings, navigation } = await fetchSettingsAndNavigation();
+  const { settings, navigation, page } = await fetchSettingsAndNavigation();
 
   return (
     <html lang="en">
       <head>
+        <meta name="title" content={page.data.page_title} />
+        <meta name="description" content={page.data.meta_description} />
         <meta name="robots" content="noindex, nofollow" />
+        <meta name="favicon" content={settings.data.favicon.url} />
       </head>
       <body>
         <AuthProvider>

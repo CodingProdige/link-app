@@ -32,6 +32,14 @@
           "placeholder_true": "true",
           "placeholder_false": "false"
         }
+      },
+      "favicon": {
+        "type": "Image",
+        "config": {
+          "label": "Favicon",
+          "constraint": {},
+          "thumbnails": []
+        }
       }
     }
   }

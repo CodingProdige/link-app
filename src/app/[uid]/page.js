@@ -20,21 +20,17 @@ export async function generateMetadata({ params }) {
   const page = await client
     .getByUID("page", params.uid)
     .catch(() => notFound());
-  const settings = await client.getSingle("settings");
 
   return {
-    title: `${asText(page.data.title)} | ${asText(settings.data.siteTitle)}`,
-    description: page.data.meta_description,
     openGraph: {
       title: page.data.meta_title,
+      description: page.data.meta_description,
       images: [
         {
           url: page.data.meta_image.url,
         },
       ],
     },
-    noIndex: settings.data.noIndex,
-    noFollow: settings.data.noFollow,
   };
 }
 

@@ -58,6 +58,13 @@
       }
     },
     "SEO & Metadata": {
+      "page_title": {
+        "type": "Text",
+        "config": {
+          "label": "Page Title",
+          "placeholder": ""
+        }
+      },
       "meta_title": {
         "type": "Text",
         "config": {
