@@ -18,13 +18,50 @@
     .headerContainer {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         flex-direction: row;
         width: 100%;
 
         background-color: $color-white;
         border-radius: 50px;
         height: 5rem;
-        padding: 2rem;
+        padding: 0 2rem;
+
+        .logoContainer {
+            @include flex-center;
+
+            .logoDesktop {
+                @include flex-center;
+
+                img {
+                    height: 3rem;
+                    width: auto;
+                    object-fit: contain;
+                }
+            
+            }
+
+            .logoMobile {
+                @include flex-center;
+                display: none;
+
+                img {
+                    height: 2rem;
+                    width: 2rem;
+                    object-fit: contain;
+                }
+            }
+
+
+            @media (max-width: $screen-md) {
+                .logoDesktop {
+                    display: none;
+                }
+                .logoMobile {
+                    display: block;
+                }
+            }
+        }
 
         a {
             @include flex-center;

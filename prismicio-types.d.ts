@@ -279,6 +279,39 @@ interface SettingsDocumentData {
    * - **Documentation**: https://prismic.io/docs/field#image
    */
   favicon: prismic.ImageField<never>;
+
+  /**
+   * Google Analytics Tag field in *Settings*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: settings.googleAnalyticsTag
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  googleAnalyticsTag: prismic.KeyTextField;
+
+  /**
+   * Logo field in *Settings*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: settings.logo
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/field#image
+   */
+  logo: prismic.ImageField<never>;
+
+  /**
+   * Logo Emblem field in *Settings*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: settings.logoEmblem
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/field#image
+   */
+  logoEmblem: prismic.ImageField<never>;
 }
 
 /**

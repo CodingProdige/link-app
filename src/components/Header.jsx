@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { ROUTES, DASHBOARD_ROUTES } from '@/app/lib/constants';
 import styles from '@/styles/header.module.scss';
 import variables from '@/styles/variables.module.scss';
+import { PrismicNextImage } from "@prismicio/next";
 
 export default function Header({ settings, navigation, pathname, user }) {
   if (!settings || !navigation || pathname === null) {
@@ -22,7 +23,20 @@ export default function Header({ settings, navigation, pathname, user }) {
     <header className={styles.header}>
       <div className={styles.headerContainer} style={{maxWidth: variables.screenXxl}}>
         <PrismicNextLink href="/">
-          <PrismicText field={settings.data.siteTitle} />
+        {settings.data.logo ? (
+            <>
+              <div className={styles.logoContainer}>
+                <div className={styles.logoDesktop}>
+                  <PrismicNextImage field={settings.data.logo} />
+                </div>
+                <div className={styles.logoMobile}>
+                  <PrismicNextImage field={settings.data.logoEmblem} />
+                </div>
+              </div>
+            </>
+          ) : (
+            <PrismicText field={settings.data.siteTitle} />
+        )}
         </PrismicNextLink>
         <nav>
           <ul>

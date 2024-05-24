@@ -4,6 +4,7 @@ import { PrismicPreview } from "@prismicio/next";
 import { repositoryName, createClient } from "@/prismicio";
 import { AuthProvider } from '@/contexts/AuthContext';
 import ClientHeader from '@/components/ClientHeader';
+import { usePathname } from "next/navigation";
 
 async function fetchSettingsAndNavigation() {
   const client = createClient();
@@ -19,10 +20,36 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        <title>{page.data.page_title}</title>
         <meta name="title" content={page.data.page_title} />
         <meta name="description" content={page.data.meta_description} />
-        <meta name="robots" content="noindex, nofollow" />
+        {settings.data.noIndex && <meta name="robots" content="noindex" />}
+        {settings.data.noFollow && <meta name="robots" content="nofollow" />}
         <meta name="favicon" content={settings.data.favicon.url} />
+        <link rel="icon" href={settings.data.favicon.url} type="image/png" />
+        {
+          settings.data.openGraphImage && (
+            <>
+              <meta property="og:type" content="website" />
+              <meta property="og:url" content={"https://fansl.ink/"} />
+              <meta property="og:title" content={page.data.meta_title} />
+              <meta property="og:description" content={page.data.meta_description} />
+              <meta property="og:image" content={settings.data.meta_image.url} />
+            </>
+          )
+        }
+         {settings.data.googleAnalyticsTag && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${settings.data.googleAnalyticsTag}');
+              `,
+            }}
+          ></script>
+        )}
       </head>
       <body>
         <AuthProvider>

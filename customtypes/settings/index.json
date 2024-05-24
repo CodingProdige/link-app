@@ -40,6 +40,29 @@
           "constraint": {},
           "thumbnails": []
         }
+      },
+      "googleAnalyticsTag": {
+        "type": "Text",
+        "config": {
+          "label": "Google Analytics Tag",
+          "placeholder": ""
+        }
+      },
+      "logo": {
+        "type": "Image",
+        "config": {
+          "label": "Logo",
+          "constraint": {},
+          "thumbnails": []
+        }
+      },
+      "logoEmblem": {
+        "type": "Image",
+        "config": {
+          "label": "Logo Emblem",
+          "constraint": {},
+          "thumbnails": []
+        }
       }
     }
   }
