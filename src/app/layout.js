@@ -5,6 +5,8 @@ import { repositoryName, createClient } from "@/prismicio";
 import { AuthProvider } from '@/contexts/AuthContext';
 import ClientHeader from '@/components/ClientHeader';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
+import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 
 async function fetchSettingsAndNavigation() {
@@ -45,6 +47,8 @@ export default async function RootLayout({ children }) {
         <AuthProvider>
           <ClientHeader settings={settings} navigation={navigation} />
           {children}
+          <Analytics/>
+          <SpeedInsights/>
         </AuthProvider>
         <PrismicPreview repositoryName={repositoryName} />
       </body>
