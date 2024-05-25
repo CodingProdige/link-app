@@ -1,3 +1,4 @@
+// Usage: node generate-sitemap.js
 const fs = require('fs');
 const path = require('path');
 
