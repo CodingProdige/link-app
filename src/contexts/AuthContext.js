@@ -1,4 +1,3 @@
-// contexts/AuthContext.js
 "use client";
 import { createContext, useContext, useEffect, useState } from 'react';
 import { auth, googleProvider, facebookProvider } from '@/app/lib/firebaseConfig.ts';
