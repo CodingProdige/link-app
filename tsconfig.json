@@ -23,6 +23,6 @@
       "@/public/*": ["./public/*"],
     }
   },
-  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx", "src/app/[uid]/page.js", "src/components/Header.jsx"],
-  "exclude": ["node_modules"]
+  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx", "src/app/[uid]/page.js", "src/components/Header.jsx", "generate-sitemap.js"],
+  "exclude": ["node_modules", "next-sitemap.config.ts"]
 }
