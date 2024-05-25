@@ -1,3 +1,4 @@
+// Usage: Generate a sitemap.xml file for a Next.js site using Prismic as a headless CMS
 import { MetadataRoute } from 'next';
 import { createClient } from '@prismicio/client';
 
