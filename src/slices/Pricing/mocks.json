@@ -24,6 +24,36 @@
 						}
 					}
 				]
+			},
+			"super_text": {
+				"__TYPE__": "FieldContent",
+				"value": "fifty",
+				"type": "Text"
+			},
+			"background_color": {
+				"__TYPE__": "FieldContent",
+				"value": "#21f215",
+				"type": "Color"
+			},
+			"popular_header_color": {
+				"__TYPE__": "FieldContent",
+				"value": "#ceef1d",
+				"type": "Color"
+			},
+			"basic_header_color": {
+				"__TYPE__": "FieldContent",
+				"value": "#d94487",
+				"type": "Color"
+			},
+			"popular_text": {
+				"__TYPE__": "FieldContent",
+				"value": "forest",
+				"type": "Text"
+			},
+			"features_icon_color": {
+				"__TYPE__": "FieldContent",
+				"value": "#4bced4",
+				"type": "Color"
 			}
 		},
 		"items": [

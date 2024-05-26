@@ -1,0 +1,16 @@
+{
+  "id": "color_block",
+  "type": "SharedSlice",
+  "name": "ColorBlock",
+  "description": "ColorBlock",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": ""
+    }
+  ]
+}

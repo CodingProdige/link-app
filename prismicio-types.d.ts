@@ -62,6 +62,8 @@ export type NavigationDocument<Lang extends string = string> =
   >;
 
 type PageDocumentDataSlicesSlice =
+  | ColorBlockSlice
+  | PricingSlice
   | HeroSlice
   | QuoteSlice
   | TextSlice
@@ -194,6 +196,16 @@ export interface PricingOptionsDocumentDataPriceOptionItem {
    * - **Documentation**: https://prismic.io/docs/field#key-text
    */
   price: prismic.KeyTextField;
+
+  /**
+   * Price Id field in *Pricing Options → Price Option*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: pricing_options.price_option[].price_id
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  price_id: prismic.KeyTextField;
 }
 
 /**
@@ -335,6 +347,36 @@ export type AllDocumentTypes =
   | PageDocument
   | PricingOptionsDocument
   | SettingsDocument;
+
+/**
+ * Default variation for ColorBlock Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slice
+ */
+export type ColorBlockSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Record<string, never>,
+  never
+>;
+
+/**
+ * Slice variation for *ColorBlock*
+ */
+type ColorBlockSliceVariation = ColorBlockSliceDefault;
+
+/**
+ * ColorBlock Shared Slice
+ *
+ * - **API ID**: `color_block`
+ * - **Description**: ColorBlock
+ * - **Documentation**: https://prismic.io/docs/slice
+ */
+export type ColorBlockSlice = prismic.SharedSlice<
+  "color_block",
+  ColorBlockSliceVariation
+>;
 
 /**
  * Primary content in *Hero → Primary*
@@ -633,6 +675,16 @@ export type ImageCardsSlice = prismic.SharedSlice<
  */
 export interface PricingSliceDefaultPrimary {
   /**
+   * Super Text field in *Pricing → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: pricing.primary.super_text
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  super_text: prismic.KeyTextField;
+
+  /**
    * Title field in *Pricing → Primary*
    *
    * - **Field Type**: Rich Text
@@ -651,6 +703,56 @@ export interface PricingSliceDefaultPrimary {
    * - **Documentation**: https://prismic.io/docs/field#rich-text-title
    */
   title_sub_text: prismic.RichTextField;
+
+  /**
+   * Background Color field in *Pricing → Primary*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: pricing.primary.background_color
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  background_color: prismic.ColorField;
+
+  /**
+   * Popular Header Color field in *Pricing → Primary*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: pricing.primary.popular_header_color
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  popular_header_color: prismic.ColorField;
+
+  /**
+   * Basic Header Color field in *Pricing → Primary*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: pricing.primary.basic_header_color
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  basic_header_color: prismic.ColorField;
+
+  /**
+   * Popular Text field in *Pricing → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: pricing.primary.popular_text
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  popular_text: prismic.KeyTextField;
+
+  /**
+   * Features Icon Color field in *Pricing → Primary*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: pricing.primary.features_icon_color
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  features_icon_color: prismic.ColorField;
 }
 
 /**
@@ -1103,6 +1205,9 @@ declare module "@prismicio/client" {
       SettingsDocument,
       SettingsDocumentData,
       AllDocumentTypes,
+      ColorBlockSlice,
+      ColorBlockSliceVariation,
+      ColorBlockSliceDefault,
       HeroSlice,
       HeroSliceHeroWithImageRightPrimary,
       HeroSliceVariation,

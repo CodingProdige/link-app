@@ -1,5 +1,9 @@
+"use client";
 import { Content } from "@prismicio/client";
-import { SliceComponentProps } from "@prismicio/react";
+import { PrismicRichText, SliceComponentProps } from "@prismicio/react";
+import PricingOptions from "@/components/PricingOptions";
+import styles from "@/styles/pricing.module.scss";
+
 
 /**
  * Props for `Pricing`.
@@ -14,8 +18,17 @@ const Pricing = ({ slice }: PricingProps): JSX.Element => {
     <section
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
+
+      className={styles.pricingSection}
+      style={{backgroundColor: slice.primary.background_color}}
     >
-      Placeholder component for pricing (variation: {slice.variation}) Slices
+      <div className={styles.pricingContainer}>
+        <div className={styles.pricingHeader} >
+          <PrismicRichText field={slice.primary.title} />
+          <PrismicRichText field={slice.primary.title_sub_text} />
+        </div>
+        <PricingOptions slice={slice}/>
+      </div>
     </section>
   );
 };

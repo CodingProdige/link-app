@@ -32,6 +32,13 @@
                 "label": "Price",
                 "placeholder": ""
               }
+            },
+            "price_id": {
+              "type": "Text",
+              "config": {
+                "label": "Price Id",
+                "placeholder": ""
+              }
             }
           }
         }

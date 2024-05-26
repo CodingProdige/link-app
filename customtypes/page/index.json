@@ -35,6 +35,12 @@
         "fieldset": "Slice Zone",
         "config": {
           "choices": {
+            "color_block": {
+              "type": "SharedSlice"
+            },
+            "pricing": {
+              "type": "SharedSlice"
+            },
             "hero": {
               "type": "SharedSlice"
             },

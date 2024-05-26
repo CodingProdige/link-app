@@ -1,0 +1,54 @@
+// styles/pricingOptions.module.scss
+
+@import './variables';
+@import './mixins';
+
+
+.pricingSection {
+    padding: 8rem 2rem;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    width: 100%;
+    
+    @media (max-width: $screen-lg) {
+        height: auto;
+    }
+
+    .pricingContainer {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        width: 100%;
+        max-width: $screen-xxl;
+
+        .pricingHeader {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+
+            sup {
+                font-size: clamp(14px, 4vmin, 16px);
+                text-align: center;
+                color: $color-text-light;
+                line-height: 1.5rem;
+            }
+
+            h2 {
+                text-align: center;
+            }
+
+            p {
+                text-align: center;
+                color: $color-text-light;
+                font-size: clamp(16px, 4vmin, 18px);
+                line-height: 1.5rem;
+            }
+        }
+    }
+}

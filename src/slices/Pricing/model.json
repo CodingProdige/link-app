@@ -12,6 +12,13 @@
       "description": "Default",
       "imageUrl": "",
       "primary": {
+        "super_text": {
+          "type": "Text",
+          "config": {
+            "label": "Super Text",
+            "placeholder": ""
+          }
+        },
         "title": {
           "type": "StructuredText",
           "config": {
@@ -28,6 +35,41 @@
             "placeholder": "",
             "allowTargetBlank": true,
             "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "background_color": {
+          "type": "Color",
+          "config": {
+            "label": "Background Color",
+            "placeholder": ""
+          }
+        },
+        "popular_header_color": {
+          "type": "Color",
+          "config": {
+            "label": "Popular Header Color",
+            "placeholder": ""
+          }
+        },
+        "basic_header_color": {
+          "type": "Color",
+          "config": {
+            "label": "Basic Header Color",
+            "placeholder": ""
+          }
+        },
+        "popular_text": {
+          "type": "Text",
+          "config": {
+            "label": "Popular Text",
+            "placeholder": ""
+          }
+        },
+        "features_icon_color": {
+          "type": "Color",
+          "config": {
+            "label": "Features Icon Color",
+            "placeholder": ""
           }
         }
       },
