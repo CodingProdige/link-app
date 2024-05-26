@@ -15,9 +15,8 @@ const ColorBlock = ({ slice }: ColorBlockProps): JSX.Element => {
     <section
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
+      style={{backgroundColor: slice.primary.background_color, padding: '7rem 0'}}
     >
-      Placeholder component for color_block (variation: {slice.variation})
-      Slices
     </section>
   );
 };

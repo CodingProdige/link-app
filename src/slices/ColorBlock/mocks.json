@@ -2,7 +2,13 @@
 	{
 		"__TYPE__": "SharedSliceContent",
 		"variation": "default",
-		"primary": {},
+		"primary": {
+			"background_color": {
+				"__TYPE__": "FieldContent",
+				"value": "#82deb3",
+				"type": "Color"
+			}
+		},
 		"items": []
 	}
 ]
