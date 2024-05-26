@@ -1,7 +1,8 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from 'react';
-import { auth, googleProvider, facebookProvider } from '@/app/lib/firebaseConfig.ts';
-import { onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
+import { auth, googleProvider, facebookProvider, db } from '@/app/lib/firebaseConfig.ts';
+import { onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signOut } from 'firebase/auth';
+import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/app/lib/constants';
 
@@ -12,27 +13,78 @@ export function AuthProvider({ children }) {
   const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userDocRef = doc(db, 'users', user.uid);
+        const userDoc = await getDoc(userDocRef);
+        if (!userDoc.exists()) {
+          // Create user document if it doesn't exist
+          await setDoc(userDocRef, {
+            uid: user.uid,
+            email: user.email,
+            createdAt: new Date(),
+          });
+        }
+      }
       setUser(user);
     });
 
     return () => unsubscribe();
   }, []);
 
-  const register = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password);
+  const register = async (email, password) => {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Create a new user document in the users collection
+    const userDocRef = doc(db, 'users', user.uid);
+    await setDoc(userDocRef, {
+      uid: user.uid,
+      email: user.email,
+      createdAt: new Date(),
+    });
+
+    return userCredential;
   };
 
   const login = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  const loginWithGoogle = () => {
-    return signInWithPopup(auth, googleProvider);
+  const loginWithGoogle = async () => {
+    const userCredential = await signInWithPopup(auth, googleProvider);
+    const user = userCredential.user;
+
+    // Create a new user document in the users collection if it doesn't exist
+    const userDocRef = doc(db, 'users', user.uid);
+    const userDoc = await getDoc(userDocRef);
+    if (!userDoc.exists()) {
+      await setDoc(userDocRef, {
+        uid: user.uid,
+        email: user.email,
+        createdAt: new Date(),
+      });
+    }
+
+    return userCredential;
   };
 
-  const loginWithFacebook = () => {
-    return signInWithPopup(auth, facebookProvider);
+  const loginWithFacebook = async () => {
+    const userCredential = await signInWithPopup(auth, facebookProvider);
+    const user = userCredential.user;
+
+    // Create a new user document in the users collection if it doesn't exist
+    const userDocRef = doc(db, 'users', user.uid);
+    const userDoc = await getDoc(userDocRef);
+    if (!userDoc.exists()) {
+      await setDoc(userDocRef, {
+        uid: user.uid,
+        email: user.email,
+        createdAt: new Date(),
+      });
+    }
+
+    return userCredential;
   };
 
   const logout = () => {
