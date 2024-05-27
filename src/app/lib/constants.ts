@@ -26,5 +26,17 @@ export const DASHBOARD_ROUTES = {
         NAME:'Links',
         ROUTE:'/dashboard/links'
     },
+    SETTINGS: {
+        NAME:'Settings',
+        ROUTE:'/dashboard/settings'
+    },
+    APPEARANCE: {
+        NAME:'Appearance',
+        ROUTE:'/dashboard/appearance'
+    },
+    ANALYTICS: {
+        NAME:'Analytics',
+        ROUTE:'/dashboard/analytics'
+    }
     // Add other dashboard routes as needed
 };

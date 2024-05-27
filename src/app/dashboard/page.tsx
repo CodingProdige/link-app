@@ -5,7 +5,7 @@ import { ROUTES } from '@/app/lib/constants';
 
 
 import DraggableList from '@/components/DraggableList';
-import DashboardPricing from '@/components/DashboardPricing';
+// import DashboardPricing from '@/components/DashboardPricing';
 import { createCustomerPortal } from '@/components/CustomerPortal';
 
 import { useAuth } from '@/contexts/AuthContext';
@@ -40,7 +40,7 @@ export default function Dashboard() {
       <p>Welcome, {user?.email}</p>
       <button onClick={handleLogout}>Sign out</button>
       <DraggableList items={items} />
-      <DashboardPricing currentUser={user} />
+      {/* <DashboardPricing currentUser={user} /> */}
       <button onClick={createCustomerPortal}>Portal session</button>
       {/* Render the dashboard content based on DASHBOARD_ROUTES */}
     </div>

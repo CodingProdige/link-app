@@ -1,0 +1,52 @@
+// styles/dashboardNav.module.scss
+
+@import './variables';
+@import './mixins';
+
+
+
+.dashboardNav {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    border-radius: 25px;
+
+    background-color: $color-white;
+    height: 100%;
+    width: 15rem;
+    padding: 2rem;
+
+    @media (max-width: $screen-lg) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        height: 5rem;
+        width: 100%;
+    }
+
+    .navLogoContainer {
+        @include flex-center;
+        margin-bottom: 2rem;
+
+        img {
+            height: 3rem;
+            width: auto;
+            object-fit: contain;
+        }
+
+        @media (max-width: $screen-lg) {
+            margin-bottom: 0;
+
+            img {
+                height: 2rem;
+                width: auto;
+                object-fit: contain;
+            }
+        }
+    }
+}
+
+

@@ -1,0 +1,37 @@
+// styles/dashboardLayout.module.scss
+
+@import './variables';
+@import './mixins';
+
+
+.dashboard {
+    display: flex;
+    flex-direction: row;
+    background-color: $color-off-white;
+
+    @media (max-width: $screen-lg) {
+        flex-direction: column;
+    }
+
+    .navContainer{
+        height: 100vh;
+        padding: 2rem;
+    
+        position: sticky;
+        top: 0;
+        left: 0;
+
+        @media (max-width: $screen-lg) {
+            height: auto;
+            width: 100%;
+        }
+    }
+
+
+    .dashboardContent {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 2rem;
+    }
+}
