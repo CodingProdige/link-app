@@ -1,6 +1,6 @@
 // lib/customerPortal.js
 import { httpsCallable } from 'firebase/functions';
-import { functions } from '@/app/lib/firebaseConfig.ts'; // Import your Firebase config
+import { functions } from '@/firebase/firebase'; // Import your Firebase config
 
 export const createCustomerPortal = async () => {
   try {

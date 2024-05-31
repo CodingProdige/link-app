@@ -3,7 +3,7 @@ import { PrismicText } from "@prismicio/react";
 import { PrismicNextLink } from "@prismicio/next";
 import * as prismic from "@prismicio/client";
 import Link from 'next/link';
-import { useAuth } from "@/contexts/AuthContext";
+
 import { ROUTES, DASHBOARD_ROUTES } from '@/app/lib/constants';
 import styles from '@/styles/header.module.scss';
 import variables from '@/styles/variables.module.scss';
@@ -17,7 +17,7 @@ export default function Header({ settings, navigation, pathname, user, isOpen, t
   }
 
   // Do not render header on login and register pages
-  if (user || pathname === '/auth/login' || pathname === '/auth/register' || pathname.includes('dashboard')) {
+  if ( pathname === '/signin' || pathname === '/signup' || pathname.includes('dashboard')) {
     return null;
   }
 

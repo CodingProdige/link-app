@@ -2,7 +2,6 @@
 import "@/styles/globals.scss";
 import { PrismicPreview } from "@prismicio/next";
 import { repositoryName, createClient } from "@/prismicio";
-import { AuthProvider } from '@/contexts/AuthContext';
 import ClientHeader from '@/components/ClientHeader';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import { Analytics } from "@vercel/analytics/react"
@@ -44,12 +43,10 @@ export default async function RootLayout({ children }) {
         <GoogleAnalytics trackingId={settings.data.googleAnalyticsTag} />
       </head>
       <body>
-        <AuthProvider>
           <ClientHeader settings={settings} navigation={navigation} />
           {children}
           <Analytics/>
           <SpeedInsights/>
-        </AuthProvider>
         <PrismicPreview repositoryName={repositoryName} />
       </body>
     </html>

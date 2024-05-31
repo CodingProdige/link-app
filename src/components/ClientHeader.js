@@ -4,10 +4,13 @@
 import { usePathname } from 'next/navigation';
 import Header from './Header';
 import { useState } from 'react';
+import { useAuth } from '@/firebase/auth';
 
-export default function ClientHeader({ settings, navigation, user }) {
+export default function ClientHeader({ settings, navigation }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const { user } = useAuth();
+  
 
   const toggleMenu = () => {
     console.log('Toggle menu called');

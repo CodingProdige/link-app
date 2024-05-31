@@ -5,12 +5,12 @@ export const ROUTES = {
         ROUTE:'/'
     },
     LOGIN: {
-        NAME:'Login',
-        ROUTE:'/auth/login'
+        NAME:'Signin',
+        ROUTE:'/signin'
     },
     REGISTER: {
-        NAME:'Register',
-        ROUTE:'/auth/register'
+        NAME:'Signup',
+        ROUTE:'/signup'
     },
     DASHBOARD: '/dashboard',
     PROFILE: '/profile',

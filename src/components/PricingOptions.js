@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "@/app/lib/auth";
+import { useAuth } from "@/firebase/auth";
 import { useRouter } from "next/navigation";
 import { ROUTES, DASHBOARD_ROUTES } from "@/app/lib/constants";
 import { createClient } from "@/prismicio";

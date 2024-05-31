@@ -1,6 +1,5 @@
 // Code: Layout for the Dashboard
 import React from 'react'
-import ProtectedRoute from '@/components/ProtectedRoute';
 import styles from '@/styles/dashboardLayout.module.scss';
 import { createClient } from '@/prismicio';
 
@@ -20,16 +19,14 @@ const layout = async ({children}) => {
 
 
   return (
-    <ProtectedRoute>
-        <div className={styles.dashboard}>
-            <div className={styles.navContainer}>
-                <DashboardNav settings={settings}/>
-            </div>
-            <div className={styles.dashboardContent}>
-                {children}
-            </div>
+    <div className={styles.dashboard}>
+        <div className={styles.navContainer}>
+            <DashboardNav settings={settings}/>
         </div>
-    </ProtectedRoute>
+        <div className={styles.dashboardContent}>
+            {children}
+        </div>
+    </div>
   )
 }
 
