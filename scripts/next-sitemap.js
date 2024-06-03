@@ -5,7 +5,7 @@ const generateSitemap = async () => {
   const baseUrl = 'https://fansl.ink';
 
   const staticPages = [
-    `${baseUrl}`,
+    `${baseUrl}/`,
     `${baseUrl}/pricing`,
     `${baseUrl}/signin`,
     `${baseUrl}/signup`,
