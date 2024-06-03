@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-          <loc>https://fansl.ink</loc>
+          <loc>https://fansl.ink/</loc>
         </url><url>
-          <loc>https://fansl.ink/auth/login</loc>
+          <loc>https://fansl.ink/pricing</loc>
         </url><url>
-          <loc>https://fansl.ink/auth/register</loc>
+          <loc>https://fansl.ink/signin</loc>
+        </url><url>
+          <loc>https://fansl.ink/signup</loc>
+        </url><url>
+          <loc>https://fansl.ink/about</loc>
         </url>
   </urlset>

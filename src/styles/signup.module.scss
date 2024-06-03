@@ -132,6 +132,9 @@
       }
       .signupOr {
         font-size: clamp(16px, 4vmin, 18px);
+        text-align: center;
+        color: $color-text-light;
+        
       }
 
       .socialLogin {
