@@ -5,6 +5,7 @@ import { auth } from '@/firebase/firebase';
 import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import styles from '@/styles/signup.module.scss';
 import { FaGoogle } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import { fetchSettingsAndNavigation } from '@/lib/prismicClient';
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 import Link from 'next/link';
@@ -144,7 +145,7 @@ export default function SignUpPage() {
           <p className={styles.signupOr}>Or</p>
           <div className={styles.socialLogin}>
             <button onClick={() => handleGoogleSignUp(setError)}>
-              <FaGoogle />
+              <FcGoogle />
               Sign Up with Google
             </button>
           </div>
