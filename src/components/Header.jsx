@@ -4,7 +4,7 @@ import { PrismicNextLink } from "@prismicio/next";
 import * as prismic from "@prismicio/client";
 import Link from 'next/link';
 
-import { ROUTES, DASHBOARD_ROUTES } from '@/app/lib/constants';
+import { ROUTES, DASHBOARD_ROUTES } from '@/lib/constants';
 import styles from '@/styles/header.module.scss';
 import variables from '@/styles/variables.module.scss';
 import { PrismicNextImage } from "@prismicio/next";

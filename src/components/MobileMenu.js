@@ -7,7 +7,7 @@ import * as prismic from '@prismicio/client';
 import { PrismicText } from '@prismicio/react';
 import { PrismicNextLink } from '@prismicio/next';
 import Link from 'next/link';
-import { ROUTES, DASHBOARD_ROUTES } from '@/app/lib/constants';
+import { ROUTES, DASHBOARD_ROUTES } from '@/lib/constants';
 
 const MobileMenu = ({ isOpen, navigation, user }) => {
     const pathname = usePathname();

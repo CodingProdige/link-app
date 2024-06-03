@@ -1,100 +1,106 @@
 "use client";
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { FormEvent } from 'react';
-import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '@/firebase/firebase';
-import { doc, setDoc } from 'firebase/firestore';
-import { db } from '@/firebase/firebase';
+import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
-async function setHttpOnlyCookie(token: string) {
-  await fetch('/api/set-cookie', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ token }),
-  });
+async function handleEmailSignUp(email: string, password: any) {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+
+    // Call the generate-token API with the UID to get a custom token
+    const response = await fetch('/api/generate-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ uid: user.uid })
+    });
+
+    if (response.ok) {
+      const { customToken } = await response.json();
+
+      // Save the custom token as a cookie
+      document.cookie = `token=${customToken}; Path=/;`;
+
+      // Redirect to the dashboard
+      window.location.href = '/dashboard';
+    } else {
+      const error = await response.json();
+      console.error('Error generating token:', error.error);
+      // Handle error (e.g., show error message to user)
+    }
+  } catch (error) {
+    console.error('Error signing up:', error);
+    // Handle error (e.g., show error message to user)
+  }
 }
 
-export default function SignUp() {
+async function handleGoogleSignUp() {
+  try {
+    const provider = new GoogleAuthProvider();
+    const userCredential = await signInWithPopup(auth, provider);
+    const user = userCredential.user;
+
+    // Call the generate-token API with the UID to get a custom token
+    const response = await fetch('/api/generate-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ uid: user.uid })
+    });
+
+    if (response.ok) {
+      const { customToken } = await response.json();
+
+      // Save the custom token as a cookie
+      document.cookie = `token=${customToken}; Path=/;`;
+
+      // Redirect to the dashboard
+      window.location.href = '/dashboard';
+    } else {
+      const error = await response.json();
+      console.error('Error generating token:', error.error);
+      // Handle error (e.g., show error message to user)
+    }
+  } catch (error) {
+    console.error('Error signing up with Google:', error);
+    // Handle error (e.g., show error message to user)
+  }
+}
+
+export default function SignUpPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const router = useRouter();
 
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      const idToken = await user.getIdToken();
-
-      // Create a new user document in Firestore
-      const userRef = doc(db, 'users', user.uid);
-      await setDoc(userRef, { email: user.email, token: idToken });
-
-      // Set the HTTP-only cookie with the token
-      await setHttpOnlyCookie(idToken);
-
-      // Redirect to the dashboard
-      router.push('/dashboard');
-    } catch (error: any) {
-      console.error('Error signing up:', error.message);
-      setError(error.message || 'An error occurred');
-    }
-  };
-
-  const handleGoogleSignUp = async () => {
-    const provider = new GoogleAuthProvider();
-    try {
-      const userCredential = await signInWithPopup(auth, provider);
-      const user = userCredential.user;
-      const idToken = await user.getIdToken();
-
-      // Create a new user document in Firestore
-      const userRef = doc(db, 'users', user.uid);
-      await setDoc(userRef, { email: user.email, token: idToken });
-
-      // Set the HTTP-only cookie with the token
-      await setHttpOnlyCookie(idToken);
-
-      // Redirect to the dashboard
-      router.push('/dashboard');
-    } catch (error: any) {
-      console.error('Error signing up with Google:', error.message);
-      setError(error.message || 'An error occurred');
-    }
+  const onSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    handleEmailSignUp(email, password);
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+    <div>
       <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', width: '300px' }}>
+      <form onSubmit={onSubmit}>
         <input
           type="email"
-          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
           required
-          style={{ padding: '10px', marginBottom: '10px' }}
         />
         <input
           type="password"
-          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          placeholder="Password"
           required
-          style={{ padding: '10px', marginBottom: '10px' }}
         />
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit" style={{ padding: '10px', backgroundColor: '#0070f3', color: '#fff', border: 'none', borderRadius: '5px' }}>
-          Sign Up
-        </button>
+        <button type="submit">Sign Up with Email</button>
       </form>
-      <button onClick={handleGoogleSignUp} style={{ padding: '10px', backgroundColor: '#0070f3', color: '#fff', border: 'none', borderRadius: '5px' }}>
-        Sign Up with Google
-      </button>
+      <button onClick={handleGoogleSignUp}>Sign Up with Google</button>
     </div>
   );
 }

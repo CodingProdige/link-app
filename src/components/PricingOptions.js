@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/firebase/auth";
 import { useRouter } from "next/navigation";
-import { ROUTES, DASHBOARD_ROUTES } from "@/app/lib/constants";
+import { ROUTES, DASHBOARD_ROUTES } from "@/lib/constants";
 import { createClient } from "@/prismicio";
 import styles from "@/styles/pricingOptions.module.scss";
 import { CiCircleCheck } from "react-icons/ci";

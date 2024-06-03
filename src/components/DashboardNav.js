@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import { useState, useEffect } from 'react';
-import {ROUTES, DASHBOARD_ROUTES} from '@/app/lib/constants';
+import {ROUTES, DASHBOARD_ROUTES} from '@/lib/constants';
 import { useRouter, usePathname } from 'next/navigation';
 import styles from '@/styles/dashboardNav.module.scss';
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";

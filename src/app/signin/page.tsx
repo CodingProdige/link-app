@@ -1,62 +1,39 @@
 "use client";
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { FormEvent } from 'react';
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/firebase/firebase';
-import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '@/firebase/firebase';
-import styles from '@/styles/signin.module.scss';
 
-async function setHttpOnlyCookie(token: string) {
-  await fetch('/api/set-cookie', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ token }),
-  });
-}
-
-async function handleSignIn(email: string, password: string) {
+async function handleSignIn(email: string, password: any) {
   try {
+    // Sign in with Firebase
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-    const idToken = await user.getIdToken();
 
-    // Update the user's document with the new token
-    const userRef = doc(db, 'users', user.uid);
-    await updateDoc(userRef, { token: idToken });
+    // Call the generate-token API with the UID to get a custom token
+    const response = await fetch('/api/generate-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ uid: user.uid })
+    });
 
-    // Set the HTTP-only cookie with the token
-    await setHttpOnlyCookie(idToken);
+    if (response.ok) {
+      const { customToken } = await response.json();
 
-    // Redirect to the dashboard
-    window.location.href = '/dashboard';
-  } catch (error: any) {
-    console.error('Error signing in:', error.message);
-    // Handle error (e.g., show error message to user)
-  }
-}
+      // Save the custom token as a cookie
+      document.cookie = `token=${customToken}; Path=/;`;
 
-async function handleGoogleSignIn() {
-  const provider = new GoogleAuthProvider();
-  try {
-    const userCredential = await signInWithPopup(auth, provider);
-    const user = userCredential.user;
-    const idToken = await user.getIdToken();
-
-    // Update the user's document with the new token
-    const userRef = doc(db, 'users', user.uid);
-    await updateDoc(userRef, { token: idToken });
-
-    // Set the HTTP-only cookie with the token
-    await setHttpOnlyCookie(idToken);
-
-    // Redirect to the dashboard
-    window.location.href = '/dashboard';
-  } catch (error: any) {
-    console.error('Error signing in with Google:', error.message);
+      // Redirect to the dashboard
+      window.location.href = '/dashboard';
+    } else {
+      const error = await response.json();
+      console.error('Error generating token:', error.error);
+      // Handle error (e.g., show error message to user)
+    }
+  } catch (error) {
+    console.error('Error signing in:', error);
     // Handle error (e.g., show error message to user)
   }
 }
@@ -71,29 +48,22 @@ export default function SignInPage() {
   };
 
   return (
-    <section className={styles.loginPage}>
-      <div className={styles.formContainer}>
-        <form onSubmit={onSubmit}>
-          <div className={styles.inputContainer}>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-              required
-            />
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              required
-            />
-          </div>
-          <button type="submit">Sign In</button>
-        </form>
-        <button onClick={handleGoogleSignIn}>Sign In with Google</button>
-      </div>
-    </section>
+    <form onSubmit={onSubmit}>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Email"
+        required
+      />
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+        required
+      />
+      <button type="submit">Sign In</button>
+    </form>
   );
 }
