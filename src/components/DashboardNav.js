@@ -7,6 +7,7 @@ import styles from '@/styles/dashboardNav.module.scss';
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 import { signOut } from 'firebase/auth';
 import { auth } from '@/firebase/firebase';
+import Logout from '@/lib/logout';
   
 
 async function unsetHttpOnlyCookie() {
@@ -17,8 +18,7 @@ async function unsetHttpOnlyCookie() {
 
 async function handleLogout() {
   try {
-    await signOut(auth);
-    await unsetHttpOnlyCookie();
+    await Logout();
     // Redirect to the home page after logout
     window.location.href = '/';
   } catch (error) {
@@ -44,9 +44,6 @@ const DashboardNav = ({settings}) => {
       return () => unsubscribe();
     }, [router]);
   
-    if (!user) {
-      return <p>Loading...</p>;
-    }
 
   return (
     <div className={styles.dashboardNav}>

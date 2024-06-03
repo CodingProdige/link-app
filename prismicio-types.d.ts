@@ -324,6 +324,28 @@ interface SettingsDocumentData {
    * - **Documentation**: https://prismic.io/docs/field#image
    */
   logoEmblem: prismic.ImageField<never>;
+
+  /**
+   * Signin Hero Image field in *Settings*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: settings.signin_hero_image
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/field#image
+   */
+  signin_hero_image: prismic.ImageField<never>;
+
+  /**
+   * Signup Hero Image field in *Settings*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: settings.signup_hero_image
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/field#image
+   */
+  signup_hero_image: prismic.ImageField<never>;
 }
 
 /**

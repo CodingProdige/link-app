@@ -63,6 +63,22 @@
           "constraint": {},
           "thumbnails": []
         }
+      },
+      "signin_hero_image": {
+        "type": "Image",
+        "config": {
+          "label": "Signin Hero Image",
+          "constraint": {},
+          "thumbnails": []
+        }
+      },
+      "signup_hero_image": {
+        "type": "Image",
+        "config": {
+          "label": "Signup Hero Image",
+          "constraint": {},
+          "thumbnails": []
+        }
       }
     }
   }

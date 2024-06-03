@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { ROUTES } from '@/app/lib/constants';
+import { ROUTES } from '@/lib/constants';
 
 
 import DraggableList from '@/components/DraggableList';
