@@ -11,7 +11,7 @@ export async function middleware(req: NextRequest) {
 
   // Redirect to /signin if no token is found and the path is not /signin or /signup
   if (!token) {
-    if (url.pathname !== '/signin' && url.pathname !== '/signup') {
+    if (url.pathname !== '/signin' && url.pathname !== '/signup' ) {
       console.log('No token found, redirecting to /signin');
       return NextResponse.redirect(new URL('/signin', req.url));
     }

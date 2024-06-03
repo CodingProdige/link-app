@@ -1,19 +1,37 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { FormEvent } from 'react';
-import { auth } from '@/firebase/firebase';
+import { auth, db } from '@/firebase/firebase'; // Import the db object
 import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore'; // Import Firestore functions
 import styles from '@/styles/signup.module.scss';
 import { FaGoogle } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { fetchSettingsAndNavigation } from '@/lib/prismicClient';
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 import Link from 'next/link';
+import { IMAGES } from '@/lib/images'; // Import the IMAGES object
+
+function getRandomHumanImage() {
+  const humanImages = Object.values(IMAGES.PROFILE.HUMANS);
+  const randomIndex = Math.floor(Math.random() * humanImages.length);
+  return humanImages[randomIndex];
+}
 
 async function handleEmailSignUp(email: string, password: any, setError: (message: string) => void) {
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
+
+    // Create a new user document in Firestore
+    await setDoc(doc(db, 'users', user.uid), {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName || '',
+      photoURL: user.photoURL || getRandomHumanImage(),
+      createdAt: new Date(),
+      userName: '',
+    });
 
     // Call the generate-token API with the UID to get a custom token
     const response = await fetch('/api/generate-token', {
@@ -48,6 +66,16 @@ async function handleGoogleSignUp(setError: (message: string) => void) {
     const provider = new GoogleAuthProvider();
     const userCredential = await signInWithPopup(auth, provider);
     const user = userCredential.user;
+
+    // Create a new user document in Firestore
+    await setDoc(doc(db, 'users', user.uid), {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName || '',
+      photoURL: user.photoURL || getRandomHumanImage(),
+      createdAt: new Date(),
+      userName: '',
+    });
 
     // Call the generate-token API with the UID to get a custom token
     const response = await fetch('/api/generate-token', {

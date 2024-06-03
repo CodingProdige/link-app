@@ -21,7 +21,10 @@ const nextConfig = async () => {
       defaultLocale: locales[0],
     },
     images: {
-      domains: ['firebasestorage.googleapis.com'],
+      domains: [
+        'firebasestorage.googleapis.com',
+        'lh3.googleusercontent.com',
+      ],
     },
     sassOptions: {
       includePaths: [path.join(__dirname, 'src', 'styles')],

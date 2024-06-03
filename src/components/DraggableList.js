@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { FiMove } from 'react-icons/fi';
+import { RiDraggable } from "react-icons/ri";
 
 // Function to reorder the list
 const reorder = (list, startIndex, endIndex) => {
@@ -57,13 +58,13 @@ const DraggableList = ({ items = [] }) => {
                       ...provided.draggableProps.style,
                     }}
                   >
-                    <span>{item.content}</span>
                     <span
                       {...provided.dragHandleProps}
                       style={{ cursor: 'grab' }}
                     >
-                      <FiMove />
+                      <RiDraggable />
                     </span>
+                    <span>{item.content}</span>
                   </div>
                 )}
               </Draggable>

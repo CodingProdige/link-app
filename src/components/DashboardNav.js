@@ -5,15 +5,15 @@ import {ROUTES, DASHBOARD_ROUTES} from '@/lib/constants';
 import { useRouter, usePathname } from 'next/navigation';
 import styles from '@/styles/dashboardNav.module.scss';
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
-import { signOut } from 'firebase/auth';
-import { auth } from '@/firebase/firebase';
+import { useAuth } from '@/firebase/auth';
 import Logout from '@/lib/logout';
-  
+import Image from 'next/image';
+import {IMAGES} from '@/lib/images';
 
-async function unsetHttpOnlyCookie() {
-  await fetch('/api/unset-cookie', {
-    method: 'POST',
-  });
+function getRandomHumanImage() {
+  const humanImages = Object.values(IMAGES.PROFILE.HUMANS);
+  const randomIndex = Math.floor(Math.random() * humanImages.length);
+  return humanImages[randomIndex];
 }
 
 async function handleLogout() {
@@ -30,29 +30,24 @@ async function handleLogout() {
 const DashboardNav = ({settings}) => {
     const pathname = usePathname();
     const router = useRouter();
-    const [user, setUser] = useState(null);
-  
-    useEffect(() => {
-      const unsubscribe = auth.onAuthStateChanged((user) => {
-        if (user) {
-          setUser(user);
-        } else {
-          router.push('/signin');
-        }
-      });
-  
-      return () => unsubscribe();
-    }, [router]);
+    const { user: authUser } = useAuth();
   
 
   return (
     <div className={styles.dashboardNav}>
-        <div className={styles.navLogoContainer}>
-            <PrismicNextImage field={settings.data.logo} />
-        </div>
-        <button onClick={handleLogout} style={{ padding: '10px', backgroundColor: '#0070f3', color: '#fff', border: 'none', borderRadius: '5px' }}>
+      <div className={styles.navLogoContainer}>
+          <PrismicNextImage field={settings.data.logo} />
+      </div>
+      <button onClick={handleLogout} style={{ padding: '10px', backgroundColor: '#0070f3', color: '#fff', border: 'none', borderRadius: '5px' }}>
         Logout
       </button>
+      <div>
+      {authUser && (
+          <div className={styles.profileImageContainer}>
+            <Image src={authUser.photoURL || getRandomHumanImage()} alt={authUser.displayName} width={40} height={40} />
+          </div>
+        )}
+      </div> 
     </div>
   )
 }
