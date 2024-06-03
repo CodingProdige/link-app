@@ -6,8 +6,11 @@ const generateSitemap = async () => {
 
   const staticPages = [
     `${baseUrl}`,
-    `${baseUrl}/auth/login`,
-    `${baseUrl}/auth/register`,
+    `${baseUrl}/pricing`,
+    `${baseUrl}/signin`,
+    `${baseUrl}/signup`,
+    `${baseUrl}/about`,
+
   ];
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
