@@ -65,6 +65,13 @@
 
         h3 {
           text-align: center;
+          font-size: clamp(28px, 4vmin, 38px);
+        }
+
+        p {
+          font-size: clamp(16px, 4vmin, 18px);
+          text-align: center;
+          color: $color-text-light;
         }
       }
 
