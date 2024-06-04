@@ -24,7 +24,8 @@ export const DASHBOARD_ROUTES = {
     },
     LINKS: {
         NAME:'Links',
-        ROUTE:'/dashboard/links'
+        ROUTE:'/dashboard/links',
+        ICON: '<BsViewList />'
     },
     SETTINGS: {
         NAME:'Settings',
