@@ -33,5 +33,9 @@
         flex-direction: column;
         width: 100%;
         padding: 2rem;
+
+        @media (max-width: $screen-lg) {
+            margin-top: 4rem;
+        }    
     }
 }

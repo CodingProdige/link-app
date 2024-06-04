@@ -9,8 +9,6 @@ import Logout from '@/lib/logout';
 import Image from 'next/image';
 import { IMAGES } from '@/lib/images';
 import { fetchUserData } from '@/utils/firebaseUtils';
-import { BsViewList } from "react-icons/bs";
-import { RiHome6Line } from "react-icons/ri";
 import Link from 'next/link';
 
 function getRandomHumanImage() {
@@ -98,9 +96,6 @@ const DashboardNav = ({ settings }) => {
       <div className={styles.navLogoContainer}>
         <PrismicNextImage field={settings.data.logo} />
       </div>
-      <button onClick={handleLogout} style={{ padding: '10px', backgroundColor: '#0070f3', color: '#fff', border: 'none', borderRadius: '5px' }} aria-label="Logout">
-        Logout
-      </button>
       <div className={styles.navLinks}>
         <ul>
           {
@@ -119,18 +114,78 @@ const DashboardNav = ({ settings }) => {
         </ul>
       </div>
 
-      <div className={styles.profileImageContainer}>
-        {userData && (
-          <div className={styles.profileInnerContainer}>
-            <Image src={userData.photoURL || getRandomHumanImage()} alt={userData.displayName} width={40} height={40} />
-            <div className={styles.userInfo}>
-              <p>{userData.name}</p>
-              <p>{userData.email}</p>
+      <div className={styles.navInnerContainerMobile}>
+        <div className={styles.profileImageContainer}>
+          {userData && (
+            <div className={styles.profileInnerContainer}>
+              <Image src={userData.photoURL || getRandomHumanImage()} alt={userData.displayName} width={40} height={40} />
+              <div className={styles.userInfo}>
+                <p>{userData.name}</p>
+                <p>{userData.email}</p>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
 
+          <div className={styles.profileDropdownMenu}>
+            <ul>
+              <div className={styles.dropdownMenuContainer}>
+                <h5>Account</h5>
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                  </svg>
+                  <p>My account</p>
+                </li>
+                <li onClick={handleLogout}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
+                    <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
+                  </svg>
+                  <p>Logout</p>
+                </li>
+              </div>
+              <div className={styles.dropdownMenuContainer}>
+                <h5>Support</h5>
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-info-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                    <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                  </svg>
+                  <p>Ask a question</p>
+                </li>
+                <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                    <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"/>
+                  </svg>
+                  <p>Help topics</p>
+                </li>
+              </div>
+            </ul>
+          </div>
+        </div>
+
+        <div className={styles.mobileMenu}>
+          <div className={styles.navLinksMobile}>
+            <ul>
+              {
+                dashboardRoutesArray.map((route, index) => {
+                  const isActive = pathname === route.ROUTE;
+                  return (
+                    <Link href={route.ROUTE} key={index}>
+                      <li key={index} className={isActive ? styles.active : ''}>
+                        {returnIcon(route.NAME)}
+                        <p>{route.NAME}</p>
+                      </li>
+                    </Link>
+                  );
+                })
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
