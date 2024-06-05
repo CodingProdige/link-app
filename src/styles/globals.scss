@@ -71,3 +71,19 @@ button {
     font-size: clamp(16px, 4vmin, 18px);
     cursor: pointer;
 }
+
+input {
+    padding: 1rem;
+    background-color: $color-off-white;
+    border-radius: 50px;
+    border: none;
+    outline: 1px solid $color-off-white;
+
+    &:focus {
+      outline: 1px solid $color-primary;
+    }
+
+    &.inputError {
+      outline: 1px solid $color-error;
+    }
+}

@@ -30,7 +30,7 @@ async function handleEmailSignUp(email: string, password: any, setError: (messag
       displayName: user.displayName || '',
       photoURL: user.photoURL || getRandomHumanImage(),
       createdAt: new Date(),
-      userName: '',
+      username: '',
     });
 
     // Call the generate-token API with the UID to get a custom token
@@ -74,7 +74,7 @@ async function handleGoogleSignUp(setError: (message: string) => void) {
       displayName: user.displayName || '',
       photoURL: user.photoURL || getRandomHumanImage(),
       createdAt: new Date(),
-      userName: '',
+      username: '',
     });
 
     // Call the generate-token API with the UID to get a custom token

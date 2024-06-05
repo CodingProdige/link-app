@@ -1,33 +1,42 @@
-// Code: Layout for the Dashboard
-import React from 'react'
+"use client";
+
+import React from 'react';
 import styles from '@/styles/dashboardLayout.module.scss';
-import { createClient } from '@/prismicio';
-
+import ModalOverlay from '@/components/ModalOverlay';
 import DashboardNav from '@/components/DashboardNav';
+import { AuthProvider, useAuth } from '@/firebase/auth';
+import { PrismicProvider, usePrismic } from '@/context/PrismicContext';
+import Loading from '@/components/Loading';
 
-async function fetchSettingsAndNavigation() {
-    const client = createClient();
-    const settings = await client.getSingle("settings");
-    const navigation = await client.getSingle("navigation");
-    const page = await client.getByUID("page", "home");
-    return { settings, navigation, page };
+const LayoutComponent = ({ children }) => {
+  const { user, loading: authLoading } = useAuth();
+  const { settings, navigation, page, loading: prismicLoading } = usePrismic();
+
+  if (prismicLoading || authLoading) {
+    return <Loading/>;
   }
-
-
-const layout = async ({children}) => {
-  const { settings, navigation, page } = await fetchSettingsAndNavigation();
-
 
   return (
     <div className={styles.dashboard}>
-        <div className={styles.navContainer}>
-            <DashboardNav settings={settings}/>
-        </div>
-        <div className={styles.dashboardContent}>
-            {children}
-        </div>
+      <ModalOverlay settings={settings} />
+      <div className={styles.navContainer}>
+        <DashboardNav settings={settings} />
+      </div>
+      <div className={styles.dashboardContent}>
+        {children}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default layout
+const Layout = ({ children }) => {
+  return (
+    <AuthProvider>
+      <PrismicProvider>
+        <LayoutComponent>{children}</LayoutComponent>
+      </PrismicProvider>
+    </AuthProvider>
+  );
+};
+
+export default Layout;
