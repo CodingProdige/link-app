@@ -54,8 +54,23 @@ const DashboardNav = ({ settings }) => {
     };
 
     fetchAndSetUserData();
+
     // Prefetch pages
-    router.prefetch(['/dashboard/premium', '/dashboard/settings', '/dashboard/appearance', '/dashboard/analytics', '/dashboard/links']);
+    const paths = [
+      '/dashboard/premium', 
+      '/dashboard/settings', 
+      '/dashboard/appearance', 
+      '/dashboard/analytics', 
+      '/dashboard/links'
+    ];
+
+    paths.forEach(path => {
+      if (typeof path === 'string') {
+        router.prefetch(path);
+      } else {
+        console.error('Invalid path for prefetching:', path);
+      }
+    });
   }, [authUser, router]);
 
   const handleProfileMenuToggle = () => setProfileMenuOpen(prevState => !prevState);

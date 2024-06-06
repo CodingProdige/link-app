@@ -5,7 +5,7 @@ import { hasUsernameField, isUsernameTaken, updateUsername } from '@/utils/fireb
 import { useAuth } from '@/firebase/auth';
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 
-const ModalOverlay = ({settings}) => {
+const ModalOverlay = ({ settings }) => {
   const [username, setUsername] = useState('');
   const [usernameExists, setUsernameExists] = useState(false);
   const [usernameError, setUsernameError] = useState('');
@@ -107,9 +107,9 @@ const ModalOverlay = ({settings}) => {
     <>
       {!usernameExists && (
         <div className={styles.overlay}>
-            <div className={styles.logoContainer}>
-                <PrismicNextImage field={settings.data.logo} />
-            </div>
+          <div className={styles.logoContainer}>
+            <PrismicNextImage field={settings.data.logo} />
+          </div>
           <div className={styles.modal}>
             <div className={styles.titleText}>
               <h2>Choose a username</h2>
