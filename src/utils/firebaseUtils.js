@@ -127,19 +127,25 @@ export const checkSubscriptionStatus = async (uid) => {
 };
 
 /**
- * Gets a users document by their username.
+ * Gets a user's document by their username.
  * @param {string} username 
  * @returns 
  */
 export const getUserByUsername = async (username) => {
-  const usersRef = collection(db, 'users');
-  const q = query(usersRef, where('username', '==', username));
-  const querySnapshot = await getDocs(q);
+  try {
+    const usersRef = collection(db, 'users');
+    const q = query(usersRef, where('username', '==', username));
+    const querySnapshot = await getDocs(q);
 
-  if (!querySnapshot.empty) {
-    const userDoc = querySnapshot.docs[0];
-    return { id: userDoc.id, ...userDoc.data() };
-  } else {
-    return null;
+    if (!querySnapshot.empty) {
+      const userDoc = querySnapshot.docs[0];
+      return { id: userDoc.id, ...userDoc.data() };
+    } else {
+      console.warn(`No user found for username: ${username}`);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error fetching user by username:', error);
+    throw new Error('Failed to fetch user data');
   }
 };

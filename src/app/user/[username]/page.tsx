@@ -23,7 +23,6 @@ const UserPage = ({ params }: UserPageProps) => {
         const data = await getUserByUsername(username);
         if (data) {
           setUserData(data);
-          console.log('Fetched user data:', data);
         } else {
           console.warn('No user data found for username:', username);
           notFound();
