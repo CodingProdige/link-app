@@ -15,6 +15,7 @@ type UserPageProps = {
 const UserPage = ({ params }: UserPageProps) => {
   const username = params.username;
   const [userData, setUserData] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,10 +25,12 @@ const UserPage = ({ params }: UserPageProps) => {
           setUserData(data);
           console.log('Fetched user data:', data);
         } else {
+          console.warn('No user data found for username:', username);
           notFound();
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
+        setError(error.message || 'Unknown error');
         notFound();
       }
     };
@@ -35,15 +38,13 @@ const UserPage = ({ params }: UserPageProps) => {
     fetchData();
   }, [username]);
 
+  if (error) {
+    return <div className={styles.error}>Error: {error}</div>;
+  }
+
   if (!userData) {
     return <Loading />;
   }
-
-  const theme = {
-    background: userData.background,
-    color: userData.color,
-  };
-  
 
   return (
     <>
