@@ -17,7 +17,7 @@ export default function Header({ settings, navigation, pathname, user, isOpen, t
   }
 
   // Do not render header on login and register pages
-  if ( pathname === '/signin' || pathname === '/signup' || pathname.includes('dashboard')) {
+  if ( pathname === '/signin' || pathname === '/signup' || pathname.includes('dashboard') || pathname.includes('user')) {
     return null;
   }
 

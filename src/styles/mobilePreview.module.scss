@@ -1,0 +1,40 @@
+// styles/mobilePreview.module.scss
+
+@import './variables';
+@import './mixins';
+
+.container {
+  position: -webkit-sticky; /* For Safari */
+  position: sticky;
+  top: 2rem;
+  border-left: 1px solid $color-text-light;
+  padding: 0 2rem;
+  height: calc(100vh - 4rem);
+
+  .mobileMockup {
+    width: 375px;
+    height: 667px;
+    border: 0.5rem solid $color-off-black;
+    border-radius: 36px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    position: relative;
+    background-color: white;
+    overflow: hidden; // Ensure the mockup itself does not show scrollbars
+  }
+
+  .iframeContainer {
+    width: 100%;
+    height: 100%;
+    border: none;
+    overflow: hidden; // Ensure the iframe itself does not show scrollbars
+    scrollbar-width: none; // For Firefox
+  }
+
+  .iframeContainer::-webkit-scrollbar {
+    display: none; // For Chrome, Safari, and Opera
+  }
+}
+
+
+
+  

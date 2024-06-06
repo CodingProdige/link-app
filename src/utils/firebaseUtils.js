@@ -1,5 +1,6 @@
 import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import {auth, db } from '@/firebase/firebase';
 
 /**
  * Fetch user data by UID.
@@ -8,7 +9,6 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
  */
 export const fetchUserData = async (uid) => {
   try {
-    const db = getFirestore();
     const userDocRef = doc(db, 'users', uid);
     const userDoc = await getDoc(userDocRef);
     if (userDoc.exists()) {
@@ -30,7 +30,6 @@ export const fetchUserData = async (uid) => {
  */
 export const addUserData = async (uid, data) => {
   try {
-    const db = getFirestore();
     const userDocRef = doc(db, 'users', uid);
     await setDoc(userDocRef, data, { merge: true });
     console.log('User data added/updated successfully');
@@ -46,7 +45,6 @@ export const addUserData = async (uid, data) => {
  */
 export const hasUsernameField = async (uid) => {
   try {
-    const db = getFirestore();
     const userDocRef = doc(db, 'users', uid);
     const userDoc = await getDoc(userDocRef);
     if (userDoc.exists()) {
@@ -69,7 +67,6 @@ export const hasUsernameField = async (uid) => {
  */
 export const isUsernameTaken = async (username) => {
   try {
-    const db = getFirestore();
     const usersRef = collection(db, 'users');
     const q = query(usersRef, where('username', '==', username));
     const querySnapshot = await getDocs(q);
@@ -88,7 +85,6 @@ export const isUsernameTaken = async (username) => {
  */
 export const updateUsername = async (uid, username) => {
   try {
-    const db = getFirestore();
     const userDocRef = doc(db, 'users', uid);
     await setDoc(userDocRef, { username }, { merge: true });
     console.log('Username updated successfully');
@@ -128,4 +124,22 @@ export const checkSubscriptionStatus = async (uid) => {
   });
 
   return hasActiveSubscription;
+};
+
+/**
+ * Gets a users document by their username.
+ * @param {string} username 
+ * @returns 
+ */
+export const getUserByUsername = async (username) => {
+  const usersRef = collection(db, 'users');
+  const q = query(usersRef, where('username', '==', username));
+  const querySnapshot = await getDocs(q);
+
+  if (!querySnapshot.empty) {
+    const userDoc = querySnapshot.docs[0];
+    return { id: userDoc.id, ...userDoc.data() };
+  } else {
+    return null;
+  }
 };

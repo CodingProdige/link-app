@@ -1,0 +1,11 @@
+// styles/dashboardLinks.module.scss
+
+@import './variables';
+@import './mixins';
+
+.linksPage {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 1rem;
+}

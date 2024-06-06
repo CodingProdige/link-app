@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { FiMove } from 'react-icons/fi';
 import { RiDraggable } from "react-icons/ri";
+import styles from '@/styles/draggableList.module.scss';
 
 // Function to reorder the list
 const reorder = (list, startIndex, endIndex) => {
@@ -35,7 +35,7 @@ const DraggableList = ({ items = [] }) => {
           <div
             {...provided.droppableProps}
             ref={provided.innerRef}
-            style={{ padding: 20, background: '#f8f9fa', borderRadius: 4 }}
+            className={styles.container}
           >
             {state.map((item, index) => (
               <Draggable key={item.id} draggableId={item.id} index={index}>
@@ -43,24 +43,12 @@ const DraggableList = ({ items = [] }) => {
                   <div
                     ref={provided.innerRef}
                     {...provided.draggableProps}
-                    style={{
-                      userSelect: 'none',
-                      padding: 16,
-                      margin: '0 0 8px 0',
-                      minHeight: '50px',
-                      backgroundColor: '#fff',
-                      color: '#333',
-                      border: '1px solid lightgrey',
-                      borderRadius: 4,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      ...provided.draggableProps.style,
-                    }}
+                    className={styles.draggableItem}
+                    style={provided.draggableProps.style}
                   >
                     <span
                       {...provided.dragHandleProps}
-                      style={{ cursor: 'grab' }}
+                      className={styles.dragHandle}
                     >
                       <RiDraggable />
                     </span>
