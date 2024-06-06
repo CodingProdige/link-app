@@ -97,3 +97,35 @@ export const updateUsername = async (uid, username) => {
     throw new Error('Username update failed');
   }
 };
+
+
+/**
+ * Checks for an active subscription on the user.
+ * @param {string} uid - User ID.
+ */
+export const checkSubscriptionStatus = async (uid) => {
+  const subscriptionQuery = query(
+    collection(db, 'customers', uid, 'subscriptions'),
+    where('status', 'in', ['trialing', 'active', 'canceled'])
+  );
+
+  const subscriptionSnapshot = await getDocs(subscriptionQuery);
+
+  if (subscriptionSnapshot.empty) {
+    return false;
+  }
+
+  let hasActiveSubscription = false;
+
+  subscriptionSnapshot.forEach((doc) => {
+    const subscription = doc.data();
+    if (subscription.status === 'canceled' && subscription.cancel_at_period_end) {
+      hasActiveSubscription = true;
+    }
+    if (['trialing', 'active'].includes(subscription.status)) {
+      hasActiveSubscription = true;
+    }
+  });
+
+  return hasActiveSubscription;
+};

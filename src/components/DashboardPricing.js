@@ -1,9 +1,11 @@
 // components/Pricing.js
 import { useEffect, useState } from 'react';
 import { collection, getDocs, query, where, addDoc, onSnapshot } from 'firebase/firestore';
-import { db } from '@/app/lib/firebaseConfig.ts';
-import { DASHBOARD_ROUTES } from '@/app/lib/constants';
+import { db } from '@/firebase/firebase';
+import { DASHBOARD_ROUTES } from '@/lib/constants';
 import { useRouter } from 'next/navigation'; // Correct import for Next.js 13+
+import styles from '@/styles/dashboardPricing.module.scss';
+import { checkSubscriptionStatus } from '@/utils/firebaseUtils'; // Import the utility function
 
 const Pricing = ({ currentUser }) => {
   const [products, setProducts] = useState([]);
@@ -37,22 +39,11 @@ const Pricing = ({ currentUser }) => {
     fetchProducts();
   }, []);
 
-  const checkSubscriptionStatus = async () => {
-    const subscriptionQuery = query(
-      collection(db, 'customers', currentUser.uid, 'subscriptions'),
-      where('status', 'in', ['trialing', 'active'])
-    );
-
-    const subscriptionSnapshot = await getDocs(subscriptionQuery);
-    return !subscriptionSnapshot.empty;
-  };
-
   const handleCheckout = async (priceId) => {
-    const hasActiveSubscription = await checkSubscriptionStatus();
+    const hasActiveSubscription = await checkSubscriptionStatus(currentUser.uid);
 
     if (hasActiveSubscription) {
       alert('You already have a premium subscription.');
-      router.push(DASHBOARD_ROUTES.DASHBOARD.ROUTE);
       return;
     }
 
@@ -74,21 +65,21 @@ const Pricing = ({ currentUser }) => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold text-center mb-8">Pricing</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div className={styles.container}>
+      <h1 className={styles.title}>Pricing</h1>
+      <div className={styles.grid}>
         {products?.map((product) => (
-          <div key={product.id} className="bg-white shadow-lg rounded-lg p-6">
-            <h2 className="text-2xl font-semibold mb-4">{product.name}</h2>
-            <p className="mb-4">{product.description}</p>
+          <div key={product.id} className={styles.card}>
+            <h2 className={styles.cardTitle}>{product.name}</h2>
+            <p className={styles.cardDescription}>{product.description}</p>
             {product.prices.map((price) => (
               <div key={price.id}>
-                <p className="text-lg font-bold mb-4">
+                <p className={styles.price}>
                   {price.currency ? price.currency.toUpperCase() : ''} {(price.unit_amount / 100).toFixed(2)}
                 </p>
                 <button
                   onClick={() => handleCheckout(price.id)}
-                  className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
+                  className={styles.button}
                 >
                   Buy
                 </button>
