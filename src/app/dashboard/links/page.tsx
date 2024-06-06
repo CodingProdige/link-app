@@ -20,6 +20,7 @@ export default function Links() {
   const { settings, loading: prismicLoading } = usePrismic();
   const router = useRouter();
   const [userData, setUserData] = useState(null);
+  const [addLinkActive, setAddLinkActive] = useState(false);
 
   useEffect(() => {
     if (!authLoading && user) {
@@ -35,11 +36,38 @@ export default function Links() {
     }
   }, [authLoading, user]);
 
+  const toggleAddLink = () => setAddLinkActive(prevState => !prevState);
+
+
   const linkPageUrl = userData ? `${window.location.origin}/user/${userData.username}` : '';
 
   return (
     <div className={styles.linksPage}>
-      <DraggableList items={items} />
+      <div className={styles.linksContainer}>
+        <div className={styles.addLinkContainer}>
+          {
+            addLinkActive ? (
+              <form className={styles.addLinkForm}>
+                <input type="text" placeholder="Link Name" />
+                <input type="text" placeholder="Link URL" />
+                <button type="submit">Save</button>
+                <button onClick={toggleAddLink}>Cancel</button>
+              </form>
+            ) : (
+              <button className={styles.addLinkButton} onClick={toggleAddLink}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus" viewBox="0 0 16 16">
+                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                </svg>
+                Add Link
+              </button>
+            )
+          }
+        </div>
+        {
+          userData?.links && <DraggableList items={items} />
+        }
+      </div>
+
       {userData && <MobilePreview linkPageUrl={linkPageUrl} />}
     </div>
   );

@@ -17,6 +17,24 @@ body {
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
+/* Minimalist scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+    background: $color-off-black-light; /* Background color of the scrollbar track */
+}
+
+::-webkit-scrollbar-thumb {
+    background: $color-off-black; /* Color of the scrollbar thumb */
+    border-radius: 10px; /* Roundness of the scrollbar thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: $color-secondary; /* Color of the scrollbar thumb on hover */
+}
   
 a {
     color: $color-primary;

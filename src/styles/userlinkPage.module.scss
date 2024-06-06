@@ -1,0 +1,34 @@
+// styles/userLinkPage.module.scss
+
+@import './variables';
+@import './mixins';
+
+.containerPublicProfile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 1rem;
+
+    .background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: -1;
+        background-color: $color-off-black;
+    }
+
+    .innerContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+        max-width: $screen-md;
+        height: auto;
+    }
+}

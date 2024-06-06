@@ -155,7 +155,7 @@ const DashboardNav = ({ settings }) => {
                   <Image src={userData.photoURL || getRandomHumanImage()} alt={userData.displayName} width={40} height={40} />
                   <div className={styles.userInfo}>
                     <p>@{userData.username}</p>
-                    <sub>fansl.ink/{userData.username}</sub>
+                    <sub>fansl.ink/user/{userData.username}</sub>
                   </div>
                 </div>
               )}

@@ -169,8 +169,8 @@
                 }
 
                 p {
-                    font-size: clamp(1rem, 1.5vw, 1.5rem);
-                    font-weight: 700;
+                    font-size: 1rem;
+                    font-weight: 500;
                     color: $color-text-light;
                     transition: color 0.3s ease;
                 }
@@ -333,7 +333,7 @@
 
                     .dropdownMenuContainer {
                         h5 {
-                            font-size: clamp(1rem, 1.5vw, 1.5rem);
+                            font-size: 1rem;
                             font-weight: 500;
                             color: $color-text;
                             transition: color 0.3s ease;
@@ -360,7 +360,7 @@
                             }
     
                             p {
-                                font-size: clamp(1rem, 1.5vw, 1.5rem);
+                                font-size: 1rem;
                                 font-weight: 400;
                                 color: $color-text-light;
                                 transition: color 0.3s ease;
