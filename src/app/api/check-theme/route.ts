@@ -1,14 +1,14 @@
 import { db } from '@/firebase/firebase';
 import { collection, query, where, updateDoc, getDocs, doc } from 'firebase/firestore';
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { NextResponse } from 'next/server';
+import type { NextApiResponse } from 'next';
+import { NextResponse, NextRequest } from 'next/server';
 
 export async function POST(
-  req: NextApiRequest,
+  req: NextRequest,
   res: NextApiResponse
 ) {
   if (req.method === 'POST') {
-    const { uid, theme } = req.body;
+    const { uid, theme } = await req.json();
 
     if (!uid || !theme) {
       return NextResponse.json({ message: 'UID and theme are required' }, { status: 400 });
