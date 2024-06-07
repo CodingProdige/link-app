@@ -41,3 +41,16 @@ export const DASHBOARD_ROUTES = {
     }
     // Add other dashboard routes as needed
 };
+
+export const DEFAULT_THEME = {
+    BACKGROUND: {
+      backgroundColor: '#F9FAFB',
+    },
+    PILL: {
+      backgroundColor: '#FFFFFF',
+      color: '#000000',
+    },
+    HEADER: {
+      color: '#FFFFFF',
+    }
+  }

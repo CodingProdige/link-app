@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { RiDraggable } from "react-icons/ri";
 import styles from '@/styles/draggableList.module.scss';
+import { updateLinks } from '@/utils/firebaseUtils'; // Ensure you have the correct path
 
 // Function to reorder the list
 const reorder = (list, startIndex, endIndex) => {
@@ -11,21 +12,26 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-const DraggableList = ({ items = [] }) => {
-  const [state, setState] = useState(items);
-
-  const onDragEnd = (result) => {
+const DraggableList = ({ items = [], userId, setItems }) => {
+  const onDragEnd = async (result) => {
     if (!result.destination) {
       return;
     }
 
     const reorderedItems = reorder(
-      state,
+      items,
       result.source.index,
       result.destination.index
     );
 
-    setState(reorderedItems);
+    setItems(reorderedItems);
+
+    try {
+      await updateLinks(userId, reorderedItems);
+      console.log('Links updated successfully');
+    } catch (error) {
+      console.error('Error updating links: ', error);
+    }
   };
 
   return (
@@ -37,22 +43,24 @@ const DraggableList = ({ items = [] }) => {
             ref={provided.innerRef}
             className={styles.container}
           >
-            {state.map((item, index) => (
-              <Draggable key={item.id} draggableId={item.id} index={index}>
-                {(provided) => (
+            {items.map((item, index) => (
+              <Draggable key={item.id} draggableId={String(item.id)} index={index}>
+                {(provided, snapshot) => (
                   <div
                     ref={provided.innerRef}
                     {...provided.draggableProps}
-                    className={styles.draggableItem}
-                    style={provided.draggableProps.style}
+                    {...provided.dragHandleProps}
+                    className={`${styles.draggableItem} ${snapshot.isDragging ? styles.dragging : ''}`}
+                    style={{ ...provided.draggableProps.style }}
                   >
-                    <span
-                      {...provided.dragHandleProps}
-                      className={styles.dragHandle}
-                    >
+                    <span className={styles.dragHandle}>
                       <RiDraggable />
                     </span>
-                    <span>{item.content}</span>
+
+                    <div className={styles.linkDataContainer}>
+                      <span id={styles.linkTitle}>{item.title}</span>
+                      <span id={styles.linkUrl}>{item.link}</span>
+                    </div>
                   </div>
                 )}
               </Draggable>

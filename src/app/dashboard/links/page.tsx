@@ -8,12 +8,7 @@ import { usePrismic } from '@/context/PrismicContext';
 import MobilePreview from '@/components/MobilePreview';
 import { fetchUserData } from '@/utils/firebaseUtils';
 import styles from '@/styles/dashboardLinks.module.scss';
-
-const items = [
-  { id: '1', content: 'Item 1' },
-  { id: '2', content: 'Item 2' },
-  { id: '3', content: 'Item 3' },
-];
+import AddLinkForm from '@/components/AddLinkForm';
 
 export default function Links() {
   const { user, loading: authLoading } = useAuth();
@@ -21,6 +16,8 @@ export default function Links() {
   const router = useRouter();
   const [userData, setUserData] = useState(null);
   const [addLinkActive, setAddLinkActive] = useState(false);
+  const [links, setLinks] = useState([]);
+  const [previewKey, setPreviewKey] = useState(0); // Key to force MobilePreview re-render
 
   useEffect(() => {
     if (!authLoading && user) {
@@ -28,6 +25,7 @@ export default function Links() {
       fetchUserData(user.uid)
         .then(data => {
           setUserData(data);
+          setLinks(data.links);
           console.log('Fetched user data:');
         })
         .catch(error => {
@@ -38,8 +36,12 @@ export default function Links() {
 
   const toggleAddLink = () => setAddLinkActive(prevState => !prevState);
 
-
   const linkPageUrl = userData ? `${window.location.origin}/user/${userData.username}` : '';
+
+  const handleLinksUpdate = async (newLinks) => {
+    setLinks(newLinks);
+    setPreviewKey(prevKey => prevKey + 1); // Update key to force re-render
+  };
 
   return (
     <div className={styles.linksPage}>
@@ -47,12 +49,7 @@ export default function Links() {
         <div className={styles.addLinkContainer}>
           {
             addLinkActive ? (
-              <form className={styles.addLinkForm}>
-                <input type="text" placeholder="Link Name" />
-                <input type="text" placeholder="Link URL" />
-                <button type="submit">Save</button>
-                <button onClick={toggleAddLink}>Cancel</button>
-              </form>
+              <AddLinkForm toggleAddLink={toggleAddLink} />
             ) : (
               <button className={styles.addLinkButton} onClick={toggleAddLink}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus" viewBox="0 0 16 16">
@@ -64,11 +61,11 @@ export default function Links() {
           }
         </div>
         {
-          userData?.links && <DraggableList items={items} />
+          links?.length > 0 && <DraggableList items={links} setItems={handleLinksUpdate} userId={user.uid} />
         }
       </div>
 
-      {userData && <MobilePreview linkPageUrl={linkPageUrl} />}
+      {userData && <MobilePreview key={previewKey} linkPageUrl={linkPageUrl} />}
     </div>
   );
 }

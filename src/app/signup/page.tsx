@@ -11,6 +11,7 @@ import { fetchSettingsAndNavigation } from '@/lib/prismicClient';
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 import Link from 'next/link';
 import { IMAGES } from '@/lib/images'; // Import the IMAGES object
+import { DEFAULT_THEME } from '@/lib/constants'; // Import the DEFAULT_THEME object
 
 function getRandomHumanImage() {
   const humanImages = Object.values(IMAGES.PROFILE.HUMANS);
@@ -31,6 +32,7 @@ async function handleEmailSignUp(email: string, password: any, setError: (messag
       photoURL: user.photoURL || getRandomHumanImage(),
       createdAt: new Date(),
       username: '',
+      theme: DEFAULT_THEME,
     });
 
     // Call the generate-token API with the UID to get a custom token
@@ -75,6 +77,7 @@ async function handleGoogleSignUp(setError: (message: string) => void) {
       photoURL: user.photoURL || getRandomHumanImage(),
       createdAt: new Date(),
       username: '',
+      theme: DEFAULT_THEME,
     });
 
     // Call the generate-token API with the UID to get a custom token

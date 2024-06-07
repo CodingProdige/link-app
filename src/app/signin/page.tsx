@@ -1,7 +1,6 @@
 "use client";
-import { useState, useEffect } from 'react';
-import { FormEvent } from 'react';
-import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { useState, useEffect, FormEvent } from 'react';
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, getAuth } from 'firebase/auth';
 import { auth } from '@/firebase/firebase';
 import styles from '@/styles/signin.module.scss';
 import { FaGoogle } from "react-icons/fa";
@@ -9,21 +8,24 @@ import { FcGoogle } from "react-icons/fc";
 import { fetchSettingsAndNavigation } from '@/lib/prismicClient';
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 import Link from 'next/link';
+import { DEFAULT_THEME } from '@/lib/constants';
 
+const firebaseAuth = getAuth();
 
 async function handleSignIn(email: string, password: string, setError: (message: string) => void) {
   try {
-    // Sign in with Firebase
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
     const user = userCredential.user;
+
+    const theme = DEFAULT_THEME; // Set the theme value you want to pass
 
     // Call the generate-token API with the UID to get a custom token
     const response = await fetch('/api/generate-token', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ uid: user.uid })
+      body: JSON.stringify({ uid: user.uid }),
     });
 
     if (response.ok) {
@@ -31,6 +33,15 @@ async function handleSignIn(email: string, password: string, setError: (message:
 
       // Save the custom token as a cookie
       document.cookie = `token=${customToken}; Path=/;`;
+
+      // Check or set the theme field
+      await fetch('/api/check-theme', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ uid: user.uid, theme }),
+      });
 
       // Redirect to the dashboard
       window.location.href = '/dashboard';
@@ -48,16 +59,18 @@ async function handleSignIn(email: string, password: string, setError: (message:
 async function handleGoogleSignIn(setError: (message: string) => void) {
   const provider = new GoogleAuthProvider();
   try {
-    const result = await signInWithPopup(auth, provider);
+    const result = await signInWithPopup(firebaseAuth, provider);
     const user = result.user;
+
+    const theme = 'default'; // Set the theme value you want to pass
 
     // Call the generate-token API with the UID to get a custom token
     const response = await fetch('/api/generate-token', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ uid: user.uid })
+      body: JSON.stringify({ uid: user.uid }),
     });
 
     if (response.ok) {
@@ -65,6 +78,15 @@ async function handleGoogleSignIn(setError: (message: string) => void) {
 
       // Save the custom token as a cookie
       document.cookie = `token=${customToken}; Path=/;`;
+
+      // Check or set the theme field
+      await fetch('/api/check-theme', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ uid: user.uid, theme }),
+      });
 
       // Redirect to the dashboard
       window.location.href = '/dashboard';
@@ -99,27 +121,22 @@ export default function SignInPage() {
     setError('');
     handleSignIn(email, password, setError);
   };
-  
 
   return (
     <div className={styles.loginPage}>
       <div className={styles.imageContainer}>
-        {
-          data.navigation && data.navigation.data && data.settings.data && (
-            <PrismicNextImage field={data.settings.data.signin_hero_image} />
-          )
-        }
+        {data.navigation && data.navigation.data && data.settings.data && (
+          <PrismicNextImage field={data.settings.data.signin_hero_image} />
+        )}
       </div>
       <div className={styles.formContainer}>
-        {
-          data.navigation && data.navigation.data && data.settings.data && (
-            <Link href="/">
-              <div className={styles.logoContainer}>
-                <PrismicNextImage field={data.settings.data.logo} />
-              </div>
-            </Link>
-          )
-        }
+        {data.navigation && data.navigation.data && data.settings.data && (
+          <Link href="/">
+            <div className={styles.logoContainer}>
+              <PrismicNextImage field={data.settings.data.logo} />
+            </div>
+          </Link>
+        )}
         <form onSubmit={onSubmit}>
           <div className={styles.formHeader}>
             <h3>Welcome back!</h3>

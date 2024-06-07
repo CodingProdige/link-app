@@ -4,6 +4,8 @@ import styles from '@/styles/modalOverlay.module.scss';
 import { hasUsernameField, isUsernameTaken, updateUsername } from '@/utils/firebaseUtils';
 import { useAuth } from '@/firebase/auth';
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
+import { useRouter } from 'next/navigation';
+import Loading from '@/components/Loading';
 
 const ModalOverlay = ({ settings }) => {
   const [username, setUsername] = useState('');
@@ -13,6 +15,7 @@ const ModalOverlay = ({ settings }) => {
   const [suggestedUsernames, setSuggestedUsernames] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const { user, loading } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     const checkUsername = async () => {
@@ -21,6 +24,9 @@ const ModalOverlay = ({ settings }) => {
         const exists = await hasUsernameField(user.uid);
         console.log('Username exists:', exists);
         setUsernameExists(exists);
+        if (!exists) {
+          setModalVisible(true); // Show the modal if username does not exist
+        }
       }
     };
 
@@ -79,6 +85,7 @@ const ModalOverlay = ({ settings }) => {
         await updateUsername(user.uid, username);
         console.log('Username updated successfully');
         setModalVisible(false); // Hide the modal on successful username update
+        router.reload(); // Reload the page to reflect the new username
       } catch (error) {
         console.error('Error updating username:', error.message);
       }
@@ -100,7 +107,7 @@ const ModalOverlay = ({ settings }) => {
   }
 
   if (loading) {
-    return null;
+    return <Loading/>
   }
 
   return (

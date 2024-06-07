@@ -1,4 +1,4 @@
-import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs, arrayUnion, updateDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import {auth, db } from '@/firebase/firebase';
 
@@ -149,5 +149,68 @@ export const getUserByUsername = async (username) => {
   } catch (error) {
     console.error('Error fetching user by username:', error);
     throw new Error('Failed to fetch user data');
+  }
+};
+
+/**
+ * Fetches a user's links from Firestore.
+ */
+export const addLinkToFirestore = async ({ title, link }) => {
+  const user = auth.currentUser;
+  if (!user) throw new Error('User not authenticated');
+
+  const userDocRef = doc(db, 'users', user.uid);
+  const userDoc = await getDoc(userDocRef);
+
+  let currentLinks = [];
+  let newId = 1;
+
+  if (userDoc.exists()) {
+    const userData = userDoc.data();
+    currentLinks = userData.links || [];
+    newId = currentLinks.length + 1;
+  }
+
+  const newLink = { id: newId, title, link };
+
+  if (currentLinks.length === 0) {
+    // If the links array does not exist, set the document with the new link
+    await setDoc(userDocRef, { links: [newLink] }, { merge: true });
+  } else {
+    // If the links array exists, update the document with the new link
+    await updateDoc(userDocRef, {
+      links: arrayUnion(newLink)
+    });
+  }
+};
+
+/**
+ * Update the users links array in Firestore
+ * @param {string} userId 
+ * @param {*} links 
+ */
+export const updateLinks = async (userId, links) => {
+  const userDocRef = doc(db, 'users', userId);
+
+  try {
+    await updateDoc(userDocRef, {
+      links: links
+    });
+    console.log('Links updated successfully');
+  } catch (error) {
+    console.error('Error updating links: ', error);
+    throw error;
+  }
+};
+
+export const getAllTemplates = async () => {
+  try {
+    const templatesCol = collection(db, 'templates');
+    const templateSnapshot = await getDocs(templatesCol);
+    const templateList = templateSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return templateList;
+  } catch (error) {
+    console.error("Error fetching templates: ", error);
+    throw error;
   }
 };

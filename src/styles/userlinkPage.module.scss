@@ -30,5 +30,59 @@
         width: 100%;
         max-width: $screen-md;
         height: auto;
+
+        .profileContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+            
+            img {
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                object-fit: cover;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .username {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: $color-white;
+            }
+        }
+
+        .linksContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+
+            ul {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                justify-content: flex-start;
+                align-items: center;
+                width: 100%;
+
+                li {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: flex-start;
+                    gap: 1rem;
+                    padding: 1rem;
+                    background-color: $color-white;
+                    color: $color-text;
+                    border-radius: 50px;
+                    cursor: pointer;
+                }
+            }
+        }
     }
 }
