@@ -1,24 +1,30 @@
 // app/layout.js
 import "@/styles/globals.scss";
 import { PrismicPreview } from "@prismicio/next";
-import { repositoryName, createClient } from "@/prismicio";
+import { repositoryName } from "@/prismicio";
 import ClientHeader from '@/components/ClientHeader';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AuthProvider } from '@/firebase/auth';
 import { PrismicProvider } from '@/context/PrismicContext';
-
-async function fetchSettingsAndNavigation() {
-  const client = createClient();
-  const settings = await client.getSingle("settings");
-  const navigation = await client.getSingle("navigation");
-  const page = await client.getByUID("page", "home");
-  return { settings, navigation, page };
-}
+import { fetchSettingsAndNavigation } from "@/lib/prismicClient";
 
 export default async function RootLayout({ children }) {
   const { settings, navigation, page } = await fetchSettingsAndNavigation();
+
+  if (!settings || !navigation || !page) {
+    return (
+      <html lang="en">
+        <head>
+          <title>Error</title>
+        </head>
+        <body>
+          <div>Error loading site settings. Please try again later.</div>
+        </body>
+      </html>
+    );
+  }
 
   return (
     <html lang="en">
