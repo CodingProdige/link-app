@@ -133,12 +133,14 @@ export const checkSubscriptionStatus = async (uid) => {
  */
 export const getUserByUsername = async (username) => {
   try {
+    console.log(`Fetching user by username: ${username}`);
     const usersRef = collection(db, 'users');
     const q = query(usersRef, where('username', '==', username));
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
       const userDoc = querySnapshot.docs[0];
+      console.log(`User found: ${userDoc.id}`);
       return { id: userDoc.id, ...userDoc.data() };
     } else {
       console.warn(`No user found for username: ${username}`);
