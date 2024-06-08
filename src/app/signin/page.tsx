@@ -10,14 +10,13 @@ import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 import Link from 'next/link';
 import { DEFAULT_THEME } from '@/lib/constants';
 
-const firebaseAuth = getAuth();
 
 async function handleSignIn(email: string, password: string, setError: (message: string) => void) {
   try {
-    const userCredential = await signInWithEmailAndPassword(firebaseAuth, email, password);
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    const theme = DEFAULT_THEME; // Set the theme value you want to pass
+    const theme = 'default'; // Set the theme value you want to pass
 
     // Call the generate-token API with the UID to get a custom token
     const response = await fetch('/api/generate-token', {
@@ -59,7 +58,7 @@ async function handleSignIn(email: string, password: string, setError: (message:
 async function handleGoogleSignIn(setError: (message: string) => void) {
   const provider = new GoogleAuthProvider();
   try {
-    const result = await signInWithPopup(firebaseAuth, provider);
+    const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
     const theme = 'default'; // Set the theme value you want to pass
