@@ -31,7 +31,7 @@ const LayoutComponent = ({ children }) => {
     <div className={styles.dashboard}>
       <ModalOverlay settings={settings} />
       {
-        userData.username && (
+        userData?.username && (
           <>
             <div className={styles.navContainer}>
               <DashboardNav settings={settings} />

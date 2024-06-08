@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       // Token is expired, remove the cookie
       const cookie = serialize('token', '', {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: 'production',
         maxAge: -1,
         path: '/',
       });
@@ -53,7 +53,7 @@ export async function POST(req: Request) {
     // If token verification fails, assume it's invalid and remove the cookie
     const cookie = serialize('token', '', {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: 'production',
       maxAge: -1,
       path: '/',
     });

@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   // Unset the token cookie
   const cookie = serialize('token', '', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: 'production',
     maxAge: -1,
     path: '/',
   });

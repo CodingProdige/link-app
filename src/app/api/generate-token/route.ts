@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     // Save the token as a cookie
     const cookie = serialize('token', customToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: 'production',
       maxAge: 60 * 60 * 24 * 7, // 1 week
       path: '/',
     });
