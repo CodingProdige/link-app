@@ -56,7 +56,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
       <div className={styles.background}></div>
       <div className={styles.innerContainer}>
         <div className={styles.profileContainer}>
-          {userData.photoUrl && (
+          {userData?.photoUrl && (
             <Image 
               src={userData.photoUrl} 
               alt={userData.username} 
@@ -66,10 +66,10 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
           )}
           <p className={styles.username}>@{userData.username}</p>
         </div>
-        {userData.links && (
+        {userData?.links && (
           <div className={styles.linksContainer}>
             <ul>
-              {userData.links.map((link: any) => (
+              {userData?.links.map((link: any) => (
                 <Link href={link.link} key={link.id} target="_blank" rel="noopener noreferrer">
                   <li key={link.id}>
                     {link.title}
