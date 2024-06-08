@@ -22,6 +22,7 @@ export default async function RootLayout({ children }) {
     <html lang="en">
       <head>
         <title>{page.data.page_title}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta name="title" content={page.data.page_title} />
         <meta name="description" content={page.data.meta_description} />
         {settings.data.noIndex && <meta name="robots" content="noindex" />}
