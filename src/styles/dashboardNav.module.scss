@@ -272,7 +272,11 @@
                 @media (min-width: $screen-lg) {
                     left: 14.5rem;
                     top: auto;
-                    bottom: -1rem;
+                    bottom: -2rem;
+                }
+
+                @media (max-width: $screen-lg) {
+                    right: -2rem;
                 }
 
                 .profileMenuUserDetailsContainer {

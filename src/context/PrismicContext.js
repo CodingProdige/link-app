@@ -16,11 +16,16 @@ export const PrismicProvider = ({ children }) => {
 
   useEffect(() => {
     const getData = async () => {
-      const { settings, navigation, page } = await fetchSettingsAndNavigation();
-      setSettings(settings);
-      setNavigation(navigation);
-      setPage(page);
-      setLoading(false);
+      try {
+        const { settings, navigation, page } = await fetchSettingsAndNavigation();
+        setSettings(settings);
+        setNavigation(navigation);
+        setPage(page);
+      } catch (error) {
+        console.error('Error fetching Prismic data:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     getData();
