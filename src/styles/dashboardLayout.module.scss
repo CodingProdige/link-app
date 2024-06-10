@@ -24,6 +24,7 @@
         @media (max-width: $screen-lg) {
             height: auto;
             width: 100%;
+            padding: 0;
         }
     }
 
@@ -35,7 +36,7 @@
         padding: 1rem;
 
         @media (max-width: $screen-lg) {
-            margin-top: 4rem;
+            margin-top: 5rem;
         }    
     }
 }

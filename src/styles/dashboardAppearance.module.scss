@@ -8,4 +8,47 @@
     flex-direction: row;
     justify-content: space-between;
     gap: 2rem;
+
+    .previewButtonContainer {
+        position: fixed;
+        bottom: 1rem;
+        left: 1rem;
+        right: 1rem;
+
+        @media (min-width: $screen-lg) {
+            display: none;
+        }
+
+
+        .previewButton {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            background-color: $color-secondary;
+            color: white;
+            border-radius: 50px;
+            width: auto;
+            cursor: pointer;
+            transition: background-color 0.3hs;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+
+            svg {
+                width: 1.5rem;
+                height: 1.5rem;
+                fill: $color-white;
+            }
+
+            &:hover {
+                background-color: $color-off-black;
+
+                svg {
+                    fill: $color-white;
+                }
+            }
+        }
+    }
 }

@@ -12,7 +12,8 @@
     "lint": "next lint",
     "slicemachine": "start-slicemachine",
     "format": "prettier --write .",
-    "postbuild": "node scripts/next-sitemap.js"
+    "postbuild": "node scripts/next-sitemap.js",
+    "deploy": "vercel --prod"
   },
   "dependencies": {
     "@prismicio/client": "^7.5.0",

@@ -1,50 +1,3 @@
-// // src/app/user/[username]/page.tsx
-// "use client";
-// import { useEffect, useState } from 'react';
-// import { db } from '@/firebase/firebase';
-// import { doc, getDoc } from 'firebase/firestore';
-// import Loading from '@/components/Loading';
-
-// export default function UserPage({ params }: { params: { username: string } }) {
-//   const { username } = params;
-//   const [userData, setUserData] = useState(null);
-
-//   useEffect(() => {
-//     if (username) {
-//       const fetchUserData = async () => {
-//         try {
-//           const userDoc = await getDoc(doc(db, 'users', username));
-//           if (userDoc.exists()) {
-//             setUserData(userDoc.data());
-//           } else {
-//             console.error('User not found');
-//           }
-//         } catch (error) {
-//           console.error('Error fetching user data:', error);
-//         }
-//       };
-
-//       fetchUserData();
-//     }
-//   }, [username]);
-
-//   if (!username) {
-//     return <Loading/>;
-//   }
-
-//   return (
-//     <div>
-//       <h1>User: {username}</h1>
-//       {userData && <pre>{JSON.stringify(userData, null, 2)}</pre>}
-//     </div>
-//   );
-// }
-
-
-
-
-
-
 "use client";
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
@@ -53,6 +6,8 @@ import styles from '@/styles/userlinkPage.module.scss';
 import Loading from '@/components/Loading';
 import Link from 'next/link';
 import { fetchUserDataByUsername } from '@/utils/firebaseUtils';
+import { usePrismic } from '@/context/PrismicContext';
+import { PrismicNextImage } from '@prismicio/next';
 
 interface UserPageProps {
   params: {
@@ -64,6 +19,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
   const [userData, setUserData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { settings, loading: prismicLoading } = usePrismic();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -88,7 +44,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
     fetchUserData();
   }, [username]);
 
-  if (loading) return <Loading />;
+  if (loading || prismicLoading) return <Loading />;
 
   if (error) {
     return <div className={styles.error}>{error}</div>;
@@ -111,7 +67,14 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
               height={150} 
             />
           )}
-          <p className={styles.username}>@{userData.username}</p>
+          <div className={styles.nameContainer}>
+            <p className={styles.username}>@{userData.username}</p>
+            {
+              userData?.name && (
+                <p className={styles.name}>{userData.name}</p>
+              )
+            }
+          </div>
         </div>
         {userData?.links && (
           <div className={styles.linksContainer}>
@@ -127,6 +90,13 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
           </div>
         )}
       </div>
+      {
+        userData?.fanslinkLogo && userData?.fanslinkLogo !== false && (
+          <div className={styles.fanslinkLogo}>
+            <PrismicNextImage field={settings.data.logo} />
+          </div>
+        )
+      }
     </div>
   );
 };
