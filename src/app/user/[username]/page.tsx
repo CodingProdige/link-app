@@ -1,6 +1,47 @@
-export default async function PublicLink({params: {username}}) {
-  return <div>{username}</div>;
+// src/app/user/[username]/page.tsx
+"use client";
+import { useEffect, useState } from 'react';
+import { db } from '@/firebase/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import Loading from '@/components/Loading';
+
+export default function UserPage({ params }: { params: { username: string } }) {
+  const { username } = params;
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    if (username) {
+      const fetchUserData = async () => {
+        try {
+          const userDoc = await getDoc(doc(db, 'users', username));
+          if (userDoc.exists()) {
+            setUserData(userDoc.data());
+          } else {
+            console.error('User not found');
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+
+      fetchUserData();
+    }
+  }, [username]);
+
+  if (!username) {
+    return <Loading/>;
+  }
+
+  return (
+    <div>
+      <h1>User: {username}</h1>
+      {userData && <pre>{JSON.stringify(userData, null, 2)}</pre>}
+    </div>
+  );
 }
+
+
+
 
 
 
