@@ -1,9 +1,58 @@
-// app/[username]/page.tsx
-import { notFound } from 'next/navigation';
+// // src/app/user/[username]/page.tsx
+// "use client";
+// import { useEffect, useState } from 'react';
+// import { db } from '@/firebase/firebase';
+// import { doc, getDoc } from 'firebase/firestore';
+// import Loading from '@/components/Loading';
+
+// export default function UserPage({ params }: { params: { username: string } }) {
+//   const { username } = params;
+//   const [userData, setUserData] = useState(null);
+
+//   useEffect(() => {
+//     if (username) {
+//       const fetchUserData = async () => {
+//         try {
+//           const userDoc = await getDoc(doc(db, 'users', username));
+//           if (userDoc.exists()) {
+//             setUserData(userDoc.data());
+//           } else {
+//             console.error('User not found');
+//           }
+//         } catch (error) {
+//           console.error('Error fetching user data:', error);
+//         }
+//       };
+
+//       fetchUserData();
+//     }
+//   }, [username]);
+
+//   if (!username) {
+//     return <Loading/>;
+//   }
+
+//   return (
+//     <div>
+//       <h1>User: {username}</h1>
+//       {userData && <pre>{JSON.stringify(userData, null, 2)}</pre>}
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+"use client";
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { notFound } from 'next/navigation';
 import styles from '@/styles/userlinkPage.module.scss';
-import { fetchUserDataByUsername, generateStaticParams } from '@/utils/firebaseUtils'
+import Loading from '@/components/Loading';
+import Link from 'next/link';
+import { fetchUserDataByUsername } from '@/utils/firebaseUtils';
 
 interface UserPageProps {
   params: {
@@ -11,24 +60,43 @@ interface UserPageProps {
   };
 }
 
-export async function generateMetadata({ params }: UserPageProps) {
-  const userData = await fetchUserDataByUsername(params.username).catch(() => notFound());
+const UserPage = ({ params: { username } }: UserPageProps) => {
+  const [userData, setUserData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  return {
-    openGraph: {
-      title: userData.username,
-      description: `Profile of ${userData.username}`,
-      images: [
-        {
-          url: userData.photoUrl,
-        },
-      ],
-    },
-  };
-}
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const data = await fetchUserDataByUsername(username);
 
-export default async function Page({ params }: UserPageProps) {
-  const userData = await fetchUserDataByUsername(params.username).catch(() => notFound());
+        if (!data) {
+          notFound();
+          return;
+        }
+
+        setUserData(data);
+      } catch (err) {
+        console.error('Error fetching user data:', err);
+        setError('Failed to load user data.');
+        notFound();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [username]);
+
+  if (loading) return <Loading />;
+
+  if (error) {
+    return <div className={styles.error}>{error}</div>;
+  }
+
+  if (!userData) {
+    return <div className={styles.error}>User data not found.</div>;
+  }
 
   return (
     <div className={styles.containerPublicProfile}>
@@ -36,11 +104,11 @@ export default async function Page({ params }: UserPageProps) {
       <div className={styles.innerContainer}>
         <div className={styles.profileContainer}>
           {userData?.photoUrl && (
-            <Image
-              src={userData.photoUrl}
-              alt={userData.username}
-              width={150}
-              height={150}
+            <Image 
+              src={userData.photoUrl} 
+              alt={userData.username} 
+              width={150} 
+              height={150} 
             />
           )}
           <p className={styles.username}>@{userData.username}</p>
@@ -61,6 +129,6 @@ export default async function Page({ params }: UserPageProps) {
       </div>
     </div>
   );
-}
+};
 
-export { generateStaticParams };
+export default UserPage;

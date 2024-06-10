@@ -21,24 +21,24 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <title>{page.data.page_title}</title>
+        <title>{page?.data?.page_title || "Default Title"}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <meta name="title" content={page.data.page_title} />
-        <meta name="description" content={page.data.meta_description} />
-        {settings.data.noIndex && <meta name="robots" content="noindex" />}
-        {settings.data.noFollow && <meta name="robots" content="nofollow" />}
-        <meta name="favicon" content={settings.data.favicon.url} />
-        <link rel="icon" href={settings.data.favicon.url} type="image/png" />
-        {settings.data.openGraphImage && (
+        <meta name="title" content={page?.data?.page_title || "Default Title"} />
+        <meta name="description" content={page?.data?.meta_description || "Default Description"} />
+        {settings?.data?.noIndex && <meta name="robots" content="noindex" />}
+        {settings?.data?.noFollow && <meta name="robots" content="nofollow" />}
+        <meta name="favicon" content={settings?.data?.favicon?.url || "/default-favicon.png"} />
+        <link rel="icon" href={settings?.data?.favicon?.url || "/default-favicon.png"} type="image/png" />
+        {settings?.data?.openGraphImage && (
           <>
             <meta property="og:type" content="website" />
             <meta property="og:url" content={"https://fansl.ink/"} />
-            <meta property="og:title" content={page.data.meta_title} />
-            <meta property="og:description" content={page.data.meta_description} />
-            <meta property="og:image" content={settings.data.meta_image.url} />
+            <meta property="og:title" content={page?.data?.meta_title || "Default OG Title"} />
+            <meta property="og:description" content={page?.data?.meta_description || "Default OG Description"} />
+            <meta property="og:image" content={settings?.data?.meta_image?.url || "/default-og-image.png"} />
           </>
         )}
-        <GoogleAnalytics trackingId={settings.data.googleAnalyticsTag} />
+        <GoogleAnalytics trackingId={settings?.data?.googleAnalyticsTag} />
       </head>
       <body>
         <AuthProvider>
