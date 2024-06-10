@@ -1,19 +1,26 @@
-// src/app/user/[username]/page.tsx
 "use client";
 import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { db } from '@/firebase/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, DocumentData } from 'firebase/firestore';
 import Loading from '@/components/Loading';
 
-export default function UserPage({ params }: { params: { username: string } }) {
-  const { username } = params;
-  const [userData, setUserData] = useState(null);
+interface UserPageProps {
+  params: {
+    username: string;
+  };
+}
+
+export default function UserPage({ params: { username } }: UserPageProps) {
+  const searchParams = useSearchParams();
+  const queryUsername = searchParams.get('nxtPusername') || username;
+  const [userData, setUserData] = useState<DocumentData | null>(null);
 
   useEffect(() => {
-    if (username) {
+    if (queryUsername) {
       const fetchUserData = async () => {
         try {
-          const userDoc = await getDoc(doc(db, 'users', username));
+          const userDoc = await getDoc(doc(db, 'users', queryUsername));
           if (userDoc.exists()) {
             setUserData(userDoc.data());
           } else {
@@ -26,19 +33,23 @@ export default function UserPage({ params }: { params: { username: string } }) {
 
       fetchUserData();
     }
-  }, [username]);
+  }, [queryUsername]);
 
-  if (!username) {
-    return <Loading/>;
+  if (!queryUsername) {
+    return <Loading />;
   }
 
   return (
     <div>
-      <h1>User: {username}</h1>
+      <h1>User: {queryUsername}</h1>
       {userData && <pre>{JSON.stringify(userData, null, 2)}</pre>}
     </div>
   );
 }
+
+
+
+
 
 
 

@@ -1,4 +1,3 @@
-"user client";
 // app/layout.js
 import "@/styles/globals.scss";
 import { PrismicPreview } from "@prismicio/next";
