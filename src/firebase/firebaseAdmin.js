@@ -1,6 +1,7 @@
-const admin = require('firebase-admin');
+// lib/firebaseAdmin.ts
+import admin from 'firebase-admin';
 
-if (!admin.apps.length) {
+if(!admin.apps.length){
   admin.initializeApp({
     credential: admin.credential.cert({
       type: process.env.FIREBASE_TYPE,
@@ -13,9 +14,9 @@ if (!admin.apps.length) {
       token_uri: process.env.FIREBASE_TOKEN_URI,
       auth_provider_x509_cert_url: process.env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
       client_x509_cert_url: process.env.FIREBASE_CLIENT_X509_CERT_URL,
-      universe_domain: process.env.FIREBASE_UNIVERSE_DOMAIN,
+      universe_domain: process.env.FIREBASE_UNIVERSE_DOMAIN,    
     }),
   });
 }
 
-module.exports = admin;
+export default admin;
