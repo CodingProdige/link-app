@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { collection, getDocs, query, where, addDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '@/firebase/firebase';
-import { DASHBOARD_ROUTES } from '@/lib/constants';
+import { DASHBOARD_ROUTES, PAYMENT_ROUTES } from '@/lib/constants';
 import { useRouter } from 'next/navigation'; // Correct import for Next.js 13+
 import styles from '@/styles/dashboardPricing.module.scss';
 import { checkSubscriptionStatus } from '@/utils/firebaseUtils'; // Import the utility function
@@ -49,8 +49,8 @@ const Pricing = ({ currentUser }) => {
 
     const docRef = await addDoc(collection(db, 'customers', currentUser.uid, 'checkout_sessions'), {
       price: priceId,
-      success_url: window.location.origin + DASHBOARD_ROUTES.DASHBOARD.ROUTE,
-      cancel_url: window.location.origin + DASHBOARD_ROUTES.DASHBOARD.ROUTE,
+      success_url: window.location.origin + PAYMENT_ROUTES.SUCCESS.ROUTE,
+      cancel_url: window.location.origin + PAYMENT_ROUTES.FAILED.ROUTE,
     });
 
     onSnapshot(docRef, (snap) => {

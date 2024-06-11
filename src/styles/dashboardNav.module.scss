@@ -33,7 +33,10 @@
     }
 
     .navLogoContainer {
-        @include flex-center;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
         height: auto;
         width: 100%;
 
@@ -43,7 +46,7 @@
             object-fit: contain;
         }
 
-        @media (max-width: $screen-lg) {
+        @media (min-width: $screen-lg) {
             margin-bottom: 0;
 
             img {

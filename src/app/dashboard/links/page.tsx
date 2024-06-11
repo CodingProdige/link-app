@@ -60,10 +60,6 @@ const Links = () => {
     return <Loading />;
   }
 
-  if (!userData) {
-    return <div>Error: No user data found.</div>;
-  }
-
   const handlePreviewToggle = () => {
     setIsPreviewSmall(prevState => !prevState);
   };

@@ -1,34 +1,37 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import styles from '@/styles/modalOverlay.module.scss';
-import { hasUsernameField, isUsernameTaken, updateUsername } from '@/utils/firebaseUtils';
-import { useAuth } from '@/firebase/auth';
-import { PrismicNextImage } from "@prismicio/next";
-import { useRouter } from 'next/navigation';
-import Loading from '@/components/Loading';
 
-const ModalOverlay = ({ settings }) => {
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/firebase/auth';
+import { usePrismic } from '@/context/PrismicContext';
+import { hasUsernameField, isUsernameTaken, updateUsername, fetchUserData, updateUserProfilePicture, resetPassword } from '@/utils/firebaseUtils';
+import Loading from '@/components/Loading';
+import { PrismicNextImage } from "@prismicio/next";
+import Image from 'next/image';
+import styles from '@/styles/dashboardAccount.module.scss';
+
+export default function Account() {
+  const { user, loading: authLoading } = useAuth();
+  const { settings, loading: prismicLoading } = usePrismic();
+  const router = useRouter();
   const [username, setUsername] = useState('');
-  const [usernameExists, setUsernameExists] = useState(false);
+  const [initialUsername, setInitialUsername] = useState('');
   const [usernameError, setUsernameError] = useState('');
   const [isUsernameValid, setIsUsernameValid] = useState(false);
   const [suggestedUsernames, setSuggestedUsernames] = useState([]);
-  const [modalVisible, setModalVisible] = useState(false);
-  const { user, loading } = useAuth();
-  const router = useRouter();
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
-    const checkUsername = async () => {
+    const fetchData = async () => {
       if (user && user.uid) {
-        const exists = await hasUsernameField(user.uid);
-        setUsernameExists(exists);
-        if (!exists) {
-          setModalVisible(true); // Show the modal if username does not exist
-        }
+        const data = await fetchUserData(user.uid);
+        setUserData(data);
+        setUsername(data?.username || '');
+        setInitialUsername(data?.username || '');
       }
     };
 
-    checkUsername();
+    fetchData();
   }, [user]);
 
   const validateUsername = (username) => {
@@ -40,7 +43,13 @@ const ModalOverlay = ({ settings }) => {
     const newUsername = e.target.value;
     setUsername(newUsername);
 
-    // Validate the username
+    if (newUsername === initialUsername) {
+      setUsernameError('');
+      setIsUsernameValid(false);
+      setSuggestedUsernames([]);
+      return;
+    }
+
     if (!validateUsername(newUsername)) {
       setUsernameError('Username contains invalid characters. Only letters, numbers, dashes, and underscores are allowed.');
       setIsUsernameValid(false);
@@ -88,12 +97,12 @@ const ModalOverlay = ({ settings }) => {
     setSuggestedUsernames([]);
   };
 
-  const handleContinueClick = async () => {
-    if (user && user.uid && isUsernameValid) {
+  const handleSaveClick = async () => {
+    if (user && user.uid && isUsernameValid && username !== initialUsername) {
       try {
         await updateUsername(user.uid, username);
-        setModalVisible(false); // Hide the modal on successful username update
-        router.reload(); // Reload the page to reflect the new username
+        setInitialUsername(username);
+        window.location.reload();
       } catch (error) {
         setUsernameError('Error updating username');
       }
@@ -110,30 +119,36 @@ const ModalOverlay = ({ settings }) => {
     }
   };
 
-  if (!modalVisible) {
-    return null; // Hide the modal
-  }
 
-  if (loading) {
+  const handleResetPassword = async () => {
+    if (user && user.email) {
+      try {
+        await resetPassword(user.email);
+        alert('Password reset email sent!');
+      } catch (error) {
+        alert('Error sending password reset email');
+      }
+    }
+  };
+
+  if (authLoading || prismicLoading) {
     return <Loading />;
   }
 
+  const isDataChanged = username !== initialUsername;
+
   return (
-    <>
-      {!usernameExists && (
-        <div className={styles.overlay}>
-          <div className={styles.logoContainer}>
-            <PrismicNextImage field={settings.data.logo} />
-          </div>
-          <div className={styles.modal}>
-            <div className={styles.titleText}>
-              <h2>Choose a username</h2>
-              <p>Choose a Fanslink URL for your new shareable link. You can always change it later.</p>
-            </div>
+    <div className={styles.accountPage}>
+        <h4>Account</h4>
+      <div className={styles.accountUsernameContainer}>
+        <div className={styles.accountUsernameInnerContainer}>
+          <div className={styles.field}>
+            <label htmlFor="username">Username</label>
             <div className={styles.inputContainer}>
               <span className={styles.baseUrl}>fansl.ink /</span>
               <input
                 type="text"
+                id="username"
                 value={username}
                 onChange={handleUsernameChange}
                 placeholder="Username"
@@ -153,12 +168,21 @@ const ModalOverlay = ({ settings }) => {
                 </ul>
               </div>
             )}
-            <button disabled={!isUsernameValid} onClick={handleContinueClick}>Continue</button>
           </div>
+          {isDataChanged && (
+            <button disabled={!isUsernameValid} onClick={handleSaveClick}>
+              Save
+            </button>
+          )}
         </div>
-      )}
-    </>
+      </div>
+      <div className={styles.accountProfileContainer}>
+        <div className={styles.emailContainer}>
+          <label>Email</label>
+          <p>{user?.email}</p>
+          <p className={styles.resetPassword} onClick={handleResetPassword}>Reset Password</p>
+        </div>
+      </div>
+    </div>
   );
-};
-
-export default ModalOverlay;
+}

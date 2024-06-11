@@ -9,6 +9,11 @@
     justify-content: space-between;
     gap: 2rem;
 
+    @media (max-width: $screen-lg) {
+        flex-direction: column;
+    }
+
+
     .previewButtonContainer {
         position: fixed;
         bottom: 1rem;
@@ -27,7 +32,7 @@
             justify-content: center;
             gap: 0.5rem;
             padding: 1rem;
-            background-color: $color-secondary;
+            background-color: $color-off-black;
             color: white;
             border-radius: 50px;
             width: auto;
@@ -42,8 +47,15 @@
                 fill: $color-white;
             }
 
+            p {
+                font-size: 1rem;
+                font-weight: 500;
+                color: $color-white;
+            
+            }
+
             &:hover {
-                background-color: $color-off-black;
+                background-color: $color-off-black-light;
 
                 svg {
                     fill: $color-white;

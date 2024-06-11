@@ -2,12 +2,12 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import styles from '@/styles/userlinkPage.module.scss';
 import Loading from '@/components/Loading';
 import Link from 'next/link';
 import { fetchUserDataByUsername } from '@/utils/firebaseUtils';
 import { usePrismic } from '@/context/PrismicContext';
 import { PrismicNextImage } from '@prismicio/next';
+import { THEMES } from '@/lib/themes';
 
 interface UserPageProps {
   params: {
@@ -15,11 +15,13 @@ interface UserPageProps {
   };
 }
 
+
 const UserPage = ({ params: { username } }: UserPageProps) => {
   const [userData, setUserData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { settings, loading: prismicLoading } = usePrismic();
+  const [theme, setTheme] = useState(THEMES.default);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -32,6 +34,10 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
         }
 
         setUserData(data);
+
+        if (data.theme) {
+          setTheme(data.theme);
+        }
       } catch (err) {
         console.error('Error fetching user data:', err);
         setError('Failed to load user data.');
@@ -47,42 +53,39 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
   if (loading || prismicLoading) return <Loading />;
 
   if (error) {
-    return <div className={styles.error}>{error}</div>;
+    return <div style={theme.error}>{error}</div>;
   }
 
   if (!userData) {
-    return <div className={styles.error}>User data not found.</div>;
+    return <div style={theme.error}>User data not found.</div>;
   }
 
   return (
-    <div className={styles.containerPublicProfile}>
-      <div className={styles.background}></div>
-      <div className={styles.innerContainer}>
-        <div className={styles.profileContainer}>
+    <div style={theme.containerPublicProfile}>
+      <div style={theme.background}></div>
+      <div style={theme.innerContainer}>
+        <div style={theme.profileContainer}>
           {userData?.photoUrl && (
             <Image 
               src={userData.photoUrl} 
               alt={userData.username} 
               width={150} 
               height={150} 
+              style={theme.profileImage}
             />
           )}
-          <div className={styles.nameContainer}>
-            <p className={styles.username}>@{userData.username}</p>
-            {
-              userData?.name && (
-                <p className={styles.name}>{userData.name}</p>
-              )
-            }
+          <div style={theme.nameContainer}>
+            <p style={theme.username}>@{userData.username}</p>
+            {userData?.name && <p style={theme.name}>{userData.name}</p>}
           </div>
         </div>
         {userData?.links && (
-          <div className={styles.linksContainer}>
-            <ul>
+          <div style={theme.linksContainer}>
+            <ul style={theme.linksList}>
               {userData?.links.map((link: any) => (
-                <Link href={link.link} key={link.id} target="_blank" rel="noopener noreferrer">
-                  <li key={link.id}>
-                    {link.title}
+                <Link style={theme.linkPill} href={link.link} key={link.id} target="_blank" rel="noopener noreferrer">
+                  <li style={theme.linkItem} key={link.id}>
+                    <p style={theme.linkTitle}>{link.title}</p>
                   </li>
                 </Link>
               ))}
@@ -90,13 +93,11 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
           </div>
         )}
       </div>
-      {
-        userData?.fanslinkLogo && userData?.fanslinkLogo !== false && (
-          <div className={styles.fanslinkLogo}>
-            <PrismicNextImage field={settings.data.logo} />
-          </div>
-        )
-      }
+      {userData?.fanslinkLogo && userData?.fanslinkLogo !== false && (
+        <div style={theme.fanslinkLogo}>
+          <PrismicNextImage field={settings.data.logo} style={theme.fanslinkLogoImage} />
+        </div>
+      )}
     </div>
   );
 };

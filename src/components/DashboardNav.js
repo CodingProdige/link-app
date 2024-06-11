@@ -75,6 +75,10 @@ const DashboardNav = ({ settings }) => {
 
   const handleProfileMenuToggle = () => setProfileMenuOpen(prevState => !prevState);
   const handleGoPremiumClick = () => router.push('/dashboard/premium');
+  const handleProfileMenuNavigation = (route) => {
+    setProfileMenuOpen(false)
+    router.push(`/dashboard/${route}`);
+  };
 
 
   const dashboardRoutesArray = Object.values(DASHBOARD_ROUTES);
@@ -156,7 +160,7 @@ const DashboardNav = ({ settings }) => {
         <div className={styles.profileImageContainer}>
           {userData && (
             <div className={styles.profileInnerContainer} onClick={handleProfileMenuToggle}>
-              <Image src={userData.photoURL || getRandomHumanImage()} alt={userData.displayName} width={40} height={40} />
+              <Image src={userData.photoUrl || getRandomHumanImage()} alt={userData.displayName} width={40} height={40} />
               <div className={styles.userInfo}>
                 <p>@{userData.username}</p>
               </div>
@@ -167,7 +171,7 @@ const DashboardNav = ({ settings }) => {
             <div className={styles.profileDropdownMenu}>
               {userData && (
                 <div className={styles.profileMenuUserDetailsContainer}>
-                  <Image src={userData.photoURL || getRandomHumanImage()} alt={userData.displayName} width={40} height={40} />
+                  <Image src={userData?.photoUrl || getRandomHumanImage()} alt={userData.displayName} width={40} height={40} />
                   <div className={styles.userInfo}>
                     <p>@{userData.username}</p>
                     <sub>fansl.ink/user/{userData.username}</sub>
@@ -177,7 +181,7 @@ const DashboardNav = ({ settings }) => {
               <ul>
                 <div className={styles.dropdownMenuContainer}>
                   <h5>Account</h5>
-                  <li>
+                  <li onClick={() => handleProfileMenuNavigation(ROUTES.ACCOUNT.ROUTE_HANDLE)}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-circle" viewBox="0 0 16 16">
                       <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                       <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>

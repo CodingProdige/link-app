@@ -1,5 +1,6 @@
 import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs, arrayUnion, updateDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { sendPasswordResetEmail } from "firebase/auth";
 import {auth, db } from '@/firebase/firebase';
 
 /**
@@ -211,6 +212,31 @@ export const getAllTemplates = async () => {
   } catch (error) {
     console.error("Error fetching templates: ", error);
     throw error;
+  }
+};
+
+
+export const updateUserProfilePicture = async (userId, file) => {
+  const storage = getStorage();
+  const storageRef = ref(storage, `profilePictures/${userId}/${file.name}`);
+  await uploadBytes(storageRef, file);
+  const downloadURL = await getDownloadURL(storageRef);
+
+  const userDocRef = doc(db, 'users', userId);
+  await updateDoc(userDocRef, {
+    profilePicture: downloadURL
+  });
+
+  return downloadURL;
+};
+
+
+export const resetPassword = async (email) => {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    console.log("Password reset email sent.");
+  } catch (error) {
+    console.error("Error sending password reset email:", error);
   }
 };
 

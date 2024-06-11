@@ -13,9 +13,24 @@ export const ROUTES = {
         ROUTE:'/signup'
     },
     DASHBOARD: '/dashboard',
-    PROFILE: '/profile',
+    ACCOUNT: {
+        NAME:'Account',
+        ROUTE_HANDLE:'account',
+        ROUTE:'/dashboard/account'
+    }
     // Add other routes as needed
 };
+
+export const PAYMENT_ROUTES = {
+    SUCCESS: {
+        NAME:'Payment Success',
+        ROUTE:'/payment/success'
+    },
+    FAILED: {
+        NAME:'Payment Failed',
+        ROUTE:'/payment/failed'
+    }
+}
 
 export const DASHBOARD_ROUTES = {
     DASHBOARD: {
@@ -38,7 +53,7 @@ export const DASHBOARD_ROUTES = {
     ANALYTICS: {
         NAME:'Analytics',
         ROUTE:'/dashboard/analytics'
-    }
+    },
     // Add other dashboard routes as needed
 };
 
