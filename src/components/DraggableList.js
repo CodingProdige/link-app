@@ -57,9 +57,20 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                       <RiDraggable />
                     </span>
 
-                    <div className={styles.linkDataContainer}>
-                      <span id={styles.linkTitle}>{item.title}</span>
-                      <span id={styles.linkUrl}>{item.link}</span>
+                    <div className={styles.dataContainer}>
+                      <div className={styles.linkDataContainer}>
+                        <span id={styles.linkTitle}>{item.title}</span>
+                        <span id={styles.linkUrl}>{item.link}</span>
+                      </div>
+
+                      <div className={styles.dataFunctions}>
+                        <button className={styles.editButton}>Edit</button>
+                        <button className={styles.copyButton}>Copy</button>
+                      </div>
+                    </div>
+
+                    <div>
+                      <button className={styles.deleteButton}>Delete</button>
                     </div>
                   </div>
                 )}

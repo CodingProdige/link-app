@@ -31,33 +31,50 @@
         cursor: grabbing;
       }
 
-      .linkDataContainer {
+      .dataContainer {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
         justify-content: flex-start;
         align-items: flex-start;
         width: 100%;
-        overflow: hidden;
 
-        #linkTitle {
-          font-size: 1rem;
-          font-weight: 700;
-          color: $color-text;
-          white-space: nowrap;        // Prevent text from wrapping to the next line
-          overflow: hidden;           // Hide the overflowed text
-          text-overflow: ellipsis;    // Display an ellipsis (...) to indicate the text is truncated
+        .linkDataContainer {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          justify-content: flex-start;
+          align-items: flex-start;
+          width: 100%;
+          overflow: hidden;
+  
+          #linkTitle {
+            font-size: 1rem;
+            font-weight: 700;
+            color: $color-text;
+            white-space: nowrap;        // Prevent text from wrapping to the next line
+            overflow: hidden;           // Hide the overflowed text
+            text-overflow: ellipsis;    // Display an ellipsis (...) to indicate the text is truncated
+          }
+          
+          #linkUrl {
+            font-size: 1rem;
+            font-weight: 400;
+            color: $color-text-light;
+            white-space: nowrap;        // Prevent text from wrapping to the next line
+            overflow: hidden;           // Hide the overflowed text
+            text-overflow: ellipsis;    // Display an ellipsis (...) to indicate the text is truncated
+          }
+          
         }
-        
-        #linkUrl {
-          font-size: 1rem;
-          font-weight: 400;
-          color: $color-text-light;
-          white-space: nowrap;        // Prevent text from wrapping to the next line
-          overflow: hidden;           // Hide the overflowed text
-          text-overflow: ellipsis;    // Display an ellipsis (...) to indicate the text is truncated
+
+        .dataFunctions {
+          display: flex;
+          flex-direction: row;
+          gap: 1rem;
+          justify-content: flex-start;
+          align-items: center;
         }
-        
       }
     }
 }
