@@ -10,11 +10,12 @@ import { AuthProvider } from '@/firebase/auth';
 import { PrismicProvider } from '@/context/PrismicContext';
 import { fetchSettingsAndNavigation } from "@/lib/prismicClient";
 import Loading from "@/components/Loading";
+import Footer from "@/components/Footer";
 
 export default async function RootLayout({ children }) {
-  const { settings, navigation, page } = await fetchSettingsAndNavigation();
+  const { settings, navigation, page, footer, faqs } = await fetchSettingsAndNavigation();
 
-  if (!settings || !navigation || !page) {
+  if (!settings || !navigation || !page || !footer || !faqs) {
     return <Loading/>
   }
 
@@ -45,6 +46,7 @@ export default async function RootLayout({ children }) {
           <PrismicProvider>
             <ClientHeader settings={settings} navigation={navigation} />
             {children}
+            <Footer settings={settings} footer={footer}/>
             <Analytics />
             <SpeedInsights />
           </PrismicProvider>

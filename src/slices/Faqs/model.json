@@ -1,0 +1,61 @@
+{
+  "id": "faqs",
+  "type": "SharedSlice",
+  "name": "Faqs",
+  "description": "Faqs",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "title": {
+          "type": "Text",
+          "config": {
+            "label": "Title",
+            "placeholder": ""
+          }
+        },
+        "super_text": {
+          "type": "Text",
+          "config": {
+            "label": "Super Text",
+            "placeholder": ""
+          }
+        },
+        "sub_text": {
+          "type": "Text",
+          "config": {
+            "label": "Sub Text",
+            "placeholder": ""
+          }
+        },
+        "background_color": {
+          "type": "Color",
+          "config": {
+            "label": "Background Color",
+            "placeholder": ""
+          }
+        },
+        "text_color": {
+          "type": "Color",
+          "config": {
+            "label": "Text Color",
+            "placeholder": ""
+          }
+        },
+        "cards_background_color": {
+          "type": "Color",
+          "config": {
+            "label": "Cards Background Color",
+            "placeholder": ""
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

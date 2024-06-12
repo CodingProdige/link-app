@@ -5,6 +5,216 @@ import type * as prismic from "@prismicio/client";
 type Simplify<T> = { [KeyType in keyof T]: T[KeyType] };
 
 /**
+ * Item in *FAQs → faq*
+ */
+export interface FaqsDocumentDataFaqItem {
+  /**
+   * Question field in *FAQs → faq*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: faqs.faq[].question
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  question: prismic.KeyTextField;
+
+  /**
+   * Answer field in *FAQs → faq*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: faqs.faq[].answer
+   * - **Documentation**: https://prismic.io/docs/field#rich-text-title
+   */
+  answer: prismic.RichTextField;
+}
+
+/**
+ * Content for FAQs documents
+ */
+interface FaqsDocumentData {
+  /**
+   * faq field in *FAQs*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: faqs.faq[]
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/field#group
+   */
+  faq: prismic.GroupField<Simplify<FaqsDocumentDataFaqItem>>;
+}
+
+/**
+ * FAQs document from Prismic
+ *
+ * - **API ID**: `faqs`
+ * - **Repeatable**: `false`
+ * - **Documentation**: https://prismic.io/docs/custom-types
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type FaqsDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithoutUID<Simplify<FaqsDocumentData>, "faqs", Lang>;
+
+/**
+ * Item in *Footer → Link*
+ */
+export interface FooterDocumentDataLinkItem {
+  /**
+   * Link Menu field in *Footer → Link*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: footer.link[].link_menu
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  link_menu: prismic.KeyTextField;
+
+  /**
+   * Link Label field in *Footer → Link*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: footer.link[].link_label
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  link_label: prismic.KeyTextField;
+
+  /**
+   * Link Url field in *Footer → Link*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: footer.link[].link_url
+   * - **Documentation**: https://prismic.io/docs/field#link-content-relationship
+   */
+  link_url: prismic.LinkField;
+}
+
+/**
+ * Item in *Footer → Social Links*
+ */
+export interface FooterDocumentDataSocialLinksItem {
+  /**
+   * Platform field in *Footer → Social Links*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: footer.social_links[].platform
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  platform: prismic.KeyTextField;
+
+  /**
+   * Social Link field in *Footer → Social Links*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: footer.social_links[].social_link
+   * - **Documentation**: https://prismic.io/docs/field#link-content-relationship
+   */
+  social_link: prismic.LinkField;
+
+  /**
+   * Social Icon field in *Footer → Social Links*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: footer.social_links[].social_icon
+   * - **Documentation**: https://prismic.io/docs/field#image
+   */
+  social_icon: prismic.ImageField<never>;
+}
+
+/**
+ * Content for Footer documents
+ */
+interface FooterDocumentData {
+  /**
+   * Link field in *Footer*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: footer.link[]
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/field#group
+   */
+  link: prismic.GroupField<Simplify<FooterDocumentDataLinkItem>>;
+
+  /**
+   * Footer Sub Text field in *Footer*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: footer.footer_sub_text
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  footer_sub_text: prismic.KeyTextField;
+
+  /**
+   * Background Color field in *Footer*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: footer.background_color
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  background_color: prismic.ColorField;
+
+  /**
+   * Background Image field in *Footer*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: footer.background_image
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/field#image
+   */
+  background_image: prismic.ImageField<never>;
+
+  /**
+   * Sub Text Color field in *Footer*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: footer.sub_text_color
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  sub_text_color: prismic.ColorField;
+
+  /**
+   * Social Links field in *Footer*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: footer.social_links[]
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/field#group
+   */
+  social_links: prismic.GroupField<Simplify<FooterDocumentDataSocialLinksItem>>;
+}
+
+/**
+ * Footer document from Prismic
+ *
+ * - **API ID**: `footer`
+ * - **Repeatable**: `false`
+ * - **Documentation**: https://prismic.io/docs/custom-types
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type FooterDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithoutUID<
+    Simplify<FooterDocumentData>,
+    "footer",
+    Lang
+  >;
+
+/**
  * Item in *Navigation → Links*
  */
 export interface NavigationDocumentDataLinksItem {
@@ -62,6 +272,7 @@ export type NavigationDocument<Lang extends string = string> =
   >;
 
 type PageDocumentDataSlicesSlice =
+  | FaqsSlice
   | ColorBlockSlice
   | PricingSlice
   | HeroSlice
@@ -365,6 +576,8 @@ export type SettingsDocument<Lang extends string = string> =
   >;
 
 export type AllDocumentTypes =
+  | FaqsDocument
+  | FooterDocument
   | NavigationDocument
   | PageDocument
   | PricingOptionsDocument
@@ -569,6 +782,98 @@ export type ColorBlockSlice = prismic.SharedSlice<
   "color_block",
   ColorBlockSliceVariation
 >;
+
+/**
+ * Primary content in *Faqs → Primary*
+ */
+export interface FaqsSliceDefaultPrimary {
+  /**
+   * Title field in *Faqs → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: faqs.primary.title
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  title: prismic.KeyTextField;
+
+  /**
+   * Super Text field in *Faqs → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: faqs.primary.super_text
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  super_text: prismic.KeyTextField;
+
+  /**
+   * Sub Text field in *Faqs → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: faqs.primary.sub_text
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  sub_text: prismic.KeyTextField;
+
+  /**
+   * Background Color field in *Faqs → Primary*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: faqs.primary.background_color
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  background_color: prismic.ColorField;
+
+  /**
+   * Text Color field in *Faqs → Primary*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: faqs.primary.text_color
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  text_color: prismic.ColorField;
+
+  /**
+   * Cards Background Color field in *Faqs → Primary*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: faqs.primary.cards_background_color
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  cards_background_color: prismic.ColorField;
+}
+
+/**
+ * Default variation for Faqs Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slice
+ */
+export type FaqsSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<FaqsSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *Faqs*
+ */
+type FaqsSliceVariation = FaqsSliceDefault;
+
+/**
+ * Faqs Shared Slice
+ *
+ * - **API ID**: `faqs`
+ * - **Description**: Faqs
+ * - **Documentation**: https://prismic.io/docs/slice
+ */
+export type FaqsSlice = prismic.SharedSlice<"faqs", FaqsSliceVariation>;
 
 /**
  * Primary content in *Hero → Primary*
@@ -1385,6 +1690,13 @@ declare module "@prismicio/client" {
 
   namespace Content {
     export type {
+      FaqsDocument,
+      FaqsDocumentData,
+      FaqsDocumentDataFaqItem,
+      FooterDocument,
+      FooterDocumentData,
+      FooterDocumentDataLinkItem,
+      FooterDocumentDataSocialLinksItem,
       NavigationDocument,
       NavigationDocumentData,
       NavigationDocumentDataLinksItem,
@@ -1407,6 +1719,10 @@ declare module "@prismicio/client" {
       ColorBlockSliceDefaultPrimary,
       ColorBlockSliceVariation,
       ColorBlockSliceDefault,
+      FaqsSlice,
+      FaqsSliceDefaultPrimary,
+      FaqsSliceVariation,
+      FaqsSliceDefault,
       HeroSlice,
       HeroSliceHeroWithImageRightPrimary,
       HeroSliceVariation,

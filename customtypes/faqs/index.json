@@ -1,0 +1,36 @@
+{
+  "format": "custom",
+  "id": "faqs",
+  "label": "FAQs",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "faq": {
+        "type": "Group",
+        "config": {
+          "label": "faq",
+          "repeat": true,
+          "fields": {
+            "question": {
+              "type": "Text",
+              "config": {
+                "label": "Question",
+                "placeholder": ""
+              }
+            },
+            "answer": {
+              "type": "StructuredText",
+              "config": {
+                "label": "Answer",
+                "placeholder": "",
+                "allowTargetBlank": true,
+                "multi": "paragraph,strong"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

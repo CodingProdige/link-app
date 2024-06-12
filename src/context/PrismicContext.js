@@ -11,16 +11,20 @@ export const usePrismic = () => {
 export const PrismicProvider = ({ children }) => {
   const [settings, setSettings] = useState(null);
   const [navigation, setNavigation] = useState(null);
+  const [faqs, setFaqs] = useState(null);
+  const [footer, setFooter] = useState(null);
   const [page, setPage] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getData = async () => {
       try {
-        const { settings, navigation, page } = await fetchSettingsAndNavigation();
+        const { settings, navigation, page, footer, faqs } = await fetchSettingsAndNavigation();
         setSettings(settings);
         setNavigation(navigation);
         setPage(page);
+        setFooter(footer);
+        setFaqs(faqs);
       } catch (error) {
         console.error('Error fetching Prismic data:', error);
       } finally {
@@ -32,7 +36,7 @@ export const PrismicProvider = ({ children }) => {
   }, []);
 
   return (
-    <PrismicContext.Provider value={{ settings, navigation, page, loading }}>
+    <PrismicContext.Provider value={{ settings, navigation, page, loading, footer, faqs }}>
       {children}
     </PrismicContext.Provider>
   );

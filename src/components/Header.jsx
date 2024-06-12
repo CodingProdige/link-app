@@ -54,6 +54,7 @@ export default function Header({ settings, navigation, pathname, user, isOpen, t
             })}
           </ul>
         </nav>
+        
         <div className={styles.profileButtons}>
           {user ? (
             <Link href={DASHBOARD_ROUTES.DASHBOARD.ROUTE}>

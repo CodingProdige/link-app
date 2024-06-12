@@ -1,0 +1,103 @@
+{
+  "format": "custom",
+  "id": "footer",
+  "label": "Footer",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "link": {
+        "type": "Group",
+        "config": {
+          "label": "Link",
+          "repeat": true,
+          "fields": {
+            "link_menu": {
+              "type": "Text",
+              "config": {
+                "label": "Link Menu",
+                "placeholder": ""
+              }
+            },
+            "link_label": {
+              "type": "Text",
+              "config": {
+                "label": "Link Label",
+                "placeholder": ""
+              }
+            },
+            "link_url": {
+              "type": "Link",
+              "config": {
+                "label": "Link Url",
+                "placeholder": "",
+                "select": null
+              }
+            }
+          }
+        }
+      },
+      "footer_sub_text": {
+        "type": "Text",
+        "config": {
+          "label": "Footer Sub Text",
+          "placeholder": ""
+        }
+      },
+      "background_color": {
+        "type": "Color",
+        "config": {
+          "label": "Background Color",
+          "placeholder": ""
+        }
+      },
+      "background_image": {
+        "type": "Image",
+        "config": {
+          "label": "Background Image",
+          "constraint": {},
+          "thumbnails": []
+        }
+      },
+      "sub_text_color": {
+        "type": "Color",
+        "config": {
+          "label": "Sub Text Color",
+          "placeholder": ""
+        }
+      },
+      "social_links": {
+        "type": "Group",
+        "config": {
+          "label": "Social Links",
+          "repeat": true,
+          "fields": {
+            "platform": {
+              "type": "Text",
+              "config": {
+                "label": "Platform",
+                "placeholder": ""
+              }
+            },
+            "social_link": {
+              "type": "Link",
+              "config": {
+                "label": "Social Link",
+                "placeholder": "",
+                "select": null
+              }
+            },
+            "social_icon": {
+              "type": "Image",
+              "config": {
+                "label": "Social Icon",
+                "constraint": {},
+                "thumbnails": []
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

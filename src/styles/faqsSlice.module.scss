@@ -1,0 +1,82 @@
+// styles/faqsSlice.module.scss
+
+@import './variables';
+@import './mixins';
+
+
+.faqsSection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10rem 2rem;
+    width: 100%;
+    height: auto;
+
+    .faqsInnerContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2rem;
+        width: 100%;
+        max-width: $screen-xxl;
+        height: auto;
+
+
+        .faqsHeader {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            height: auto;
+    
+            .superText {
+                font-size: 1rem;
+                font-weight: 700;
+            }
+    
+            .subText {
+                font-size: 1rem;
+                font-weight: 400;
+            }
+        }
+    
+        .faqsExpandablesContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            height: auto;
+
+            .faqsExpandable {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+                width: 100%;
+                height: auto;
+                padding: 2rem;
+                border-radius: 25px;
+
+                .faqsExpandableHeader {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 1rem;
+                    width: 100%;
+                    height: auto;
+
+                    .question {
+                        font-size: 1.5rem;
+                        font-weight: 700;
+                    }
+
+                }
+            }
+        }
+
+    }
+}

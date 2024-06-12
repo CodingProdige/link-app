@@ -1,0 +1,39 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"title": {
+				"__TYPE__": "FieldContent",
+				"value": "author",
+				"type": "Text"
+			},
+			"super_text": {
+				"__TYPE__": "FieldContent",
+				"value": "even",
+				"type": "Text"
+			},
+			"sub_text": {
+				"__TYPE__": "FieldContent",
+				"value": "than",
+				"type": "Text"
+			},
+			"background_color": {
+				"__TYPE__": "FieldContent",
+				"value": "#5fcb35",
+				"type": "Color"
+			},
+			"text_color": {
+				"__TYPE__": "FieldContent",
+				"value": "#3cd5d2",
+				"type": "Color"
+			},
+			"cards_background_color": {
+				"__TYPE__": "FieldContent",
+				"value": "#cdc5fb",
+				"type": "Color"
+			}
+		},
+		"items": []
+	}
+]
