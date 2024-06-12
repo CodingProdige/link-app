@@ -29,10 +29,7 @@
 
         .logoContainer {
             @include flex-center;
-
-            @media (max-width: $screen-lg) {
-                width: 100%;
-            }
+            width: max-content;
 
             .logoDesktop {
                 @include flex-center;
@@ -72,6 +69,13 @@
         }
 
         .menuNav {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            padding-left: 3rem;
+
             @media (max-width: $screen-lg) {
                 display: none;
             }
@@ -84,8 +88,8 @@
                 list-style: none;
 
                 li {
-                    font-size: clamp(16px, 4vmin, 18px);
-                    font-weight: 500;
+                    font-size: 1.1rem;
+                    font-weight: 400;
                     cursor: pointer;
     
                     a {
@@ -99,7 +103,6 @@
     
                     &.active {
                         a {
-                            font-size: clamp(16px, 4vmin, 18px);
                             color: $color-primary;
                         }
                     }
@@ -128,6 +131,7 @@
                 cursor: pointer;
                 background-color: $color-primary;
                 color: $color-white;
+                text-wrap: nowrap;
 
                 &:hover {
                     background-color: $color-black;
@@ -140,8 +144,9 @@
                 border-radius: 50px;
                 font-size: clamp(16px, 4vmin, 18px);
                 cursor: pointer;
-                background-color: $color-primary;
+                background-color: $color-off-black;
                 color: $color-white;
+                text-wrap: nowrap;
 
                 &:hover {
                     background-color: $color-black;
@@ -154,11 +159,12 @@
                 border-radius: 8px;
                 font-size: clamp(16px, 4vmin, 18px);
                 cursor: pointer;
-                background-color: $color-accent-dark;
+                background-color: $color-primary;
                 color: $color-white;
+                text-wrap: nowrap;
 
                 &:hover {
-                    background-color: $color-black;
+                    background-color: $color-secondary;
                     color: $color-white;
                 }
             }

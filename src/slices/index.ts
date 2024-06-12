@@ -11,6 +11,7 @@ export const components = {
   image_cards: dynamic(() => import("./ImageCards")),
   pricing: dynamic(() => import("./Pricing")),
   quote: dynamic(() => import("./Quote")),
+  rich_text: dynamic(() => import("./RichText")),
   text: dynamic(() => import("./Text")),
   text_with_image: dynamic(() => import("./TextWithImage")),
 };

@@ -1,6 +1,8 @@
+"use client";
 import * as prismic from "@prismicio/client";
 import { PrismicNextImage } from "@prismicio/next";
 import clsx from "clsx";
+import styles from "@/styles/imageSlice.module.scss";
 
 import { Bounded } from "@/components/Bounded";
 
@@ -8,16 +10,12 @@ const Image = ({ slice, index }) => {
   const image = slice.primary.image;
 
   return (
-    <Bounded
-      as="section"
-      className={clsx("bg-white", index === 0 && "pt-0 md:pt-0")}
-    >
+    <div className={styles.imageSlice}>
       {prismic.isFilled.image(image) && (
-        <div className="bg-gray-100">
-          <PrismicNextImage field={image} sizes="100vw" className="w-full" />
+        <div className={styles.imageContainer} style={{backgroundImage: `url("${slice.primary.image.url}")`}}>
         </div>
       )}
-    </Bounded>
+    </div>
   );
 };
 

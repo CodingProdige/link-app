@@ -1,0 +1,28 @@
+// styles/imageSlice.module.scss
+
+@import './variables';
+@import './mixins';
+
+.imageSlice {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .imageContainer {
+        width: 100%;
+        padding: 15rem;
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+
+        @media (max-width: $screen-lg) {
+            padding: 10rem;
+        }
+
+        @media (max-width: $screen-md) {
+            padding: 8rem;
+        }
+    }
+}
