@@ -1514,9 +1514,172 @@ export type TextHeroSliceDefault = prismic.SharedSliceVariation<
 >;
 
 /**
+ * Primary content in *TextHero → Primary*
+ */
+export interface TextHeroSliceWithCardsPrimary {
+  /**
+   * Super Text field in *TextHero → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.super_text
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  super_text: prismic.KeyTextField;
+
+  /**
+   * Title field in *TextHero → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.title
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  title: prismic.KeyTextField;
+
+  /**
+   * Sub Text field in *TextHero → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.sub_text
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  sub_text: prismic.KeyTextField;
+
+  /**
+   * Button Text field in *TextHero → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.button_text
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  button_text: prismic.KeyTextField;
+
+  /**
+   * Button Link field in *TextHero → Primary*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.button_link
+   * - **Documentation**: https://prismic.io/docs/field#link-content-relationship
+   */
+  button_link: prismic.LinkField;
+
+  /**
+   * Background Color field in *TextHero → Primary*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.background_color
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  background_color: prismic.ColorField;
+
+  /**
+   * Text Color field in *TextHero → Primary*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.text_color
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  text_color: prismic.ColorField;
+
+  /**
+   * Button Color field in *TextHero → Primary*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.button_color
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  button_color: prismic.ColorField;
+
+  /**
+   * Button Hover Color field in *TextHero → Primary*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.button_hover_color
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  button_hover_color: prismic.ColorField;
+}
+
+/**
+ * Primary content in *TextHero → Items*
+ */
+export interface TextHeroSliceWithCardsItem {
+  /**
+   * Card Image field in *TextHero → Items*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.items[].card_image
+   * - **Documentation**: https://prismic.io/docs/field#image
+   */
+  card_image: prismic.ImageField<never>;
+
+  /**
+   * Card Title field in *TextHero → Items*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.items[].card_title
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  card_title: prismic.KeyTextField;
+
+  /**
+   * Card Sub Text field in *TextHero → Items*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.items[].card_sub_text
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  card_sub_text: prismic.KeyTextField;
+
+  /**
+   * Card Color field in *TextHero → Items*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.items[].card_color
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  card_color: prismic.ColorField;
+
+  /**
+   * Card Text Color field in *TextHero → Items*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.items[].card_text_color
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  card_text_color: prismic.ColorField;
+}
+
+/**
+ * WithCards variation for TextHero Slice
+ *
+ * - **API ID**: `withCards`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slice
+ */
+export type TextHeroSliceWithCards = prismic.SharedSliceVariation<
+  "withCards",
+  Simplify<TextHeroSliceWithCardsPrimary>,
+  Simplify<TextHeroSliceWithCardsItem>
+>;
+
+/**
  * Slice variation for *TextHero*
  */
-type TextHeroSliceVariation = TextHeroSliceDefault;
+type TextHeroSliceVariation = TextHeroSliceDefault | TextHeroSliceWithCards;
 
 /**
  * TextHero Shared Slice
@@ -1565,6 +1728,16 @@ export interface TextWithImageSliceWithButtonPrimary {
   subText: prismic.KeyTextField;
 
   /**
+   * Sub RichText field in *TextWithImage → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_with_image.primary.sub_richtext
+   * - **Documentation**: https://prismic.io/docs/field#rich-text-title
+   */
+  sub_richtext: prismic.RichTextField;
+
+  /**
    * Button Link field in *TextWithImage → Primary*
    *
    * - **Field Type**: Link
@@ -1603,6 +1776,17 @@ export interface TextWithImageSliceWithButtonPrimary {
    * - **Documentation**: https://prismic.io/docs/field#color
    */
   backgroundColor: prismic.ColorField;
+
+  /**
+   * Show Blob field in *TextWithImage → Primary*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: false
+   * - **API ID Path**: text_with_image.primary.show_blob
+   * - **Documentation**: https://prismic.io/docs/field#boolean
+   */
+  show_blob: prismic.BooleanField;
 
   /**
    * Blob Color field in *TextWithImage → Primary*
@@ -1693,6 +1877,16 @@ export interface TextWithImageSliceTextWithButtonImageRightPrimary {
   subText: prismic.KeyTextField;
 
   /**
+   * Sub RichText field in *TextWithImage → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_with_image.primary.sub_richtext
+   * - **Documentation**: https://prismic.io/docs/field#rich-text-title
+   */
+  sub_richtext: prismic.RichTextField;
+
+  /**
    * Button Link field in *TextWithImage → Primary*
    *
    * - **Field Type**: Link
@@ -1731,6 +1925,17 @@ export interface TextWithImageSliceTextWithButtonImageRightPrimary {
    * - **Documentation**: https://prismic.io/docs/field#color
    */
   backgroundColor: prismic.ColorField;
+
+  /**
+   * Show Blob field in *TextWithImage → Primary*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: false
+   * - **API ID Path**: text_with_image.primary.show_blob
+   * - **Documentation**: https://prismic.io/docs/field#boolean
+   */
+  show_blob: prismic.BooleanField;
 
   /**
    * Blob Color field in *TextWithImage → Primary*
@@ -1880,8 +2085,11 @@ declare module "@prismicio/client" {
       TextSliceTwoColumns,
       TextHeroSlice,
       TextHeroSliceDefaultPrimary,
+      TextHeroSliceWithCardsPrimary,
+      TextHeroSliceWithCardsItem,
       TextHeroSliceVariation,
       TextHeroSliceDefault,
+      TextHeroSliceWithCards,
       TextWithImageSlice,
       TextWithImageSliceWithButtonPrimary,
       TextWithImageSliceTextWithButtonImageRightPrimary,

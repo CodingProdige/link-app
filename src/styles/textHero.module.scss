@@ -40,5 +40,54 @@
             font-weight: 700;
             cursor: pointer;
         }
+
+        .cardContainer {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: stretch; /* Ensure all cards stretch to the same height */
+            margin-top: 3rem;
+            gap: 2rem;
+            width: 100%;
+            height: auto;
+        
+            @media (max-width: $screen-lg) {
+                flex-wrap: wrap;
+            }
+        
+            .card {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                gap: 1rem;
+                width: 100%;
+                flex-grow: 1; /* Allow cards to grow and fill the available space */
+                height: auto;
+                padding: 3rem 2rem;
+                border-radius: 1rem;
+                box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease;
+        
+                &:hover {
+                    transform: translateY(-0.5rem);
+                    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
+                }
+        
+                .cardImage {
+                    width: 100%;
+                    height: auto;
+                    border-radius: 1rem;
+                }
+        
+                .cardTitle {
+                    font-weight: 900;
+                }
+        
+                .cardSubText {
+                    font-weight: 400;
+                }
+            }
+        }
     }
 }

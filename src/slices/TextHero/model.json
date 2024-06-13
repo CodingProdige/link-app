@@ -78,6 +78,118 @@
         }
       },
       "items": {}
+    },
+    {
+      "id": "withCards",
+      "name": "WithCards",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "super_text": {
+          "type": "Text",
+          "config": {
+            "label": "Super Text",
+            "placeholder": ""
+          }
+        },
+        "title": {
+          "type": "Text",
+          "config": {
+            "label": "Title",
+            "placeholder": ""
+          }
+        },
+        "sub_text": {
+          "type": "Text",
+          "config": {
+            "label": "Sub Text",
+            "placeholder": ""
+          }
+        },
+        "button_text": {
+          "type": "Text",
+          "config": {
+            "label": "Button Text",
+            "placeholder": ""
+          }
+        },
+        "button_link": {
+          "type": "Link",
+          "config": {
+            "label": "Button Link",
+            "placeholder": "",
+            "select": null
+          }
+        },
+        "background_color": {
+          "type": "Color",
+          "config": {
+            "label": "Background Color",
+            "placeholder": ""
+          }
+        },
+        "text_color": {
+          "type": "Color",
+          "config": {
+            "label": "Text Color",
+            "placeholder": ""
+          }
+        },
+        "button_color": {
+          "type": "Color",
+          "config": {
+            "label": "Button Color",
+            "placeholder": ""
+          }
+        },
+        "button_hover_color": {
+          "type": "Color",
+          "config": {
+            "label": "Button Hover Color",
+            "placeholder": ""
+          }
+        }
+      },
+      "items": {
+        "card_image": {
+          "type": "Image",
+          "config": {
+            "label": "Card Image",
+            "constraint": {},
+            "thumbnails": []
+          }
+        },
+        "card_title": {
+          "type": "Text",
+          "config": {
+            "label": "Card Title",
+            "placeholder": ""
+          }
+        },
+        "card_sub_text": {
+          "type": "Text",
+          "config": {
+            "label": "Card Sub Text",
+            "placeholder": ""
+          }
+        },
+        "card_color": {
+          "type": "Color",
+          "config": {
+            "label": "Card Color",
+            "placeholder": ""
+          }
+        },
+        "card_text_color": {
+          "type": "Color",
+          "config": {
+            "label": "Card Text Color",
+            "placeholder": ""
+          }
+        }
+      }
     }
   ]
 }

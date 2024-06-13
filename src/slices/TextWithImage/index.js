@@ -7,30 +7,36 @@ import { Bounded } from "@/components/Bounded";
 import { PrismicRichText } from "@/components/PrismicRichText";
 import { PrismicNextLink } from "@prismicio/next";
 import styles from "@/styles/textWithImage.module.scss";
+import { list } from "firebase/storage";
 
 const TextWithImage = ({ slice }) => {
   const image = slice.primary.image;
   const [isHovered, setIsHovered] = useState(false);
 
   const richTextCustomRender = {
-    paragraph: ({ children }) => <p style={{ color: slice.primary.textColor }}>{children}</p>,
+    paragraph: ({ children }) => <p style={{ 
+      color: slice.primary.textColor, 
+      marginBottom: "1rem",
+    }}>
+        {children}
+      </p>,
     heading2: ({ children }) => <h2 style={{ color: slice.primary.textColor }}>{children}</h2>,
+    list: ({ children }) => <ul style={{ color: slice.primary.textColor, paddingLeft: "1rem" }}>{children}</ul>,
+    listItem: ({ children }) => <li style={{ color: slice.primary.textColor, marginBottom: "1rem" }}>{children}</li>,
     // Add more custom rendering as needed
   };
 
   const buttonStyle = {
     backgroundColor: isHovered ? slice.primary.buttonHoverColor : slice.primary.buttonColor,
+    color: slice.primary.backgroundColor,
     padding: "1rem 2rem",
     border: "none",
     borderRadius: "50px",
-    fontSize: "clamp(16px, 4vmin, 18px)",
+    fontSize: "1rem",
+    fontWeight: "700",
     cursor: "pointer",
   };
 
-  const buttonText = {
-    color: isHovered ? slice.primary.textColor : slice.primary.backgroundColor,
-    fontWeight: 'bold',
-  };
 
   const renderVariation = () => {
     switch(slice.variation) {
@@ -38,22 +44,38 @@ const TextWithImage = ({ slice }) => {
         return (
           <>
             <div className={styles.imageContainer}>
-              <div className={styles.imageBlob} style={{ backgroundColor: slice.primary.blobColor }}></div>
+              {
+                slice.primary.show_blob && (
+                  <div className={styles.imageBlob} style={{ backgroundColor: slice.primary.blobColor }}></div>
+                )
+              }
               <PrismicNextImage field={image} />
             </div>
             <div className={styles.textContainer}>
               <sup style={{ color: slice.primary.textColor }}>{slice.primary.superText}</sup>
               <PrismicRichText field={slice.primary.text} components={richTextCustomRender} />
-              <p style={{ color: slice.primary.textColor }}>{slice.primary.subText}</p>
-              <button
-                style={buttonStyle}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-              >
-                <PrismicNextLink field={slice.primary.buttonLink}>
-                  <span style={buttonText}>{slice.primary.buttonText}</span>
-                </PrismicNextLink>
-              </button>
+              {
+                slice.primary.subText && (
+                  <p style={{ color: slice.primary.textColor }}>{slice.primary.subText}</p>
+                )
+              }
+              {
+                slice.primary.sub_richtext && (
+                  <PrismicRichText field={slice.primary.sub_richtext} components={richTextCustomRender} />
+                )
+              }
+              {
+                slice.primary.buttonText && (
+                    <PrismicNextLink 
+                      style={buttonStyle}
+                      onMouseEnter={() => setIsHovered(true)}
+                      onMouseLeave={() => setIsHovered(false)}
+                      field={slice.primary.buttonLink}
+                    >
+                      {slice.primary.buttonText}
+                    </PrismicNextLink>
+                )
+              }
             </div>
           </>
         );
@@ -63,19 +85,34 @@ const TextWithImage = ({ slice }) => {
             <div className={styles.textContainer}>
               <sup style={{ color: slice.primary.textColor }}>{slice.primary.superText}</sup>
               <PrismicRichText field={slice.primary.text} components={richTextCustomRender} />
-              <p style={{ color: slice.primary.textColor }}>{slice.primary.subText}</p>
-              <button
-                style={buttonStyle}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-              >
-                <PrismicNextLink field={slice.primary.buttonLink}>
-                  <span style={buttonText}>{slice.primary.buttonText}</span>
-                </PrismicNextLink>
-              </button>
+              {
+                slice.primary.subText && (
+                  <p style={{ color: slice.primary.textColor }}>{slice.primary.subText}</p>
+                )
+              }
+              {
+                slice.primary.sub_richtext && (
+                  <PrismicRichText field={slice.primary.sub_richtext} components={richTextCustomRender}/>
+                )
+              }              {
+                slice.primary.buttonText && (
+                    <PrismicNextLink 
+                      style={buttonStyle}
+                      onMouseEnter={() => setIsHovered(true)}
+                      onMouseLeave={() => setIsHovered(false)}
+                      field={slice.primary.buttonLink}
+                    >
+                      {slice.primary.buttonText}
+                    </PrismicNextLink>
+                )
+              }
             </div>
             <div className={styles.imageContainer}>
-              <div className={styles.imageBlob} style={{ backgroundColor: slice.primary.blobColor }}></div>
+              {
+                slice.primary.show_blob && (
+                  <div className={styles.imageBlob} style={{ backgroundColor: slice.primary.blobColor }}></div>
+                )
+              }              
               <PrismicNextImage field={image} />
             </div>
           </>

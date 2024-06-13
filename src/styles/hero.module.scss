@@ -34,6 +34,12 @@ padding: 12rem 2rem;
             align-items: flex-start;
             justify-content: center;
             gap: 1.5rem;
+            width: 100%;
+            max-width: 50%;
+
+            @media (max-width: $screen-lg) {
+                max-width: 100%;
+            }
 
             sup {
                 font-size: clamp(16px, 4vmin, 18px);
@@ -69,6 +75,11 @@ padding: 12rem 2rem;
             justify-content: center;
             overflow: hidden;
             width: 100%;
+            max-width: 50%;
+
+            @media (max-width: $screen-lg) {
+                max-width: 100%;
+            }
 
     
             .imageBlob {

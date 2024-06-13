@@ -52,5 +52,123 @@
 			}
 		},
 		"items": []
+	},
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "withCards",
+		"primary": {
+			"super_text": {
+				"__TYPE__": "FieldContent",
+				"value": "production",
+				"type": "Text"
+			},
+			"title": {
+				"__TYPE__": "FieldContent",
+				"value": "arrangement",
+				"type": "Text"
+			},
+			"sub_text": {
+				"__TYPE__": "FieldContent",
+				"value": "floor",
+				"type": "Text"
+			},
+			"button_text": {
+				"__TYPE__": "FieldContent",
+				"value": "ring",
+				"type": "Text"
+			},
+			"button_link": {
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "https://slicemachine.dev"
+				}
+			},
+			"background_color": {
+				"__TYPE__": "FieldContent",
+				"value": "#1afbd8",
+				"type": "Color"
+			},
+			"text_color": {
+				"__TYPE__": "FieldContent",
+				"value": "#685556",
+				"type": "Color"
+			},
+			"button_color": {
+				"__TYPE__": "FieldContent",
+				"value": "#a18bbf",
+				"type": "Color"
+			},
+			"button_hover_color": {
+				"__TYPE__": "FieldContent",
+				"value": "#c53f28",
+				"type": "Color"
+			}
+		},
+		"items": [
+			{
+				"__TYPE__": "GroupItemContent",
+				"value": [
+					[
+						"card_title",
+						{
+							"__TYPE__": "FieldContent",
+							"value": "stop",
+							"type": "Text"
+						}
+					],
+					[
+						"card_sub_text",
+						{
+							"__TYPE__": "FieldContent",
+							"value": "build",
+							"type": "Text"
+						}
+					],
+					[
+						"card_image",
+						{
+							"origin": {
+								"id": "main",
+								"url": "https://images.unsplash.com/photo-1596195689404-24d8a8d1c6ea",
+								"width": 5000,
+								"height": 4613
+							},
+							"url": "https://images.unsplash.com/photo-1596195689404-24d8a8d1c6ea",
+							"width": 5000,
+							"height": 4613,
+							"edit": {
+								"zoom": 1,
+								"crop": {
+									"x": 0,
+									"y": 0
+								},
+								"background": "transparent"
+							},
+							"credits": null,
+							"alt": null,
+							"__TYPE__": "ImageContent",
+							"thumbnails": {}
+						}
+					],
+					[
+						"card_color",
+						{
+							"__TYPE__": "FieldContent",
+							"value": "#e92932",
+							"type": "Color"
+						}
+					],
+					[
+						"card_text_color",
+						{
+							"__TYPE__": "FieldContent",
+							"value": "#81fa4f",
+							"type": "Color"
+						}
+					]
+				]
+			}
+		]
 	}
 ]

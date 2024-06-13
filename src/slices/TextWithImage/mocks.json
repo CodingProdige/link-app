@@ -79,10 +79,25 @@
 				"value": "#51b2ad",
 				"type": "Color"
 			},
+			"sub_richtext": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Ipsum velit dolore reprehenderit mollit reprehenderit fugiat. Est magna in exercitation ex cupidatat velit ut aute excepteur duis laborum eiusmod sint eu. Velit magna cupidatat et ex."
+						}
+					}
+				]
+			},
 			"subText": {
 				"__TYPE__": "FieldContent",
-				"value": "form",
+				"value": "thought",
 				"type": "Text"
+			},
+			"show_blob": {
+				"__TYPE__": "BooleanContent",
+				"value": false
 			}
 		},
 		"items": [
@@ -111,11 +126,6 @@
 						}
 					}
 				]
-			},
-			"subText": {
-				"__TYPE__": "FieldContent",
-				"value": "find",
-				"type": "Text"
 			},
 			"buttonLink": {
 				"__TYPE__": "LinkContent",
@@ -176,6 +186,26 @@
 				"alt": null,
 				"__TYPE__": "ImageContent",
 				"thumbnails": {}
+			},
+			"sub_richtext": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Commodo elit consequat culpa pariatur culpa id dolore adipisicing ipsum dolor culpa dolor ex. Velit exercitation nisi id cillum commodo officia magna esse."
+						}
+					}
+				]
+			},
+			"subText": {
+				"__TYPE__": "FieldContent",
+				"value": "condition",
+				"type": "Text"
+			},
+			"show_blob": {
+				"__TYPE__": "BooleanContent",
+				"value": false
 			}
 		},
 		"items": [

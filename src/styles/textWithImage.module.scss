@@ -32,6 +32,11 @@
             align-items: flex-start;
             justify-content: center;
             gap: 1.5rem;
+            width: 100%;
+            max-width: 50%;
+            @media (max-width: $screen-lg) {
+                max-width: 100%;
+            }
 
             p {
                 font-size: clamp(16px, 4.5vmin, 22px);
@@ -42,12 +47,8 @@
                 padding: 1rem 2rem;
                 border: none;
                 border-radius: 50px;
-                font-size: clamp(16px, 4vmin, 18px);
+                font-size: 1rem;
                 cursor: pointer;
-
-                &:hover {
-                    background-color: $color-black;
-                }
             }
 
             @media (max-width: $screen-lg) {
@@ -60,6 +61,12 @@
             align-items: center;
             justify-content: center;
             gap: 1rem;
+            width: 100%;
+            max-width: 50%;
+
+            @media (max-width: $screen-lg) {
+                max-width: 100%;
+            }
 
             .imageBlob {
                 position: absolute;
