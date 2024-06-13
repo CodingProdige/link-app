@@ -1,0 +1,83 @@
+{
+  "id": "text_hero",
+  "type": "SharedSlice",
+  "name": "TextHero",
+  "description": "TextHero",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "super_text": {
+          "type": "Text",
+          "config": {
+            "label": "Super Text",
+            "placeholder": ""
+          }
+        },
+        "title": {
+          "type": "Text",
+          "config": {
+            "label": "Title",
+            "placeholder": ""
+          }
+        },
+        "sub_text": {
+          "type": "Text",
+          "config": {
+            "label": "Sub Text",
+            "placeholder": ""
+          }
+        },
+        "button_text": {
+          "type": "Text",
+          "config": {
+            "label": "Button Text",
+            "placeholder": ""
+          }
+        },
+        "button_link": {
+          "type": "Link",
+          "config": {
+            "label": "Button Link",
+            "placeholder": "",
+            "select": null
+          }
+        },
+        "background_color": {
+          "type": "Color",
+          "config": {
+            "label": "Background Color",
+            "placeholder": ""
+          }
+        },
+        "text_color": {
+          "type": "Color",
+          "config": {
+            "label": "Text Color",
+            "placeholder": ""
+          }
+        },
+        "button_color": {
+          "type": "Color",
+          "config": {
+            "label": "Button Color",
+            "placeholder": ""
+          }
+        },
+        "button_hover_color": {
+          "type": "Color",
+          "config": {
+            "label": "Button Hover Color",
+            "placeholder": ""
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

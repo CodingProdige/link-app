@@ -1,0 +1,44 @@
+// styles/textHero.module.scss
+
+@import './variables';
+@import './mixins';
+
+.textHeroSection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10rem 2rem;
+    width: 100%;
+    height: auto;
+
+    .textHeroInnerContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+        max-width: $screen-xxl;
+        height: auto;
+
+        .superText {
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: center;
+        }
+        .title {
+            text-align: center;
+        }
+        .subText {
+            text-align: center;
+        }
+        .ctaButton {
+            @include flex-center;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+    }
+}

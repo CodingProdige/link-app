@@ -272,6 +272,7 @@ export type NavigationDocument<Lang extends string = string> =
   >;
 
 type PageDocumentDataSlicesSlice =
+  | TextHeroSlice
   | FaqsSlice
   | ColorBlockSlice
   | PricingSlice
@@ -1335,36 +1336,6 @@ type QuoteSliceVariation = QuoteSliceDefault;
 export type QuoteSlice = prismic.SharedSlice<"quote", QuoteSliceVariation>;
 
 /**
- * Default variation for RichText Slice
- *
- * - **API ID**: `default`
- * - **Description**: Default
- * - **Documentation**: https://prismic.io/docs/slice
- */
-export type RichTextSliceDefault = prismic.SharedSliceVariation<
-  "default",
-  Record<string, never>,
-  never
->;
-
-/**
- * Slice variation for *RichText*
- */
-type RichTextSliceVariation = RichTextSliceDefault;
-
-/**
- * RichText Shared Slice
- *
- * - **API ID**: `rich_text`
- * - **Description**: RichText
- * - **Documentation**: https://prismic.io/docs/slice
- */
-export type RichTextSlice = prismic.SharedSlice<
-  "rich_text",
-  RichTextSliceVariation
->;
-
-/**
  * Primary content in *Text → Primary*
  */
 export interface TextSliceDefaultPrimary {
@@ -1433,6 +1404,131 @@ type TextSliceVariation = TextSliceDefault | TextSliceTwoColumns;
  * - **Documentation**: https://prismic.io/docs/slice
  */
 export type TextSlice = prismic.SharedSlice<"text", TextSliceVariation>;
+
+/**
+ * Primary content in *TextHero → Primary*
+ */
+export interface TextHeroSliceDefaultPrimary {
+  /**
+   * Super Text field in *TextHero → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.super_text
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  super_text: prismic.KeyTextField;
+
+  /**
+   * Title field in *TextHero → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.title
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  title: prismic.KeyTextField;
+
+  /**
+   * Sub Text field in *TextHero → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.sub_text
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  sub_text: prismic.KeyTextField;
+
+  /**
+   * Button Text field in *TextHero → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.button_text
+   * - **Documentation**: https://prismic.io/docs/field#key-text
+   */
+  button_text: prismic.KeyTextField;
+
+  /**
+   * Button Link field in *TextHero → Primary*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.button_link
+   * - **Documentation**: https://prismic.io/docs/field#link-content-relationship
+   */
+  button_link: prismic.LinkField;
+
+  /**
+   * Background Color field in *TextHero → Primary*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.background_color
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  background_color: prismic.ColorField;
+
+  /**
+   * Text Color field in *TextHero → Primary*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.text_color
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  text_color: prismic.ColorField;
+
+  /**
+   * Button Color field in *TextHero → Primary*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.button_color
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  button_color: prismic.ColorField;
+
+  /**
+   * Button Hover Color field in *TextHero → Primary*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: text_hero.primary.button_hover_color
+   * - **Documentation**: https://prismic.io/docs/field#color
+   */
+  button_hover_color: prismic.ColorField;
+}
+
+/**
+ * Default variation for TextHero Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slice
+ */
+export type TextHeroSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<TextHeroSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *TextHero*
+ */
+type TextHeroSliceVariation = TextHeroSliceDefault;
+
+/**
+ * TextHero Shared Slice
+ *
+ * - **API ID**: `text_hero`
+ * - **Description**: TextHero
+ * - **Documentation**: https://prismic.io/docs/slice
+ */
+export type TextHeroSlice = prismic.SharedSlice<
+  "text_hero",
+  TextHeroSliceVariation
+>;
 
 /**
  * Primary content in *TextWithImage → Primary*
@@ -1776,15 +1872,16 @@ declare module "@prismicio/client" {
       QuoteSliceDefaultPrimary,
       QuoteSliceVariation,
       QuoteSliceDefault,
-      RichTextSlice,
-      RichTextSliceVariation,
-      RichTextSliceDefault,
       TextSlice,
       TextSliceDefaultPrimary,
       TextSliceTwoColumnsPrimary,
       TextSliceVariation,
       TextSliceDefault,
       TextSliceTwoColumns,
+      TextHeroSlice,
+      TextHeroSliceDefaultPrimary,
+      TextHeroSliceVariation,
+      TextHeroSliceDefault,
       TextWithImageSlice,
       TextWithImageSliceWithButtonPrimary,
       TextWithImageSliceTextWithButtonImageRightPrimary,

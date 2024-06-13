@@ -1,0 +1,56 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"super_text": {
+				"__TYPE__": "FieldContent",
+				"value": "laugh",
+				"type": "Text"
+			},
+			"title": {
+				"__TYPE__": "FieldContent",
+				"value": "discovery",
+				"type": "Text"
+			},
+			"sub_text": {
+				"__TYPE__": "FieldContent",
+				"value": "softly",
+				"type": "Text"
+			},
+			"background_color": {
+				"__TYPE__": "FieldContent",
+				"value": "#3ff227",
+				"type": "Color"
+			},
+			"text_color": {
+				"__TYPE__": "FieldContent",
+				"value": "#4c93ea",
+				"type": "Color"
+			},
+			"button_color": {
+				"__TYPE__": "FieldContent",
+				"value": "#24b46e",
+				"type": "Color"
+			},
+			"button_text": {
+				"__TYPE__": "FieldContent",
+				"value": "none",
+				"type": "Text"
+			},
+			"button_link": {
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "http://google.com"
+				}
+			},
+			"button_hover_color": {
+				"__TYPE__": "FieldContent",
+				"value": "#308c4c",
+				"type": "Color"
+			}
+		},
+		"items": []
+	}
+]

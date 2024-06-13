@@ -12,4 +12,5 @@ export const components = {
     text_with_image: dynamic(() => import("./TextWithImage/index")),
     color_block: dynamic(() => import("./ColorBlock")),
     faqs: dynamic(() => import("./Faqs")),
+    text_hero: dynamic(() => import("./TextHero")),
 };
