@@ -71,6 +71,15 @@
             "placeholder": ""
           }
         },
+        "showBlob": {
+          "type": "Boolean",
+          "config": {
+            "label": "Show Blob",
+            "default_value": false,
+            "placeholder_true": "true",
+            "placeholder_false": "false"
+          }
+        },
         "buttonColor": {
           "type": "Color",
           "config": {

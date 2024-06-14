@@ -5,6 +5,9 @@ import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 import { Bounded } from "@/components/Bounded";
 import { PrismicRichText } from "@prismicio/react";
 import styles from "@/styles/hero.module.scss";
+import FollowCursorWrapper from "@/components/FollowCursorWrapper";
+import ForwardedPrismicNextImage from "@/components/ForwardedPrismicNextImage";
+
 
 const Hero = ({ slice }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -49,8 +52,14 @@ const Hero = ({ slice }) => {
             </button>
           </div>
           <div className={styles.imageContainer}>
-            <div className={styles.imageBlob} style={{ backgroundColor: slice.primary.blobColor }}></div>
-            <PrismicNextImage field={slice.primary.image} />
+            {
+              slice.primary.showBlob && (
+                <div className={styles.imageBlob} style={{ backgroundColor: slice.primary.blobColor }}></div>
+              )
+            }
+            <FollowCursorWrapper>
+              <ForwardedPrismicNextImage field={slice.primary.image} />
+            </FollowCursorWrapper> 
           </div>
         </div>
       </Bounded>

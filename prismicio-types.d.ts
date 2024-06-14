@@ -961,6 +961,17 @@ export interface HeroSliceHeroWithImageRightPrimary {
   blobColor: prismic.ColorField;
 
   /**
+   * Show Blob field in *Hero → Primary*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: false
+   * - **API ID Path**: hero.primary.showBlob
+   * - **Documentation**: https://prismic.io/docs/field#boolean
+   */
+  showBlob: prismic.BooleanField;
+
+  /**
    * Button Color field in *Hero → Primary*
    *
    * - **Field Type**: Color

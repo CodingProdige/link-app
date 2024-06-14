@@ -78,6 +78,10 @@
 				"__TYPE__": "FieldContent",
 				"value": "#eb29f3",
 				"type": "Color"
+			},
+			"showBlob": {
+				"__TYPE__": "BooleanContent",
+				"value": false
 			}
 		},
 		"items": [

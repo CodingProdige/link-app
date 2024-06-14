@@ -5,6 +5,7 @@ import styles from "@/styles/textHero.module.scss";
 import { useState } from "react";
 import { PrismicNextImage } from "@prismicio/next";
 
+
 /**
  * Props for `TextHero`.
  */

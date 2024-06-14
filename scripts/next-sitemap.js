@@ -10,7 +10,10 @@ const generateSitemap = async () => {
     `${baseUrl}/signin`,
     `${baseUrl}/signup`,
     `${baseUrl}/about`,
-
+    `${baseUrl}/terms-and-conditions`,
+    `${baseUrl}/privacy-policy`,
+    `${baseUrl}/fanslink-for-instagram`,
+    `${baseUrl}/fanslink-for-tiktok`,
   ];
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

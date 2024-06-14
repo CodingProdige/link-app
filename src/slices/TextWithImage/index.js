@@ -8,6 +8,8 @@ import { PrismicRichText } from "@/components/PrismicRichText";
 import { PrismicNextLink } from "@prismicio/next";
 import styles from "@/styles/textWithImage.module.scss";
 import { list } from "firebase/storage";
+import FollowCursorWrapper from "@/components/FollowCursorWrapper";
+import ForwardedPrismicNextImage from "@/components/ForwardedPrismicNextImage";
 
 const TextWithImage = ({ slice }) => {
   const image = slice.primary.image;
@@ -49,7 +51,9 @@ const TextWithImage = ({ slice }) => {
                   <div className={styles.imageBlob} style={{ backgroundColor: slice.primary.blobColor }}></div>
                 )
               }
-              <PrismicNextImage field={image} />
+              <FollowCursorWrapper>
+                <ForwardedPrismicNextImage field={image} />
+              </FollowCursorWrapper>  
             </div>
             <div className={styles.textContainer}>
               <sup style={{ color: slice.primary.textColor }}>{slice.primary.superText}</sup>
@@ -112,8 +116,10 @@ const TextWithImage = ({ slice }) => {
                 slice.primary.show_blob && (
                   <div className={styles.imageBlob} style={{ backgroundColor: slice.primary.blobColor }}></div>
                 )
-              }              
-              <PrismicNextImage field={image} />
+              }        
+              <FollowCursorWrapper>
+                <ForwardedPrismicNextImage field={image} />
+              </FollowCursorWrapper>  
             </div>
           </>
         );
