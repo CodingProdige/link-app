@@ -7,12 +7,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ROUTES, DASHBOARD_ROUTES } from '@/lib/constants';
 import { useAuth } from '@/firebase/auth';
+import { usePathname } from 'next/navigation';
 
 
 export default function Footer({ settings, footer }) {
     const [footerStyles, setFooterStyles] = useState({});
     const [subTextStyles, setSubTextStyles] = useState({});
     const { user } = useAuth();
+    const pathname = usePathname();
 
     useEffect(() => {
         if (footer?.data?.background_color) {
@@ -34,6 +36,11 @@ export default function Footer({ settings, footer }) {
 
     const hasLinkMenu = (menuName) => {
         return footer?.data?.link?.some(item => item.link_menu === menuName);
+    }
+
+    // Do not render header on login and register pages
+    if ( pathname === '/signin' || pathname === '/signup' || pathname.includes('dashboard') || pathname.includes('user')) {
+        return null;
     }
 
     return (

@@ -74,10 +74,22 @@
                     box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
                 }
         
-                .cardImage {
+                .cardImageContainer {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
                     width: 100%;
-                    height: auto;
-                    border-radius: 1rem;
+                    max-height: 50%;
+                    height: 100%;
+                    flex-grow: 1;
+
+                    .cardImage {
+                        width: 70%;
+                        height: auto;
+                        max-height: 50%;
+                        margin-bottom: 2rem;
+                        object-fit: contain;
+                    }
                 }
         
                 .cardTitle {

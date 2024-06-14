@@ -76,7 +76,9 @@ const TextHero = ({ slice }: TextHeroProps): JSX.Element => {
                   <div key={index} className={styles.card} style={{backgroundColor: item.card_color, color: item.card_text_color }}>
                     {
                       item.card_image?.url && (
-                        <PrismicNextImage field={item.card_image} />
+                        <div className={styles.cardImageContainer}>
+                          <PrismicNextImage className={styles.cardImage} field={item.card_image} />
+                        </div>
                       )
                     }
                     <h3 className={styles.cardTitle}>{item.card_title}</h3>
