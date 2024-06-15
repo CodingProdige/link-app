@@ -26,9 +26,9 @@ export default async function RootLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta name="title" content={page?.data?.page_title || "Default Title"} />
         <meta name="description" content={page?.data?.meta_description || "Default Description"} />
-        {settings?.data?.noIndex && <meta name="robots" content="noindex" />}
-        {settings?.data?.noFollow && <meta name="robots" content="nofollow" />}
         <meta name="favicon" content={settings?.data?.favicon?.url || "/default-favicon.png"} />
+        <meta name="robots" content="index, follow"/>
+        <meta name="author" content="Dillon Jurgens"/>
         <link rel="icon" href={settings?.data?.favicon?.url || "/default-favicon.png"} type="image/png" />
         {settings?.data?.openGraphImage && (
           <>
