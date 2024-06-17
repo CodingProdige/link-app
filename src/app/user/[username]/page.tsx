@@ -83,11 +83,15 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
           <div style={theme.linksContainer}>
             <ul style={theme.linksList}>
               {userData?.links.map((link: any) => (
-                <Link style={theme.linkPill} href={link.link} key={link.id} target="_blank" rel="noopener noreferrer">
-                  <li style={theme.linkItem} key={link.id}>
-                    <p style={theme.linkTitle}>{link.title}</p>
-                  </li>
-                </Link>
+                <>
+                  {link?.active && (
+                    <Link style={theme.linkPill} href={link.link} key={link.id} target="_blank" rel="noopener noreferrer">
+                      <li style={theme.linkItem} key={link.id}>
+                        <p style={theme.linkTitle}>{link.title}</p>
+                      </li>
+                    </Link>
+                  )}
+                </>
               ))}
             </ul>
           </div>

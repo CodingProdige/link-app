@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { RiDraggable } from "react-icons/ri";
 import styles from '@/styles/draggableList.module.scss';
-import { updateLinks, updateLinkActiveState, ensureActiveKey } from '@/utils/firebaseUtils'; // Ensure you have the correct path
+import { updateLinks, updateLinkActiveState } from '@/utils/firebaseUtils'; // Ensure you have the correct path
 
 // Function to reorder the list
 const reorder = (list, startIndex, endIndex) => {
@@ -12,14 +12,7 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-const DraggableList = ({ items = [], userId, setItems }) => {
-  // Ensure that all items have the active key
-  useEffect(() => {
-    const updatedItems = ensureActiveKey(items);
-    setItems(updatedItems);
-    // Only run this effect once when the component mounts
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); 
+const DraggableList = ({ items = [], userId, setItems }) => { 
 
   const onDragEnd = async (result) => {
     if (!result.destination) {
@@ -49,15 +42,11 @@ const DraggableList = ({ items = [], userId, setItems }) => {
   };
 
   const toggleActive = async (itemId, currentState) => {
-    const updatedItems = items.map((item) => 
-      item.id === itemId ? { ...item, active: !currentState } : item
-    );
-
-    setItems(updatedItems);
-
     try {
-      await updateLinkActiveState(userId, itemId, !currentState);
+      const updatedItems = await updateLinkActiveState(userId, itemId, !currentState);
+      setItems(updatedItems);
       console.log(`Updated link ${itemId} active state to ${!currentState}`);
+      console.log(updatedItems);
     } catch (error) {
       console.error('Error updating link active state: ', error);
     }

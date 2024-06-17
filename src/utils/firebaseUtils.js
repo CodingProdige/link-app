@@ -256,34 +256,30 @@ export const resetPassword = async (email) => {
  */
 export const updateLinkActiveState = async (userId, linkId, active) => {
   try {
-    const linkRef = doc(db, 'users', userId, 'links', String(linkId));
-    const docSnap = await getDoc(linkRef);
+    const userRef = doc(db, 'users', userId);
+    const userDoc = await getDoc(userRef);
 
-    if (docSnap.exists()) {
-      // Document exists, update it
-      await updateDoc(linkRef, { active });
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      const links = userData.links || [];
+      
+      const updatedLinks = links.map(link => {
+        if (link.id === linkId) {
+          return { ...link, active };
+        }
+        return link;
+      });
+
+      await updateDoc(userRef, { links: updatedLinks });
+
+      console.log('Link active state updated successfully');
+      return updatedLinks;
     } else {
-      // Document does not exist, create it with the active state
-      await setDoc(linkRef, { active });
+      throw new Error('User document does not exist');
     }
-
-    console.log('Link active state updated successfully');
   } catch (error) {
     console.error('Error updating link active state: ', error);
+    throw error;
   }
-};
-
-/**
- * Ensures that each link has an active key. Adds it if it doesn't exist.
- * @param {Array} links - The array of link objects.
- * @returns {Array} - The updated array of link objects.
- */
-export const ensureActiveKey = (links) => {
-  return links.map(link => {
-    if (!('active' in link)) {
-      link.active = false; // Default value for active
-    }
-    return link;
-  });
 };
 
