@@ -23,7 +23,7 @@ function getRandomHumanImage() {
 async function handleLogout(router) {
   try {
     await Logout();
-    router.push('/');
+    window.location.href = '/';
   } catch (error) {
     console.error('Error logging out:', error.message);
     // Handle error (e.g., show error message to user)
