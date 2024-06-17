@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { RiDraggable } from "react-icons/ri";
 import styles from '@/styles/draggableList.module.scss';
-import { updateLinks } from '@/utils/firebaseUtils'; // Ensure you have the correct path
+import { updateLinks, updateLinkActiveState, ensureActiveKey } from '@/utils/firebaseUtils'; // Ensure you have the correct path
 
 // Function to reorder the list
 const reorder = (list, startIndex, endIndex) => {
@@ -13,6 +13,14 @@ const reorder = (list, startIndex, endIndex) => {
 };
 
 const DraggableList = ({ items = [], userId, setItems }) => {
+  // Ensure that all items have the active key
+  useEffect(() => {
+    const updatedItems = ensureActiveKey(items);
+    setItems(updatedItems);
+    // Only run this effect once when the component mounts
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); 
+
   const onDragEnd = async (result) => {
     if (!result.destination) {
       return;
@@ -24,13 +32,34 @@ const DraggableList = ({ items = [], userId, setItems }) => {
       result.destination.index
     );
 
-    setItems(reorderedItems);
+    // Update the ids to match their new index in the array
+    const updatedItems = reorderedItems.map((item, index) => ({
+      ...item,
+      id: index + 1, // Assuming ids are 1-based
+    }));
+
+    setItems(updatedItems);
 
     try {
-      await updateLinks(userId, reorderedItems);
+      await updateLinks(userId, updatedItems);
       console.log('Links updated successfully');
     } catch (error) {
       console.error('Error updating links: ', error);
+    }
+  };
+
+  const toggleActive = async (itemId, currentState) => {
+    const updatedItems = items.map((item) => 
+      item.id === itemId ? { ...item, active: !currentState } : item
+    );
+
+    setItems(updatedItems);
+
+    try {
+      await updateLinkActiveState(userId, itemId, !currentState);
+      console.log(`Updated link ${itemId} active state to ${!currentState}`);
+    } catch (error) {
+      console.error('Error updating link active state: ', error);
     }
   };
 
@@ -66,11 +95,19 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                       <div className={styles.dataFunctions}>
                         <button className={styles.editButton}>Edit</button>
                         <button className={styles.copyButton}>Copy</button>
+                        <button className={styles.deleteButton}>Delete</button>
                       </div>
                     </div>
 
-                    <div>
-                      <button className={styles.deleteButton}>Delete</button>
+                    <div className={styles.toggleContainer}>
+                      <label className={styles.switch}>
+                        <input 
+                          type="checkbox" 
+                          checked={item.active} 
+                          onChange={() => toggleActive(item.id, item.active)} 
+                        />
+                        <span className={styles.slider}></span>
+                      </label>
                     </div>
                   </div>
                 )}
