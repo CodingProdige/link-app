@@ -10,15 +10,14 @@ import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 import Link from 'next/link';
 import { DEFAULT_THEME } from '@/lib/constants';
 
-
-async function handleSignIn(email: string, password: string, setError: (message: string) => void) {
+async function handleSignIn(email, password, setError, setLoading) {
   try {
+    setLoading(true);
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    const theme = 'default'; // Set the theme value you want to pass
+    const theme = 'default';
 
-    // Call the generate-token API with the UID to get a custom token
     const response = await fetch('/api/generate-token', {
       method: 'POST',
       headers: {
@@ -29,11 +28,8 @@ async function handleSignIn(email: string, password: string, setError: (message:
 
     if (response.ok) {
       const { customToken } = await response.json();
-
-      // Save the custom token as a cookie
       document.cookie = `token=${customToken}; Path=/;`;
 
-      // Check or set the theme field
       await fetch('/api/check-theme', {
         method: 'POST',
         headers: {
@@ -42,7 +38,6 @@ async function handleSignIn(email: string, password: string, setError: (message:
         body: JSON.stringify({ uid: user.uid, theme }),
       });
 
-      // Redirect to the dashboard
       window.location.href = '/dashboard';
     } else {
       const error = await response.json();
@@ -52,18 +47,20 @@ async function handleSignIn(email: string, password: string, setError: (message:
   } catch (error) {
     setError('Error signing in: ' + error.message);
     console.error('Error signing in:', error);
+  } finally {
+    setLoading(false);
   }
 }
 
-async function handleGoogleSignIn(setError: (message: string) => void) {
+async function handleGoogleSignIn(setError, setLoading) {
   const provider = new GoogleAuthProvider();
   try {
+    setLoading(true);
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    const theme = 'default'; // Set the theme value you want to pass
+    const theme = 'default';
 
-    // Call the generate-token API with the UID to get a custom token
     const response = await fetch('/api/generate-token', {
       method: 'POST',
       headers: {
@@ -74,11 +71,8 @@ async function handleGoogleSignIn(setError: (message: string) => void) {
 
     if (response.ok) {
       const { customToken } = await response.json();
-
-      // Save the custom token as a cookie
       document.cookie = `token=${customToken}; Path=/;`;
 
-      // Check or set the theme field
       await fetch('/api/check-theme', {
         method: 'POST',
         headers: {
@@ -87,7 +81,6 @@ async function handleGoogleSignIn(setError: (message: string) => void) {
         body: JSON.stringify({ uid: user.uid, theme }),
       });
 
-      // Redirect to the dashboard
       window.location.href = '/dashboard';
     } else {
       const error = await response.json();
@@ -97,6 +90,8 @@ async function handleGoogleSignIn(setError: (message: string) => void) {
   } catch (error) {
     setError('Error signing in with Google: ' + error.message);
     console.error('Error signing in with Google:', error);
+  } finally {
+    setLoading(false);
   }
 }
 
@@ -104,6 +99,7 @@ export default function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({ settings: null, navigation: null, page: null });
 
   useEffect(() => {
@@ -118,7 +114,7 @@ export default function SignInPage() {
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     setError('');
-    handleSignIn(email, password, setError);
+    handleSignIn(email, password, setError, setLoading);
   };
 
   return (
@@ -159,13 +155,19 @@ export default function SignInPage() {
               required
               className={error ? styles.inputError : ''}
             />
-            <button type="submit">Sign In</button>
+            <button type="submit" disabled={loading}>
+              {loading ? 'Signing In...' : 'Sign In'}
+            </button>
           </div>
           <p className={styles.signupOr}>Or</p>
           <div className={styles.socialLogin}>
-            <button onClick={() => handleGoogleSignIn(setError)}>
-              <FcGoogle />
-              Sign in with Google
+            <button onClick={() => handleGoogleSignIn(setError, setLoading)} disabled={loading}>
+              {loading ? 'Signing In...' : (
+                <>
+                  <FcGoogle />
+                  Sign in with Google
+                </>
+              )}
             </button>
           </div>
           <div className={styles.redirectContainer}>

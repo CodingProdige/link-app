@@ -1,17 +1,16 @@
 "use client";
-import { useState, useEffect } from 'react';
-import { FormEvent } from 'react';
-import { auth, db } from '@/firebase/firebase'; // Import the db object
+import { useState, useEffect, FormEvent } from 'react';
+import { auth, db } from '@/firebase/firebase';
 import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore'; // Import Firestore functions
+import { doc, setDoc } from 'firebase/firestore';
 import styles from '@/styles/signup.module.scss';
 import { FaGoogle } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { fetchSettingsAndNavigation } from '@/lib/prismicClient';
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 import Link from 'next/link';
-import { IMAGES } from '@/lib/images'; // Import the IMAGES object
-import { DEFAULT_THEME } from '@/lib/constants'; // Import the DEFAULT_THEME object
+import { IMAGES } from '@/lib/images';
+import { DEFAULT_THEME } from '@/lib/constants';
 
 function getRandomHumanImage() {
   const humanImages = Object.values(IMAGES.PROFILE.HUMANS);
@@ -19,12 +18,12 @@ function getRandomHumanImage() {
   return humanImages[randomIndex];
 }
 
-async function handleEmailSignUp(email: string, password: any, setError: (message: string) => void) {
+async function handleEmailSignUp(email, password, setError, setLoading) {
   try {
+    setLoading(true);
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    // Create a new user document in Firestore
     await setDoc(doc(db, 'users', user.uid), {
       uid: user.uid,
       email: user.email,
@@ -35,7 +34,6 @@ async function handleEmailSignUp(email: string, password: any, setError: (messag
       theme: DEFAULT_THEME,
     });
 
-    // Call the generate-token API with the UID to get a custom token
     const response = await fetch('/api/generate-token', {
       method: 'POST',
       headers: {
@@ -46,11 +44,7 @@ async function handleEmailSignUp(email: string, password: any, setError: (messag
 
     if (response.ok) {
       const { customToken } = await response.json();
-
-      // Save the custom token as a cookie
       document.cookie = `token=${customToken}; Path=/;`;
-
-      // Redirect to the dashboard
       window.location.href = '/dashboard';
     } else {
       const error = await response.json();
@@ -60,16 +54,18 @@ async function handleEmailSignUp(email: string, password: any, setError: (messag
   } catch (error) {
     setError('Error signing up: ' + error.message);
     console.error('Error signing up:', error);
+  } finally {
+    setLoading(false);
   }
 }
 
-async function handleGoogleSignUp(setError: (message: string) => void) {
+async function handleGoogleSignUp(setError, setLoading) {
   try {
+    setLoading(true);
     const provider = new GoogleAuthProvider();
     const userCredential = await signInWithPopup(auth, provider);
     const user = userCredential.user;
 
-    // Create a new user document in Firestore
     await setDoc(doc(db, 'users', user.uid), {
       uid: user.uid,
       email: user.email,
@@ -80,7 +76,6 @@ async function handleGoogleSignUp(setError: (message: string) => void) {
       theme: DEFAULT_THEME,
     });
 
-    // Call the generate-token API with the UID to get a custom token
     const response = await fetch('/api/generate-token', {
       method: 'POST',
       headers: {
@@ -91,11 +86,7 @@ async function handleGoogleSignUp(setError: (message: string) => void) {
 
     if (response.ok) {
       const { customToken } = await response.json();
-
-      // Save the custom token as a cookie
       document.cookie = `token=${customToken}; Path=/;`;
-
-      // Redirect to the dashboard
       window.location.href = '/dashboard';
     } else {
       const error = await response.json();
@@ -105,6 +96,8 @@ async function handleGoogleSignUp(setError: (message: string) => void) {
   } catch (error) {
     setError('Error signing up with Google: ' + error.message);
     console.error('Error signing up with Google:', error);
+  } finally {
+    setLoading(false);
   }
 }
 
@@ -112,6 +105,7 @@ export default function SignUpPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({ settings: null, navigation: null, page: null });
 
   useEffect(() => {
@@ -126,7 +120,7 @@ export default function SignUpPage() {
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     setError('');
-    handleEmailSignUp(email, password, setError);
+    handleEmailSignUp(email, password, setError, setLoading);
   };
 
   return (
@@ -171,13 +165,19 @@ export default function SignUpPage() {
               required
               className={error ? styles.inputError : ''}
             />
-            <button type="submit">Create account</button>
+            <button type="submit" disabled={loading}>
+              {loading ? 'Creating account...' : 'Create account'}
+            </button>
           </div>
           <p className={styles.signupOr}>Or</p>
           <div className={styles.socialLogin}>
-            <button onClick={() => handleGoogleSignUp(setError)}>
-              <FcGoogle />
-              Sign Up with Google
+            <button onClick={() => handleGoogleSignUp(setError, setLoading)} disabled={loading}>
+              {loading ? 'Signing Up...' : (
+                <>
+                  <FcGoogle />
+                  Sign Up with Google
+                </>
+              )}
             </button>
           </div>
           <div className={styles.redirectContainer}>

@@ -34,6 +34,7 @@
     width: 100%;
     height: 100vh;
     @include flex-center;
+    gap: 0rem;
 
     .logoContainer {
       position: absolute;
