@@ -2,6 +2,7 @@ import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs, a
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { sendPasswordResetEmail } from "firebase/auth";
 import {auth, db } from '@/firebase/firebase';
+import axios from 'axios';
 
 /**
  * Fetch user data by UID.
@@ -173,7 +174,8 @@ export const addLinkToFirestore = async ({ title, link, userId, urlMetaData }) =
     title, 
     link,
     active: false,
-    urlMetaData: urlMetaData
+    urlMetaData: urlMetaData,
+    image: urlMetaData.metadata["og:image"] || null
   };
 
   let updatedLinks = [];
@@ -363,4 +365,33 @@ export const validateUrl = (url) => {
     'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
   );
   return urlPattern.test(url);
+};
+
+/**
+ * Downloads an image from the given URL using the proxy API route and uploads it to Firebase Storage under the current user.
+ * @param {string} userId - The ID of the current user.
+ * @param {string} imageUrl - The URL of the image to download.
+ * @returns {Promise<string>} - The download URL of the uploaded image.
+ */
+export const downloadAndUploadImage = async (userId, imageUrl) => {
+  try {
+    // Fetch the image as a blob using the Next.js API route
+    const proxyUrl = `/api/downloadImage?url=${encodeURIComponent(imageUrl)}`;
+    const response = await axios.get(proxyUrl, { responseType: 'blob' });
+    const imageBlob = response.data;
+
+    // Create a reference to the Firebase Storage location
+    const storageRef = ref(storage, `users/${userId}/images/${Date.now()}_${imageUrl.split('/').pop()}`);
+
+    // Upload the image blob to Firebase Storage
+    await uploadBytes(storageRef, imageBlob);
+
+    // Get the download URL of the uploaded image
+    const downloadURL = await getDownloadURL(storageRef);
+
+    return downloadURL;
+  } catch (error) {
+    console.error('Error downloading or uploading image: ', error);
+    throw error;
+  }
 };

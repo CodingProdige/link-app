@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { fetchUserDataByUsername } from '@/utils/firebaseUtils';
 import { usePrismic } from '@/context/PrismicContext';
 import { PrismicNextImage } from '@prismicio/next';
-import { THEMES } from '@/lib/themes';
+import styles from '@/styles/userlinkPage.module.scss';
 
 interface UserPageProps {
   params: {
@@ -21,7 +21,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { settings, loading: prismicLoading } = usePrismic();
-  const [theme, setTheme] = useState(THEMES.default);
+  const [theme, setTheme] = useState(null);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -53,41 +53,44 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
   if (loading || prismicLoading) return <Loading />;
 
   if (error) {
-    return <div style={theme.error}>{error}</div>;
+    return <div className={styles.error}>{error}</div>;
   }
 
   if (!userData) {
-    return <div style={theme.error}>User data not found.</div>;
+    return <div className={styles.error}>User data not found.</div>;
   }
 
   return (
-    <div style={theme.containerPublicProfile}>
-      <div style={theme.background}></div>
-      <div style={theme.innerContainer}>
-        <div style={theme.profileContainer}>
+    <div className={styles.containerPublicProfile}>
+      <div className={styles.background}></div>
+      <div className={styles.innerContainer}>
+        <div className={styles.profileContainer}>
           {userData?.photoUrl && (
             <Image 
               src={userData.photoUrl} 
               alt={userData.username} 
               width={150} 
               height={150} 
-              style={theme.profileImage}
+              className={styles.profileImage}
             />
           )}
-          <div style={theme.nameContainer}>
-            <p style={theme.username}>@{userData.username}</p>
-            {userData?.name && <p style={theme.name}>{userData.name}</p>}
+          <div className={styles.nameContainer}>
+            <p className={styles.username}>@{userData.username}</p>
+            {userData?.name && <p className={styles.name}>{userData.name}</p>}
           </div>
         </div>
         {userData?.links && (
-          <div style={theme.linksContainer}>
-            <ul style={theme.linksList}>
+          <div className={styles.linksContainer}>
+            <ul className={styles.linksList}>
               {userData?.links.map((link: any) => (
-                <div key={link.id}>
+                <div className={styles.linkWrapper} key={link.id}>
                   {link?.active && (
-                    <Link style={theme.linkPill} href={link.link} key={link.id} target="_blank" rel="noopener noreferrer">
-                      <li style={theme.linkItem} key={link.id}>
-                        <p style={theme.linkTitle}>{link.title}</p>
+                    <Link className={styles.linkPill} href={link.link} key={link.id} target="_blank" rel="noopener noreferrer">
+                      <li className={styles.linkItem} key={link.id}>
+                        {link.image && (
+                          <div className={styles.linkImageContainer} style={{backgroundImage: `url("${link.image}")`}}></div>
+                        )}
+                        <p className={styles.linkTitle}>{link.title}</p>
                       </li>
                     </Link>
                   )}
@@ -98,8 +101,8 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
         )}
       </div>
       {userData?.fanslinkLogo && userData?.fanslinkLogo !== false && (
-        <div style={theme.fanslinkLogo}>
-          <PrismicNextImage field={settings.data.logo} style={theme.fanslinkLogoImage} />
+        <div className={styles.fanslinkLogo}>
+          <PrismicNextImage field={settings.data.logo} className={styles.fanslinkLogoImage} />
         </div>
       )}
     </div>

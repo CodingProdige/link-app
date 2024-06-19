@@ -13,6 +13,21 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
+const downloadAndUploadImage = async (userId, imageUrl) => {
+  try {
+    const res = await fetch('/api/upload-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imageUrl, userId }),
+    });
+    const data = await res.json();
+    return data.imageUrl;
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    throw new Error('Failed to upload image.');
+  }
+};
+
 const DraggableList = ({ items = [], userId, setItems }) => {
   const [activeFunction, setActiveFunction] = useState(null);
   const [functionPanelOpen, setFunctionPanelOpen] = useState(false);
@@ -117,14 +132,26 @@ const DraggableList = ({ items = [], userId, setItems }) => {
         body: JSON.stringify({ url }),
       });
       const data = await res.json();
+  
+      if (data?.metadata["og:image"]) {
+        const imageUrl = data.metadata["og:image"];
+        const image = await downloadAndUploadImage(userId, imageUrl);
+        data.metadata["og:image"] = image;
+      } else {
+        data.metadata["og:image"] = null;
+      }
+  
       const updatedItems = [...items];
       updatedItems[index].metadata = data;
-      if(data?.metadata["og:title"]) {
+      if (data?.metadata["og:title"]) {
         updatedItems[index].title = data?.metadata["og:title"];
+      }
+      if (data?.metadata["og:image"]) {
+        updatedItems[index].image = data?.metadata["og:image"];
       }
       updatedItems[index].link = url;
       setItems(updatedItems);
-
+  
       await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata
       console.log('Link and metadata updated successfully');
     } catch (error) {
@@ -133,6 +160,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
       setLoading(false);
     }
   };
+  
 
   const stopEditing = async (index, field) => {
     setLoading(true);

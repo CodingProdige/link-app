@@ -24,6 +24,7 @@ const nextConfig = async () => {
       domains: [
         'firebasestorage.googleapis.com',
         'lh3.googleusercontent.com',
+        'storage.googleapis.com',
       ],
     },
     sassOptions: {
