@@ -14,8 +14,8 @@
         flex-direction: column;
         gap: 1rem;
         justify-content: flex-start;
-        width: 100%;
-        max-width: 60%;
+        width: 100dvw;
+        max-width: calc(60dvw - 15rem);
 
         @media (max-width: $screen-lg) {
             max-width: 100%;
