@@ -236,7 +236,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                               />
                             ) : (
                               <span className={styles.linkTitle} onClick={() => startEditing(index, 'title')}>
-                                <p>{item.title}</p>
+                                <p>{item.title ? item.title : "Title"}</p>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                                   <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
                                 </svg>
@@ -263,7 +263,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                               />
                             ) : (
                               <span className={styles.linkUrl} onClick={() => startEditing(index, 'link')}>
-                                <p>{item.link}</p>
+                                <p>{item.link ? item.link : "Link"}</p>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
                                   <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
                                 </svg>
@@ -284,23 +284,33 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                         </div>
 
                         <div className={styles.dataFunctions}>
-                          <svg
-                            className={activeFunction === 'video' && activeIndex === index ? styles.functionActive : ''}
-                            onClick={() => handleFunctionToggle('video', index)}
-                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-btn" viewBox="0 0 16 16"
-                          >
-                            <path d="M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z"/>
-                            <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
-                          </svg>
+                          {item?.metadata?.mediaType?.includes('video') && (
+                            <svg
+                              className={`
+                                ${activeFunction === 'video' && activeIndex === index ? styles.functionActive : ''}
+                                ${item?.metadata?.mediaType?.includes('video') && styles.functionsContains}
+                              `}                              
+                              onClick={() => handleFunctionToggle('video', index)}
+                              xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-btn" viewBox="0 0 16 16"
+                            >
+                              <path d="M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z"/>
+                              <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 0a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1z"/>
+                            </svg>
+                          )}
 
-                          <svg
-                            className={activeFunction === 'image' && activeIndex === index ? styles.functionActive : ''}
-                            onClick={() => handleFunctionToggle('image', index)}
-                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-image" viewBox="0 0 16 16"
-                          >
-                            <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
-                            <path d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2zm13 1a.5.5 0 0 1 .5.5v6l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12v.54L1 12.5v-9a.5.5 0 0 1 .5-.5z"/>
-                          </svg>
+                          {item?.mediaType?.includes('image') && (
+                            <svg
+                              className={`
+                                ${activeFunction === 'image' && activeIndex === index ? styles.functionActive : ''}
+                                ${item?.metadata?.mediaType?.includes('image') && styles.functionsContains}
+                              `}
+                              onClick={() => handleFunctionToggle('image', index)}
+                              xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-image" viewBox="0 0 16 16"
+                            >
+                              <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                              <path d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2zm13 1a.5.5 0 0 1 .5.5v6l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12v.54L1 12.5v-9a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                          )}
 
                           <svg
                             className={activeFunction === 'delete' && activeIndex === index ? styles.functionActive : ''}
@@ -319,20 +329,55 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                       <div className={styles.functionalityContainer}>
                         {functionPanelOpen && activeFunction === 'video' && activeIndex === index && (
                           <div className={styles.videoPanel}>
-                            <h3>Video Panel</h3>
+                            <div className={styles.closeFunctionPanel}>
+                              <p className={styles.closeFunctionPanelText}>Video Options</p>
+                              <svg 
+                                onClick={() => setFunctionPanelOpen(false)}
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"
+                              >
+                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                              </svg>
+                            </div>
+                            <div className={styles.videoText}>
+                              <p>Video options</p>
+                            </div>
                           </div>
                         )}
 
                         {functionPanelOpen && activeFunction === 'image' && activeIndex === index && (
                           <div className={styles.imagePanel}>
-                            <h3>Image Panel</h3>
+                            <div className={styles.closeFunctionPanel}>
+                              <p className={styles.closeFunctionPanelText}>Image Options</p>
+                              <svg 
+                                onClick={() => setFunctionPanelOpen(false)}
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"
+                              >
+                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                              </svg>
+                            </div>
+                            <div className={styles.imageText}>
+                              <p>Add or replace a thumbnail.</p>
+                            </div>
                           </div>
                         )}
 
                         {functionPanelOpen && activeFunction === 'delete' && activeIndex === index && (
                           <div className={styles.deletePanel}>
+                            <div className={styles.closeFunctionPanel}>
+                              <p className={styles.closeFunctionPanelText}>Delete</p>
+                              <svg 
+                                onClick={() => {
+                                  setFunctionPanelOpen(false)
+                                  setActiveFunction('')
+                                  setActiveIndex(null)
+                                }}
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"
+                              >
+                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                              </svg>
+                            </div>
                             <div className={styles.deleteText}>
-                              <h3>Confirm Delete</h3>
+                              <p>Are you sure you want to delete this link?</p>
                             </div>
                             <div className={styles.deleteButton}>
                               {loading ? (

@@ -90,7 +90,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
                         {link.image && (
                           <div className={styles.linkImageContainer} style={{backgroundImage: `url("${link.image}")`}}></div>
                         )}
-                        <p className={styles.linkTitle}>{link.title}</p>
+                        <p className={styles.linkTitle}>{link.title ? link.title : "Title"}</p>
                       </li>
                     </Link>
                   )}

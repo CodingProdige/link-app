@@ -174,7 +174,7 @@ export const addLinkToFirestore = async ({ title, link, userId, urlMetaData }) =
     title, 
     link,
     active: false,
-    urlMetaData: urlMetaData,
+    metadata: urlMetaData,
     image: urlMetaData.metadata["og:image"] || null
   };
 
