@@ -155,11 +155,8 @@ export const fetchUserDataByUsername = async (username) => {
 /**
  * Fetches a user's links from Firestore.
  */
-export const addLinkToFirestore = async ({ title, link }) => {
-  const user = auth.currentUser;
-  if (!user) throw new Error('User not authenticated');
-
-  const userDocRef = doc(db, 'users', user.uid);
+export const addLinkToFirestore = async ({ title, link, userId, urlMetaData }) => {
+  const userDocRef = doc(db, 'users', userId);
   const userDoc = await getDoc(userDocRef);
 
   let currentLinks = [];
@@ -172,23 +169,29 @@ export const addLinkToFirestore = async ({ title, link }) => {
   }
 
   const newLink = { 
-    id: 
-    newId, 
+    id: newId, 
     title, 
     link,
     active: false,
+    urlMetaData: urlMetaData
   };
 
+  let updatedLinks = [];
   if (currentLinks.length === 0) {
     // If the links array does not exist, set the document with the new link
     await setDoc(userDocRef, { links: [newLink] }, { merge: true });
+    updatedLinks = [newLink];
   } else {
     // If the links array exists, update the document with the new link
     await updateDoc(userDocRef, {
       links: arrayUnion(newLink)
     });
+    updatedLinks = [...currentLinks, newLink];
   }
+
+  return updatedLinks;
 };
+
 
 /**
  * Update the users links array in Firestore
@@ -283,3 +286,81 @@ export const updateLinkActiveState = async (userId, linkId, active) => {
   }
 };
 
+/**
+ * Updates a specific link data (e.g., title or url) in Firestore.
+ * If the field key does not exist, it adds the key with the provided value.
+ * @param {string} userId - The ID of the user.
+ * @param {number} linkId - The ID of the link.
+ * @param {string} field - The field to update (e.g., 'title' or 'link').
+ * @param {any} value - The new value for the field.
+ */
+export const updateLinkData = async (userId, linkId, field, value) => {
+  try {
+    const userRef = doc(db, 'users', userId);
+    const userDoc = await getDoc(userRef);
+
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      const links = userData.links || [];
+
+      const updatedLinks = links.map(link => {
+        if (link.id === linkId) {
+          return { ...link, [field]: value };
+        }
+        return link;
+      });
+
+      await updateDoc(userRef, { links: updatedLinks });
+
+      console.log(`Link ${field} updated successfully`);
+      return updatedLinks;
+    } else {
+      throw new Error('User document does not exist');
+    }
+  } catch (error) {
+    console.error(`Error updating link ${field}: `, error);
+    throw error;
+  }
+};
+
+/**
+ * Deletes a specific link from the user's links array in Firestore.
+ * @param {string} userId - The ID of the user.
+ * @param {number} linkId - The ID of the link to be deleted.
+ * @returns {Array} - The updated links array after deletion.
+ */
+export const deleteLinkById = async (userId, linkId) => {
+  try {
+    const userRef = doc(db, 'users', userId);
+    const userDoc = await getDoc(userRef);
+
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      const links = userData.links || [];
+      
+      const updatedLinks = links.filter(link => link.id !== linkId);
+
+      await updateDoc(userRef, { links: updatedLinks });
+
+      console.log('Link deleted successfully');
+      return updatedLinks;
+    } else {
+      throw new Error('User document does not exist');
+    }
+  } catch (error) {
+    console.error('Error deleting link: ', error);
+    throw error;
+  }
+};
+
+/**
+ * Validates a URL against a specified regex pattern.
+ * @param {string} url The URL to validate.
+ * @return {boolean} True if the URL is valid, false otherwise.
+ */
+export const validateUrl = (url) => {
+  const urlPattern = new RegExp(
+    'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+  );
+  return urlPattern.test(url);
+};

@@ -69,7 +69,7 @@ const Links = () => {
       <div className={styles.linksContainer}>
         <div className={styles.addLinkContainer}>
           {addLinkActive ? (
-            <AddLinkForm toggleAddLink={toggleAddLink} />
+            <AddLinkForm toggleAddLink={toggleAddLink} setItems={handleLinksUpdate} userId={user.uid} />
           ) : (
             <button className={styles.addLinkButton} onClick={toggleAddLink}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus" viewBox="0 0 16 16">
