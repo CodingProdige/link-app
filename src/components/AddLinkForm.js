@@ -17,7 +17,7 @@ const downloadAndUploadImage = async (userId, imageUrl) => {
   }
 };
 
-export default function AddLinkForm({ toggleAddLink, setItems, userId }) {
+export default function AddLinkForm({ toggleAddLink, setItems, userId, setAddLinkActive }) {
   const [title, setTitle] = useState('');
   const [link, setLink] = useState('');
   const [url, setUrl] = useState('');
@@ -93,6 +93,9 @@ export default function AddLinkForm({ toggleAddLink, setItems, userId }) {
             {error && <p className={styles.error}>{error}</p>}
             <button type="submit" disabled={!url || loading}>
               {loading ? 'Scanning URL...' : 'Add'}
+            </button>
+            <button type="button" onClick={() => setAddLinkActive()}>
+              Cancel
             </button>
           </form>
         </div>

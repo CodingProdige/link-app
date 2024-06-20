@@ -11,6 +11,7 @@ import { fetchUserData } from '@/utils/firebaseUtils';
 import styles from '@/styles/dashboardLinks.module.scss';
 import AddLinkForm from '@/components/AddLinkForm';
 import Loading from '@/components/Loading';
+import { prev } from 'cheerio/lib/api/traversing';
 
 const Links = () => {
   const { user, loading: authLoading } = useAuth();
@@ -29,6 +30,10 @@ const Links = () => {
     setLinks(newLinks);
     setPreviewKey(prevKey => prevKey + 1); // Update key to force re-render of MobilePreview
   };
+
+  const handleAddLinkActive = () => {
+    setAddLinkActive(prevState => !prevState);
+  }
 
   const getOrigin = () => {
     if (typeof window !== 'undefined' && window.location) {
@@ -69,7 +74,7 @@ const Links = () => {
       <div className={styles.linksContainer}>
         <div className={styles.addLinkContainer}>
           {addLinkActive ? (
-            <AddLinkForm toggleAddLink={toggleAddLink} setItems={handleLinksUpdate} userId={user.uid} />
+            <AddLinkForm toggleAddLink={toggleAddLink} setItems={handleLinksUpdate} userId={user.uid} setAddLinkActive={handleAddLinkActive} />
           ) : (
             <button className={styles.addLinkButton} onClick={toggleAddLink}>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus" viewBox="0 0 16 16">

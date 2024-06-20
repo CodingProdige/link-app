@@ -6,7 +6,7 @@
 .linksPage {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     gap: 2rem;
 
     .linksContainer {
@@ -15,7 +15,7 @@
         gap: 1rem;
         justify-content: flex-start;
         width: 100dvw;
-        max-width: calc(60dvw - 15rem);
+        max-width: calc(50dvw - 10rem);
 
         @media (max-width: $screen-lg) {
             max-width: 100%;
