@@ -14,7 +14,7 @@ export async function POST(request: Request) {
       responseType: 'stream',
     });
 
-    const fileName = `${userId}/${uuidv4()}.jpg`;
+    const fileName = `users/${userId}/images/${Date.now()}_${imageUrl.split('/').pop()}`;
     const file = bucket.file(fileName);
 
     return new Promise<Response>((resolve, reject) => {

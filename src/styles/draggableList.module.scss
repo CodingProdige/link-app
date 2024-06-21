@@ -6,11 +6,13 @@
 .container {
     border-radius: 4px;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 
     .draggableItem {
       user-select: none;
       padding: 16px;
-      margin: 0 0 8px 0;
       min-height: 50px;
       background-color: #fff;
       color: #333;
@@ -221,10 +223,76 @@
           gap: 0.5rem;
 
           .videoText {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
             p {
               font-size: 1rem;
               font-weight: 400;
               color: $color-text-light;
+            }
+
+            .videoCheckboxContainer {
+              display: flex;
+              flex-direction: row;
+              gap: 1rem;
+              justify-content: space-between;
+              align-items: center;
+              padding: 2rem;
+              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+              border-radius: 25px;
+              cursor: pointer;
+
+              input[type="checkbox"] {
+                -webkit-appearance: none;
+                appearance: none;
+                background-color: $color-white;
+                border-radius: 50px;
+                cursor: pointer;
+                position: relative;
+                outline: 1px solid $color-text-lighter;
+                outline-offset: 3px;
+                padding: 0.5rem;
+
+                &:checked {
+                  outline: 1px solid $color-primary;
+                }
+
+                &:checked::before {
+                  content: '';
+                  position: absolute;
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                  width: 1rem; /* Adjust size as needed */
+                  height: 1rem; /* Adjust size as needed */
+                  border-radius: 50px;
+                  background-color: $color-primary;
+                  border: 2px solid #fff; /* Change this to your desired color */
+                }
+              }
+              .videoOptionsText {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+
+                p:first-of-type {
+                  font-size: 1rem;
+                  font-weight: 700;
+                  color: $color-text;
+                }
+                
+                p:last-of-type {
+                  font-size: 1rem;
+                  font-weight: 400;
+                  color: $color-text-light;
+                }
+              
+              }
+            }
+            .selected {
+              outline: 2px solid $color-primary;
             }
           }
         }
@@ -235,6 +303,10 @@
           gap: 0.5rem;
 
           .imageText {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
             p {
               font-size: 1rem;
               font-weight: 400;
@@ -243,16 +315,82 @@
           }
         }
 
-        .musicPanel {
+        .layoutPanel {
           display: flex;
           flex-direction: column;
           gap: 0.5rem;
 
-          .musicText {
+          .layoutText {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
             p {
               font-size: 1rem;
               font-weight: 400;
               color: $color-text-light;
+            }
+
+            .layoutCheckboxContainer {
+              display: flex;
+              flex-direction: row;
+              gap: 1rem;
+              justify-content: space-between;
+              align-items: center;
+              padding: 2rem;
+              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+              border-radius: 25px;
+              cursor: pointer;
+
+              input[type="checkbox"] {
+                -webkit-appearance: none;
+                appearance: none;
+                background-color: $color-white;
+                border-radius: 50px;
+                cursor: pointer;
+                position: relative;
+                outline: 1px solid $color-text-lighter;
+                outline-offset: 3px;
+                padding: 0.5rem;
+
+                &:checked {
+                  outline: 1px solid $color-primary;
+                }
+
+                &:checked::before {
+                  content: '';
+                  position: absolute;
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                  width: 1rem; /* Adjust size as needed */
+                  height: 1rem; /* Adjust size as needed */
+                  border-radius: 50px;
+                  background-color: $color-primary;
+                  border: 2px solid #fff; /* Change this to your desired color */
+                }
+              }
+              .layoutOptionsText {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+
+                p:first-of-type {
+                  font-size: 1rem;
+                  font-weight: 700;
+                  color: $color-text;
+                }
+                
+                p:last-of-type {
+                  font-size: 1rem;
+                  font-weight: 400;
+                  color: $color-text-light;
+                }
+              
+              }
+            }
+            .selected {
+              outline: 2px solid $color-primary;
             }
           }
         }
@@ -318,7 +456,112 @@
         height: 1rem;
       }
     }
+
 }
+// Variables for colors
+$modal-background-color: #fff;
+$overlay-background-color: rgba(0, 0, 0, 0.5);
+$button-font-size: 1.5rem;
+$icon-size: 32px;
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: $overlay-background-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+
+  .modal {
+    background-color: $modal-background-color;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+
+    .modalHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+
+      h2 {
+        margin: 0;
+      }
+
+      .closeButton {
+        background: none;
+        border: none;
+        font-size: $button-font-size;
+        cursor: pointer;
+      }
+    }
+
+    .modalBody {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      h3 {
+        margin-top: 0;
+      }
+
+      input[type='text'] {
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        width: 100%;
+        max-width: 400px;
+      }
+
+      .iconGrid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 10px;
+        margin-top: 20px;
+
+        .iconOption {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          cursor: pointer;
+
+          svg {
+            width: $icon-size;
+            height: $icon-size;
+          }
+
+          p {
+            margin-top: 5px;
+            font-size: 0.9rem;
+          }
+        }
+      }
+
+      button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #0056b3;
+        }
+      }
+    }
+  }
+}
+
   
   
   

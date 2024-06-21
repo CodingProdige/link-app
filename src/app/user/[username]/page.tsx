@@ -96,8 +96,8 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
                   {link?.active && (
                     <Link className={styles.linkPill} href={link.link} key={link.id} target="_blank" rel="noopener noreferrer">
                       <li className={styles.linkItem} key={link.id}>
-                        {link?.image ? (
-                          <div className={styles.linkImageContainer} style={{backgroundImage: `url("${link.image}")`}}></div>
+                        {link?.metadata?.metadata["og:image"] ? (
+                          <div className={styles.linkImageContainer} style={{backgroundImage: `url("${link.metadata.metadata["og:image"]}")`}}></div>
                         ) : (
                           <div className={styles.emptyThumbnail}></div>
                         )}

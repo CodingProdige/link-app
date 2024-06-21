@@ -1,10 +1,12 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { RiDraggable } from "react-icons/ri";
 import styles from '@/styles/draggableList.module.scss';
-import { updateLinks, updateLinkActiveState, updateLinkData, deleteLinkById, validateUrl} from '@/utils/firebaseUtils'; // Ensure you have the correct path
+import { updateLinks, updateLinkActiveState, updateLinkData, deleteLinkById, validateUrl, uploadImage} from '@/utils/firebaseUtils'; // Ensure you have the correct path
 import Image from 'next/image';
+import * as FaIcons from 'react-icons/fa'; // Import all FontAwesome icons
+import { IconContext } from 'react-icons';
 
 // Function to reorder the list
 const reorder = (list, startIndex, endIndex) => {
@@ -40,6 +42,12 @@ const DraggableList = ({ items = [], userId, setItems }) => {
   const [focusStyle, setFocusStyle] = useState({});
   const [url, setUrl] = useState('');
   const [error, setError] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [showIconPicker, setShowIconPicker] = useState(false);
+  const [selectedIcon, setSelectedIcon] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const fileInputRef = useRef(null);
+
 
   const onDragEnd = async (result) => {
     if (!result.destination) {
@@ -150,6 +158,8 @@ const DraggableList = ({ items = [], userId, setItems }) => {
       if (data?.metadata["og:image"]) {
         updatedItems[index].image = data?.metadata["og:image"];
       }
+      updatedItems[index].layout = 'classic';
+      updatedItems[index].linkType = 'external';
       updatedItems[index].link = url;
       setItems(updatedItems);
   
@@ -188,6 +198,103 @@ const DraggableList = ({ items = [], userId, setItems }) => {
       setLoading(false);
     }
   };
+
+  const handleLayoutOptionClick = async (option, index) => {
+    try {
+      setLoading(true);
+      const updatedItems = [...items];
+      updatedItems[index].layout = option;
+      // updatedItems[index].linkType = 'external';
+  
+      await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata
+      setItems(updatedItems);
+      console.log('Link layout updated successfully');
+    } catch (error) {
+      setError('Failed to update link layout. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVideoOptionClick = async (option, index) => {
+    try {
+      setLoading(true);
+      const updatedItems = [...items];
+      updatedItems[index].linkType = option;
+      // updatedItems[index].linkType = 'external';
+  
+      await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata
+      setItems(updatedItems);
+      console.log('link Type updated successfully');
+    } catch (error) {
+      setError('Failed to update link type. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleMusicOptionClick = async (option, index) => {
+    try {
+      setLoading(true);
+      const updatedItems = [...items];
+      updatedItems[index].linkType = option;
+      // updatedItems[index].linkType = 'external';
+  
+      await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata
+      setItems(updatedItems);
+      console.log('link Type updated successfully');
+    } catch (error) {
+      setError('Failed to update link type. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleFileChange = async (event, index) => {
+    const file = event.target.files[0];
+    if (file) {
+      try {
+        setLoading(true);
+        const imageStorageUrl = await uploadImage(userId, file);
+        console.log('Uploaded image URL:', imageStorageUrl);
+
+        const updatedItems = [...items];
+        updatedItems[index].metadata.metadata["og:image"] = imageStorageUrl;
+
+        const updatedLinks = await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata
+        setItems(updatedLinks);
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      } finally {
+        setLoading(false);
+        setShowModal(false);
+      }
+    }
+  };
+
+  const handleIconSelect = async (icon, index) => {
+    try {
+      setLoading(true);
+      setSelectedIcon(icon);
+      console.log('Selected icon:', icon);
+      const updatedItems = [...items];
+      updatedItems[index].metadata.metadata["og:image"] = null;
+      updatedItems[index].metadata.metadata["og:icon"] = icon;
+
+      const updatedLinks = await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata
+      setItems(updatedLinks);
+      setShowModal(false); // Close modal after upload
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    } finally {
+      setLoading(false);
+      setShowModal(false);
+    }
+  };
+
+  const filteredIcons = Object.keys(FaIcons).filter(iconName =>
+    iconName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -343,25 +450,58 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                           </svg>
                         </div>
                       </div>
-
                     </div>
 
                     {functionPanelOpen && activeIndex === index && (
                       <div className={styles.functionalityContainer}>
-
                         {functionPanelOpen && activeFunction === 'layout' && activeIndex === index && (
                           <div className={styles.layoutPanel}>
                             <div className={styles.closeFunctionPanel}>
                               <p className={styles.closeFunctionPanelText}>Layout Options</p>
                               <svg 
                                 onClick={() => setFunctionPanelOpen(false)}
-                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16"
                               >
                                 <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
                               </svg>
                             </div>
                             <div className={styles.layoutText}>
-                              <p>Layout options</p>
+                              <p>Choose a layout for your link</p>
+                              <div 
+                                className={`${styles.layoutCheckboxContainer} ${item.layout == 'classic' ? styles.selected : ''}`} 
+                                onClick={() => handleLayoutOptionClick('classic', index)}
+                              >
+                                <input 
+                                  type="checkbox" 
+                                  id="classic" 
+                                  name="classic" 
+                                  value="classic" 
+                                  checked={item.layout === 'classic' } 
+                                />
+                                <div className={styles.layoutOptionsText}>
+                                  <p>Classic</p>
+                                  <p>Efficient, direct and compact.</p>
+                                </div>
+                                <Image src="https://firebasestorage.googleapis.com/v0/b/linkapp-a5ccb.appspot.com/o/Platform%20Images%2FClassic.png?alt=media&token=12b5c3ee-ccca-4a72-92a2-981b2bdae1a4" alt="Classic Layout" width={200} height={200} />
+                              </div>
+
+                              <div 
+                                className={`${styles.layoutCheckboxContainer} ${item.layout === 'featured' ? styles.selected : ''}`} 
+                                onClick={() => handleLayoutOptionClick('featured', index)}
+                              >
+                                <input 
+                                  type="checkbox" 
+                                  id="featured" 
+                                  name="featured" 
+                                  value="featured" 
+                                  checked={item.layout === 'featured'} 
+                                />
+                                <div className={styles.layoutOptionsText}>
+                                  <p>Featured</p>
+                                  <p>Make your link stand out with a larger, more attractive display.</p>
+                                </div>
+                                <Image src="https://firebasestorage.googleapis.com/v0/b/linkapp-a5ccb.appspot.com/o/Platform%20Images%2FFeatured.png?alt=media&token=c4ca60e2-6026-46c3-96fd-9be4f1f7975c" alt="Classic Layout" width={200} height={200} />
+                              </div>
                             </div>
                           </div>
                         )}
@@ -372,13 +512,48 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                               <p className={styles.closeFunctionPanelText}>Video Options</p>
                               <svg 
                                 onClick={() => setFunctionPanelOpen(false)}
-                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16"
                               >
                                 <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
                               </svg>
                             </div>
                             <div className={styles.videoText}>
-                              <p>Video options</p>
+                              <p>Choose a video option for your link</p>
+                              <div 
+                                className={`${styles.videoCheckboxContainer} ${item.linkType === 'external' ? styles.selected : ''}`} 
+                                onClick={() => handleVideoOptionClick('external', index)}
+                              >
+                                <input 
+                                  type="checkbox" 
+                                  id="external" 
+                                  name="external" 
+                                  value="external" 
+                                  checked={item.linkType === 'external'} 
+                                  className={styles.checkbox}
+                                />
+                                <div className={styles.videoOptionsText}>
+                                  <p>External Link</p>
+                                  <p>Direct your audience to the video link.</p>
+                                </div>
+                              </div>
+
+                              <div 
+                                className={`${styles.videoCheckboxContainer} ${item.linkType === 'embed' ? styles.selected : ''}`} 
+                                onClick={() => handleVideoOptionClick('embed', index)}
+                              >
+                                <input 
+                                  type="checkbox" 
+                                  id="embed" 
+                                  name="embed" 
+                                  value="embed" 
+                                  checked={item.linkType === 'embed'} 
+                                  className={styles.checkbox}
+                                />
+                                <div className={styles.videoOptionsText}>
+                                  <p>Embed Video</p>
+                                  <p>Play the video directly on your Fanslink page.</p>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         )}
@@ -389,7 +564,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                               <p className={styles.closeFunctionPanelText}>Image Options</p>
                               <svg 
                                 onClick={() => setFunctionPanelOpen(false)}
-                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16"
                               >
                                 <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
                               </svg>
@@ -400,9 +575,77 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                               )}
                               <div className={styles.imageText}>
                                 <p>Add or replace a thumbnail.</p>
+                                <button onClick={() => setShowModal(true)}>Select Image or Icon</button>
                               </div>
                             </div>
-
+                            {showModal && (
+                              <div className={styles.modalOverlay}>
+                                <div className={styles.modal}>
+                                  <div className={styles.modalHeader}>
+                                    <h2>Select an Option</h2>
+                                    <button className={styles.closeButton} onClick={() => setShowModal(false)}>×</button>
+                                  </div>
+                                  <div className={styles.modalBody}>
+                                    {!showIconPicker ? (
+                                      <div>
+                                        <h3>Upload an Image</h3>
+                                        <input 
+                                          type="file" 
+                                          ref={fileInputRef} 
+                                          style={{ display: 'none' }} 
+                                          onChange={(e) => handleFileChange(e, index)} 
+                                        />
+                                        {
+                                          loading ? (
+                                            <button onClick={() => fileInputRef.current.click()}>Uploading...</button>
+                                          ) : (
+                                            <button onClick={() => fileInputRef.current.click()}>Upload Image</button>
+                                          )
+                                        }
+                                        <button onClick={() => setShowIconPicker(true)}>Select an Icon</button>
+                                      </div>
+                                    ) : (
+                                      <div>
+                                        <div>
+                                          <h3>Select an Icon</h3>
+                                          <svg 
+                                            onClick={() => setShowIconPicker(false)}
+                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"
+                                          >
+                                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                          </svg>
+                                        </div>
+                                      
+                                        <input 
+                                          type="text" 
+                                          placeholder="Search icons..." 
+                                          value={searchTerm} 
+                                          onChange={(e) => setSearchTerm(e.target.value)} 
+                                        />
+                                        <div className={styles.iconGrid}>
+                                          <IconContext.Provider value={{ size: "32px" }}>
+                                            {filteredIcons.map(iconName => {
+                                              const IconComponent = FaIcons[iconName];
+                                              return (
+                                                <div 
+                                                  key={iconName} 
+                                                  className={styles.iconOption} 
+                                                  onClick={() => handleIconSelect(iconName, index)}
+                                                >
+                                                  <IconComponent />
+                                                  <p>{iconName}</p>
+                                                </div>
+                                              );
+                                            })}
+                                          </IconContext.Provider>
+                                        </div>
+                                        <button onClick={() => setShowIconPicker(false)}>Back</button>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            )}
                           </div>
                         )}
 
@@ -421,6 +664,41 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                             </div>
                             <div className={styles.musicText}>
                               <p>Music options</p>
+                              <div 
+                                className={`${styles.musicCheckboxContainer} ${item.linkType === 'external' ? styles.selected : ''}`} 
+                                onClick={() => handleMusicOptionClick('external', index)}
+                              >
+                                <input 
+                                  type="checkbox" 
+                                  id="external" 
+                                  name="external" 
+                                  value="external" 
+                                  checked={item.linkType === 'external'} 
+                                  className={styles.checkbox}
+                                />
+                                <div className={styles.musicOptionsText}>
+                                  <p>External Link</p>
+                                  <p>Direct your audience to the music link.</p>
+                                </div>
+                              </div>
+
+                              <div 
+                                className={`${styles.musicCheckboxContainer} ${item.linkType === 'embed' ? styles.selected : ''}`} 
+                                onClick={() => handleMusicOptionClick('embed', index)}
+                              >
+                                <input 
+                                  type="checkbox" 
+                                  id="embed" 
+                                  name="embed" 
+                                  value="embed" 
+                                  checked={item.linkType === 'embed'} 
+                                  className={styles.checkbox}
+                                />
+                                <div className={styles.musicOptionsText}>
+                                  <p>Embed Track</p>
+                                  <p>Play the track directly on your Fanslink page.</p>
+                                </div>
+                              </div>
                             </div>
                           </div>
                         )}

@@ -1,7 +1,7 @@
 import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs, arrayUnion, updateDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { sendPasswordResetEmail } from "firebase/auth";
-import {auth, db } from '@/firebase/firebase';
+import {auth, db, storage } from '@/firebase/firebase';
 import axios from 'axios';
 
 /**
@@ -175,7 +175,8 @@ export const addLinkToFirestore = async ({ title, link, userId, urlMetaData }) =
     link,
     active: false,
     metadata: urlMetaData,
-    image: urlMetaData.metadata["og:image"] || null
+    layout: 'classic',
+    linkType: 'external',
   };
 
   let updatedLinks = [];
@@ -392,6 +393,30 @@ export const downloadAndUploadImage = async (userId, imageUrl) => {
     return downloadURL;
   } catch (error) {
     console.error('Error downloading or uploading image: ', error);
+    throw error;
+  }
+};
+
+/**
+ * Uploads the given image file to Firebase Storage under the current user.
+ * @param {string} userId - The ID of the current user.
+ * @param {File} imageFile - The image file to upload.
+ * @returns {Promise<string>} - The download URL of the uploaded image.
+ */
+export const uploadImage = async (userId, imageFile) => {
+  try {
+    // Create a reference to the Firebase Storage location
+    const storageRef = ref(storage, `users/${userId}/images/${Date.now()}_${imageFile.name}`);
+
+    // Upload the image file to Firebase Storage
+    await uploadBytes(storageRef, imageFile);
+
+    // Get the download URL of the uploaded image
+    const downloadURL = await getDownloadURL(storageRef);
+
+    return downloadURL;
+  } catch (error) {
+    console.error('Error uploading image: ', error);
     throw error;
   }
 };

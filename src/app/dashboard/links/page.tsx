@@ -11,7 +11,6 @@ import { fetchUserData } from '@/utils/firebaseUtils';
 import styles from '@/styles/dashboardLinks.module.scss';
 import AddLinkForm from '@/components/AddLinkForm';
 import Loading from '@/components/Loading';
-import { prev } from 'cheerio/lib/api/traversing';
 
 const Links = () => {
   const { user, loading: authLoading } = useAuth();
@@ -19,7 +18,7 @@ const Links = () => {
   const router = useRouter();
   const [userData, setUserData] = useState(null);
   const [addLinkActive, setAddLinkActive] = useState(false);
-  const [links, setLinks] = useState([]);
+  const [links, setLinks] = useState([]); // Initialize links as an empty array
   const [previewKey, setPreviewKey] = useState(0); // Key to force MobilePreview re-render
   const [linkPageUrl, setLinkPageUrl] = useState('/');
   const [isPreviewSmall, setIsPreviewSmall] = useState(false);

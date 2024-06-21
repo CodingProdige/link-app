@@ -9,6 +9,10 @@
     justify-content: space-around;
     gap: 2rem;
 
+    @media (max-width: $screen-lg) {
+        margin-bottom: 8rem;
+    }
+
     .linksContainer {
         display: flex;
         flex-direction: column;

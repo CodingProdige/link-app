@@ -15,7 +15,6 @@
     height: 100%;
     width: 15rem;
     padding: 1rem;
-    z-index: 1000;
 
     @media (max-width: $screen-lg) {
         flex-direction: row;
@@ -274,7 +273,7 @@
                 border-radius: 25px;
                 padding: 1rem;
                 box-shadow: 0 0 10px rgba($color-black, 0.1);
-                z-index: 1000;
+                z-index: 100;
                 width: 20rem;
             
                 @media (min-width: $screen-lg) {
