@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { RiDraggable } from "react-icons/ri";
 import styles from '@/styles/draggableList.module.scss';
-import { updateLinks, updateLinkActiveState, updateLinkData, deleteLinkById, validateUrl, uploadImage} from '@/utils/firebaseUtils'; // Ensure you have the correct path
+import { updateLinks, updateLinkActiveState, updateLinkData, deleteLinkById, validateUrl, uploadImage } from '@/utils/firebaseUtils'; // Ensure you have the correct path
 import Image from 'next/image';
 import * as FaIcons from 'react-icons/fa'; // Import all FontAwesome icons
 import { IconContext } from 'react-icons';
@@ -47,7 +47,6 @@ const DraggableList = ({ items = [], userId, setItems }) => {
   const [selectedIcon, setSelectedIcon] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const fileInputRef = useRef(null);
-
 
   const onDragEnd = async (result) => {
     if (!result.destination) {
@@ -141,7 +140,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
         body: JSON.stringify({ url }),
       });
       const data = await res.json();
-  
+
       if (data?.metadata["og:image"]) {
         const imageUrl = data.metadata["og:image"];
         const image = await downloadAndUploadImage(userId, imageUrl);
@@ -149,7 +148,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
       } else {
         data.metadata["og:image"] = null;
       }
-  
+
       const updatedItems = [...items];
       updatedItems[index].metadata = data;
       if (data?.metadata["og:title"]) {
@@ -162,7 +161,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
       updatedItems[index].linkType = 'external';
       updatedItems[index].link = url;
       setItems(updatedItems);
-  
+
       await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata
       console.log('Link and metadata updated successfully');
     } catch (error) {
@@ -171,7 +170,6 @@ const DraggableList = ({ items = [], userId, setItems }) => {
       setLoading(false);
     }
   };
-  
 
   const stopEditing = async (index, field) => {
     setLoading(true);
@@ -205,7 +203,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
       const updatedItems = [...items];
       updatedItems[index].layout = option;
       // updatedItems[index].linkType = 'external';
-  
+
       await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata
       setItems(updatedItems);
       console.log('Link layout updated successfully');
@@ -222,7 +220,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
       const updatedItems = [...items];
       updatedItems[index].linkType = option;
       // updatedItems[index].linkType = 'external';
-  
+
       await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata
       setItems(updatedItems);
       console.log('link Type updated successfully');
@@ -231,7 +229,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const handleMusicOptionClick = async (option, index) => {
     try {
@@ -239,7 +237,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
       const updatedItems = [...items];
       updatedItems[index].linkType = option;
       // updatedItems[index].linkType = 'external';
-  
+
       await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata
       setItems(updatedItems);
       console.log('link Type updated successfully');
@@ -248,7 +246,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const handleFileChange = async (event, index) => {
     const file = event.target.files[0];
@@ -260,9 +258,10 @@ const DraggableList = ({ items = [], userId, setItems }) => {
 
         const updatedItems = [...items];
         updatedItems[index].metadata.metadata["og:image"] = imageStorageUrl;
+        updatedItems[index].metadata.metadata["og:icon"] = null;
 
-        const updatedLinks = await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata
-        setItems(updatedLinks);
+        await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata
+        setItems(updatedItems);
       } catch (error) {
         console.error('Error uploading image:', error);
       } finally {
@@ -281,11 +280,11 @@ const DraggableList = ({ items = [], userId, setItems }) => {
       updatedItems[index].metadata.metadata["og:image"] = null;
       updatedItems[index].metadata.metadata["og:icon"] = icon;
 
-      const updatedLinks = await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata
-      setItems(updatedLinks);
+      await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata
+      setItems(updatedItems);
       setShowModal(false); // Close modal after upload
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error('Error selecting icon:', error);
     } finally {
       setLoading(false);
       setShowModal(false);
@@ -345,7 +344,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                             ) : (
                               <span className={styles.linkTitle} onClick={() => startEditing(index, 'title')}>
                                 <p>{item.title ? item.title : "Title"}</p>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil" viewBox="0 0 16 16">
                                   <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
                                 </svg>
                               </span>
@@ -372,7 +371,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                             ) : (
                               <span className={styles.linkUrl} onClick={() => startEditing(index, 'link')}>
                                 <p>{item.link ? item.link : "Link"}</p>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pencil" viewBox="0 0 16 16">
                                   <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
                                 </svg>
                               </span>
@@ -392,7 +391,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                         </div>
 
                         <div className={styles.dataFunctions}>
-                          <svg
+                        <svg
                             className={`
                               ${activeFunction === 'layout' && activeIndex === index ? styles.functionActive : ''}
                             `}
@@ -476,7 +475,8 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                                   id="classic" 
                                   name="classic" 
                                   value="classic" 
-                                  checked={item.layout === 'classic' } 
+                                  checked={item.layout === 'classic'} 
+                                  readOnly
                                 />
                                 <div className={styles.layoutOptionsText}>
                                   <p>Classic</p>
@@ -495,12 +495,13 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                                   name="featured" 
                                   value="featured" 
                                   checked={item.layout === 'featured'} 
+                                  readOnly
                                 />
                                 <div className={styles.layoutOptionsText}>
                                   <p>Featured</p>
                                   <p>Make your link stand out with a larger, more attractive display.</p>
                                 </div>
-                                <Image src="https://firebasestorage.googleapis.com/v0/b/linkapp-a5ccb.appspot.com/o/Platform%20Images%2FFeatured.png?alt=media&token=c4ca60e2-6026-46c3-96fd-9be4f1f7975c" alt="Classic Layout" width={200} height={200} />
+                                <Image src="https://firebasestorage.googleapis.com/v0/b/linkapp-a5ccb.appspot.com/o/Platform%20Images%2FFeatured.png?alt=media&token=c4ca60e2-6026-46c3-96fd-9be4f1f7975c" alt="Featured Layout" width={200} height={200} />
                               </div>
                             </div>
                           </div>
@@ -529,6 +530,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                                   name="external" 
                                   value="external" 
                                   checked={item.linkType === 'external'} 
+                                  readOnly
                                   className={styles.checkbox}
                                 />
                                 <div className={styles.videoOptionsText}>
@@ -547,6 +549,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                                   name="embed" 
                                   value="embed" 
                                   checked={item.linkType === 'embed'} 
+                                  readOnly
                                   className={styles.checkbox}
                                 />
                                 <div className={styles.videoOptionsText}>
@@ -570,8 +573,18 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                               </svg>
                             </div>
                             <div className={styles.imageFunctionContent}>
-                              {item?.metadata?.metadata["og:image"] && (
-                                <Image src={item?.metadata?.metadata["og:image"]} alt="Thumbnail" width={200} height={200} />
+                              {item?.metadata?.metadata["og:icon"] ? (
+                                <div className={styles.selectedIcon}>
+                                  <IconContext.Provider value={{ size: '32px' }}>
+                                    {React.createElement(FaIcons[item?.metadata?.metadata["og:icon"]])}
+                                  </IconContext.Provider>
+                                </div>
+                              ) : (
+                                <>
+                                  {item?.metadata?.metadata["og:image"] && (
+                                    <Image src={item?.metadata?.metadata["og:image"]} alt="Thumbnail" width={200} height={200} />
+                                  )}
+                                </>
                               )}
                               <div className={styles.imageText}>
                                 <p>Add or replace a thumbnail.</p>
@@ -595,13 +608,11 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                                           style={{ display: 'none' }} 
                                           onChange={(e) => handleFileChange(e, index)} 
                                         />
-                                        {
-                                          loading ? (
-                                            <button onClick={() => fileInputRef.current.click()}>Uploading...</button>
-                                          ) : (
-                                            <button onClick={() => fileInputRef.current.click()}>Upload Image</button>
-                                          )
-                                        }
+                                        {loading ? (
+                                          <button onClick={() => fileInputRef.current.click()}>Uploading...</button>
+                                        ) : (
+                                          <button onClick={() => fileInputRef.current.click()}>Upload Image</button>
+                                        )}
                                         <button onClick={() => setShowIconPicker(true)}>Select an Icon</button>
                                       </div>
                                     ) : (
@@ -610,7 +621,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                                           <h3>Select an Icon</h3>
                                           <svg 
                                             onClick={() => setShowIconPicker(false)}
-                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"
+                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16"
                                           >
                                             <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
                                           </svg>
@@ -633,7 +644,6 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                                                   onClick={() => handleIconSelect(iconName, index)}
                                                 >
                                                   <IconComponent />
-                                                  <p>{iconName}</p>
                                                 </div>
                                               );
                                             })}
@@ -655,7 +665,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                               <p className={styles.closeFunctionPanelText}>Music Options</p>
                               <svg 
                                 onClick={() => setFunctionPanelOpen(false)}
-                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-music-note-beamed" viewBox="0 0 16 16"
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-music-note-beamed" viewBox="0 0 16 16"
                               >
                                 <path d="M6 13c0 1.105-1.12 2-2.5 2S1 14.105 1 13s1.12-2 2.5-2 2.5.896 2.5 2m9-2c0 1.105-1.12 2-2.5 2s-2.5-.895-2.5-2 1.12-2 2.5-2 2.5.895 2.5 2"/>
                                 <path fill-rule="evenodd" d="M14 11V2h1v9zM6 3v10H5V3z"/>
@@ -674,6 +684,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                                   name="external" 
                                   value="external" 
                                   checked={item.linkType === 'external'} 
+                                  readOnly
                                   className={styles.checkbox}
                                 />
                                 <div className={styles.musicOptionsText}>
@@ -692,6 +703,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                                   name="embed" 
                                   value="embed" 
                                   checked={item.linkType === 'embed'} 
+                                  readOnly
                                   className={styles.checkbox}
                                 />
                                 <div className={styles.musicOptionsText}>
@@ -709,11 +721,11 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                               <p className={styles.closeFunctionPanelText}>Delete</p>
                               <svg 
                                 onClick={() => {
-                                  setFunctionPanelOpen(false)
-                                  setActiveFunction('')
-                                  setActiveIndex(null)
+                                  setFunctionPanelOpen(false);
+                                  setActiveFunction('');
+                                  setActiveIndex(null);
                                 }}
-                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"
+                                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16"
                               >
                                 <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
                               </svg>

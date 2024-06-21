@@ -3,6 +3,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { sendPasswordResetEmail } from "firebase/auth";
 import {auth, db, storage } from '@/firebase/firebase';
 import axios from 'axios';
+import imageCompression from 'browser-image-compression';
 
 /**
  * Fetch user data by UID.
@@ -398,18 +399,26 @@ export const downloadAndUploadImage = async (userId, imageUrl) => {
 };
 
 /**
- * Uploads the given image file to Firebase Storage under the current user.
+ * Compresses and uploads the given image file to Firebase Storage under the current user.
  * @param {string} userId - The ID of the current user.
  * @param {File} imageFile - The image file to upload.
  * @returns {Promise<string>} - The download URL of the uploaded image.
  */
 export const uploadImage = async (userId, imageFile) => {
   try {
+    // Compress the image file
+    const options = {
+      maxSizeMB: 0.5, // Maximum size in MB
+      maxWidthOrHeight: 1920, // Max width or height
+      useWebWorker: true, // Use web worker for better performance
+    };
+    const compressedFile = await imageCompression(imageFile, options);
+
     // Create a reference to the Firebase Storage location
     const storageRef = ref(storage, `users/${userId}/images/${Date.now()}_${imageFile.name}`);
 
-    // Upload the image file to Firebase Storage
-    await uploadBytes(storageRef, imageFile);
+    // Upload the compressed image file to Firebase Storage
+    await uploadBytes(storageRef, compressedFile);
 
     // Get the download URL of the uploaded image
     const downloadURL = await getDownloadURL(storageRef);

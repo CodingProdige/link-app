@@ -1,4 +1,5 @@
 "use client";
+import React from 'react';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
@@ -8,6 +9,8 @@ import { fetchUserDataByUsername } from '@/utils/firebaseUtils';
 import { usePrismic } from '@/context/PrismicContext';
 import { PrismicNextImage } from '@prismicio/next';
 import styles from '@/styles/userlinkPage.module.scss';
+import * as FaIcons from 'react-icons/fa'; // Import all FontAwesome icons
+import { IconContext } from 'react-icons';
 
 interface UserPageProps {
   params: {
@@ -96,11 +99,23 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
                   {link?.active && (
                     <Link className={styles.linkPill} href={link.link} key={link.id} target="_blank" rel="noopener noreferrer">
                       <li className={styles.linkItem} key={link.id}>
-                        {link?.metadata?.metadata["og:image"] ? (
-                          <div className={styles.linkImageContainer} style={{backgroundImage: `url("${link.metadata.metadata["og:image"]}")`}}></div>
-                        ) : (
-                          <div className={styles.emptyThumbnail}></div>
-                        )}
+                        {
+                          link?.metadata?.metadata["og:icon"] ? (
+                            <div className={styles.selectedIcon}>
+                              <IconContext.Provider value={{ size: '32px' }}>
+                                {React.createElement(FaIcons[link?.metadata?.metadata["og:icon"]])}
+                              </IconContext.Provider>
+                            </div>
+                          ) : (
+                            <>
+                              {link?.metadata?.metadata["og:image"] ? (
+                                <div className={styles.linkImageContainer} style={{backgroundImage: `url("${link.metadata.metadata["og:image"]}")`}}></div>
+                              ) : (
+                                <div className={styles.emptyThumbnail}></div>
+                              )}
+                            </>
+                          )
+                        }
                         <p className={styles.linkTitle}>{link.title ? link.title : "Title"}</p>
                         <div className={styles.linkOptions}>
                           {/* <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-share" viewBox="0 0 16 16">

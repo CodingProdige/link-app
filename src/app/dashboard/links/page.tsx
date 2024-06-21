@@ -47,7 +47,7 @@ const Links = () => {
         .then(data => {
           if (data) {
             setUserData(data);
-            setLinks(data.links || []);
+            setLinks(data?.links);
             const origin = getOrigin();
             setLinkPageUrl(`${origin}/user/${data.username}`); // Update link page URL
           } else {
@@ -58,7 +58,7 @@ const Links = () => {
           console.error('Error fetching user data:', error);
         });
     }
-  }, [authLoading, user]);
+  }, [authLoading, user, userData?.links]);
 
   if (authLoading || prismicLoading) {
     return <Loading />;
@@ -83,7 +83,7 @@ const Links = () => {
             </button>
           )}
         </div>
-        {links.length > 0 && <DraggableList items={links} setItems={handleLinksUpdate} userId={user.uid} />}
+        {links?.length > 0 && <DraggableList items={links} setItems={handleLinksUpdate} userId={user.uid} />}
       </div>
       {linkPageUrl && (
         <>
