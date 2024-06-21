@@ -251,15 +251,21 @@ const DraggableList = ({ items = [], userId, setItems }) => {
   const handleFileChange = async (event, index) => {
     const file = event.target.files[0];
     if (file) {
+      // Check if the file type is an image
+      if (!file.type.startsWith('image/')) {
+        alert('Error: The selected file is not an image.');
+        return;
+      }
+  
       try {
         setLoading(true);
         const imageStorageUrl = await uploadImage(userId, file);
         console.log('Uploaded image URL:', imageStorageUrl);
-
+  
         const updatedItems = [...items];
         updatedItems[index].metadata.metadata["og:image"] = imageStorageUrl;
         updatedItems[index].metadata.metadata["og:icon"] = null;
-
+  
         await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata
         setItems(updatedItems);
       } catch (error) {
@@ -270,6 +276,22 @@ const DraggableList = ({ items = [], userId, setItems }) => {
       }
     }
   };
+
+  const handleRemoveThumbnail = async (index) => {
+    try {
+      setLoading(true);
+      const updatedItems = [...items];
+      updatedItems[index].metadata.metadata["og:image"] = null;
+      updatedItems[index].metadata.metadata["og:icon"] = null;
+
+      await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata
+      setItems(updatedItems);
+    } catch (error) {
+      console.error('Error removing thumbnail:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const handleIconSelect = async (icon, index) => {
     try {
@@ -288,12 +310,23 @@ const DraggableList = ({ items = [], userId, setItems }) => {
     } finally {
       setLoading(false);
       setShowModal(false);
+      setShowIconPicker(false)
     }
   };
 
   const filteredIcons = Object.keys(FaIcons).filter(iconName =>
     iconName.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const thumbnailButtonLabel = (imageUrl, iconName) => {
+    if (imageUrl) {
+      return 'Change Thumbnail';
+    } else if (iconName) {
+      return 'Change Icon';
+    } else {
+      return 'Add Thumbnail';
+    }
+  }
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -458,7 +491,11 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                             <div className={styles.closeFunctionPanel}>
                               <p className={styles.closeFunctionPanelText}>Layout Options</p>
                               <svg 
-                                onClick={() => setFunctionPanelOpen(false)}
+                                onClick={() => {
+                                  setFunctionPanelOpen(false)
+                                  setActiveFunction('');
+                                  setActiveIndex(null);
+                                }}
                                 xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16"
                               >
                                 <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
@@ -479,10 +516,14 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                                   readOnly
                                 />
                                 <div className={styles.layoutOptionsText}>
-                                  <p>Classic</p>
-                                  <p>Efficient, direct and compact.</p>
+                                  <div className={styles.layoutOptionsTextInner}>
+                                    <Image src="https://firebasestorage.googleapis.com/v0/b/linkapp-a5ccb.appspot.com/o/Platform%20Images%2FClassic.png?alt=media&token=12b5c3ee-ccca-4a72-92a2-981b2bdae1a4" alt="Classic Layout" width={200} height={200} />
+                                    <div className={styles.layoutOptionsTextContainer}>
+                                      <p>Classic</p>
+                                      <p>Efficient, direct and compact.</p>
+                                    </div>
+                                  </div>
                                 </div>
-                                <Image src="https://firebasestorage.googleapis.com/v0/b/linkapp-a5ccb.appspot.com/o/Platform%20Images%2FClassic.png?alt=media&token=12b5c3ee-ccca-4a72-92a2-981b2bdae1a4" alt="Classic Layout" width={200} height={200} />
                               </div>
 
                               <div 
@@ -498,10 +539,14 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                                   readOnly
                                 />
                                 <div className={styles.layoutOptionsText}>
-                                  <p>Featured</p>
-                                  <p>Make your link stand out with a larger, more attractive display.</p>
+                                  <div className={styles.layoutOptionsTextInner}>
+                                    <Image src="https://firebasestorage.googleapis.com/v0/b/linkapp-a5ccb.appspot.com/o/Platform%20Images%2FFeatured.png?alt=media&token=c4ca60e2-6026-46c3-96fd-9be4f1f7975c" alt="Featured Layout" width={200} height={200} />
+                                    <div className={styles.layoutOptionsTextContainer}>
+                                      <p>Featured</p>
+                                      <p>Make your link stand out with a larger, more attractive display.</p>
+                                    </div>
+                                  </div>
                                 </div>
-                                <Image src="https://firebasestorage.googleapis.com/v0/b/linkapp-a5ccb.appspot.com/o/Platform%20Images%2FFeatured.png?alt=media&token=c4ca60e2-6026-46c3-96fd-9be4f1f7975c" alt="Featured Layout" width={200} height={200} />
                               </div>
                             </div>
                           </div>
@@ -512,7 +557,11 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                             <div className={styles.closeFunctionPanel}>
                               <p className={styles.closeFunctionPanelText}>Video Options</p>
                               <svg 
-                                onClick={() => setFunctionPanelOpen(false)}
+                                onClick={() => {
+                                  setFunctionPanelOpen(false)
+                                  setActiveFunction('');
+                                  setActiveIndex(null);
+                                }}
                                 xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16"
                               >
                                 <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
@@ -566,7 +615,11 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                             <div className={styles.closeFunctionPanel}>
                               <p className={styles.closeFunctionPanelText}>Image Options</p>
                               <svg 
-                                onClick={() => setFunctionPanelOpen(false)}
+                                onClick={() => {
+                                  setFunctionPanelOpen(false)
+                                  setActiveFunction('');
+                                  setActiveIndex(null);
+                                }}
                                 xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16"
                               >
                                 <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
@@ -582,49 +635,63 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                               ) : (
                                 <>
                                   {item?.metadata?.metadata["og:image"] && (
-                                    <Image src={item?.metadata?.metadata["og:image"]} alt="Thumbnail" width={200} height={200} />
+                                    <div className={styles.selectedImage} style={ item?.metadata?.metadata["og:image"] && {backgroundImage: `url("${item?.metadata?.metadata["og:image"]}")`}}></div>
                                   )}
                                 </>
                               )}
                               <div className={styles.imageText}>
-                                <p>Add or replace a thumbnail.</p>
-                                <button onClick={() => setShowModal(true)}>Select Image or Icon</button>
+                                {
+                                  !item?.metadata?.metadata["og:image"] && !item?.metadata?.metadata["og:icon"] && <p>Add a thumbnail or icon to your link.</p>
+                                }
+                                <div className={styles.imageButtons}>
+                                  <button onClick={() => setShowModal(true)}>
+                                    {thumbnailButtonLabel(item?.metadata?.metadata["og:image"], item?.metadata?.metadata["og:icon"])}
+                                  </button>
+                                  <button onClick={() => handleRemoveThumbnail(index)}>Remove</button>
+                                </div>
                               </div>
                             </div>
+
                             {showModal && (
                               <div className={styles.modalOverlay}>
                                 <div className={styles.modal}>
                                   <div className={styles.modalHeader}>
-                                    <h2>Select an Option</h2>
-                                    <button className={styles.closeButton} onClick={() => setShowModal(false)}>×</button>
+                                    <p>Add a thumbnail or icon</p>
+                                    <svg 
+                                      onClick={() => setShowModal(false)}
+                                      xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"
+                                    >
+                                      <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                    </svg>
                                   </div>
                                   <div className={styles.modalBody}>
                                     {!showIconPicker ? (
-                                      <div>
-                                        <h3>Upload an Image</h3>
+                                      <div className={styles.mediaOptionsContainer}>
                                         <input 
                                           type="file" 
                                           ref={fileInputRef} 
                                           style={{ display: 'none' }} 
                                           onChange={(e) => handleFileChange(e, index)} 
                                         />
-                                        {loading ? (
-                                          <button onClick={() => fileInputRef.current.click()}>Uploading...</button>
-                                        ) : (
-                                          <button onClick={() => fileInputRef.current.click()}>Upload Image</button>
-                                        )}
-                                        <button onClick={() => setShowIconPicker(true)}>Select an Icon</button>
+                                        <div className={styles.mediaOptionsButtons}>
+                                          {loading ? (
+                                            <button onClick={() => fileInputRef.current.click()}>Uploading...</button>
+                                          ) : (
+                                            <button onClick={() => fileInputRef.current.click()}>Upload Image</button>
+                                          )}
+                                          <button onClick={() => setShowIconPicker(true)}>Select an Icon</button>
+                                        </div>
                                       </div>
                                     ) : (
-                                      <div>
-                                        <div>
-                                          <h3>Select an Icon</h3>
+                                      <div className={styles.iconSelectContainer}>
+                                        <div className={styles.iconSelectHeader}>
                                           <svg 
                                             onClick={() => setShowIconPicker(false)}
-                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-x-lg" viewBox="0 0 16 16"
+                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16"
                                           >
-                                            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
                                           </svg>
+                                          <p>Select an Icon</p>
                                         </div>
                                       
                                         <input 
@@ -664,7 +731,11 @@ const DraggableList = ({ items = [], userId, setItems }) => {
                             <div className={styles.closeFunctionPanel}>
                               <p className={styles.closeFunctionPanelText}>Music Options</p>
                               <svg 
-                                onClick={() => setFunctionPanelOpen(false)}
+                                onClick={() => {
+                                  setFunctionPanelOpen(false)
+                                  setActiveFunction('');
+                                  setActiveIndex(null);
+                                }}
                                 xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-music-note-beamed" viewBox="0 0 16 16"
                               >
                                 <path d="M6 13c0 1.105-1.12 2-2.5 2S1 14.105 1 13s1.12-2 2.5-2 2.5.896 2.5 2m9-2c0 1.105-1.12 2-2.5 2s-2.5-.895-2.5-2 1.12-2 2.5-2 2.5.895 2.5 2"/>
