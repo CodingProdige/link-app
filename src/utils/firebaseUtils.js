@@ -158,6 +158,10 @@ export const fetchUserDataByUsername = async (username) => {
  * Fetches a user's links from Firestore.
  */
 export const addLinkToFirestore = async ({ title, link, userId, urlMetaData }) => {
+  if (!title || !link || !userId || !urlMetaData) {
+    throw new Error('Missing required fields');
+  }
+
   const userDocRef = doc(db, 'users', userId);
   const userDoc = await getDoc(userDocRef);
 
@@ -170,15 +174,26 @@ export const addLinkToFirestore = async ({ title, link, userId, urlMetaData }) =
     newId = currentLinks.length + 1;
   }
 
+  // Ensure urlMetaData and its fields have no undefined values
+  const validatedUrlMetaData = { mediaType: urlMetaData.mediaType, metadata: {} };
+  for (const key in urlMetaData.metadata) {
+    if (urlMetaData.metadata[key] !== undefined) {
+      validatedUrlMetaData.metadata[key] = urlMetaData.metadata[key];
+    }
+  }
+
   const newLink = { 
     id: newId, 
     title, 
     link,
     active: false,
-    metadata: urlMetaData,
+    metadata: validatedUrlMetaData,
     layout: 'classic',
     linkType: 'external',
   };
+
+  // Log the newLink object to check for any undefined fields
+  console.log('New Link:', newLink);
 
   let updatedLinks = [];
   if (currentLinks.length === 0) {
@@ -195,6 +210,9 @@ export const addLinkToFirestore = async ({ title, link, userId, urlMetaData }) =
 
   return updatedLinks;
 };
+
+
+
 
 
 /**

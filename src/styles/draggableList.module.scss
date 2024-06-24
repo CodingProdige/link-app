@@ -729,6 +729,10 @@
         justify-content: space-between;      
         align-items: center;
 
+        @media (max-width: $screen-lg) {
+          flex-direction: column;
+        }
+
         button {
           width: 100%;
           background-color: $color-off-black;

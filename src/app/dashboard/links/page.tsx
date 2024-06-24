@@ -58,7 +58,7 @@ const Links = () => {
           console.error('Error fetching user data:', error);
         });
     }
-  }, [authLoading, user, userData?.links]);
+  }, [authLoading, user]);
 
   if (authLoading || prismicLoading) {
     return <Loading />;

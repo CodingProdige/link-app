@@ -37,7 +37,7 @@ export default function AddLinkForm({ toggleAddLink, setItems, userId, setAddLin
       setItems(updatedItems);
       toggleAddLink();
     } catch (error) {
-      setError('Failed to add link. Please try again.');
+      setError(error.message);
     } finally {
       setTitle('');
       setLink('');
@@ -59,17 +59,31 @@ export default function AddLinkForm({ toggleAddLink, setItems, userId, setAddLin
         body: JSON.stringify({ url }),
       });
       const data = await res.json();
-
-      if (data?.metadata["og:image"]) {
-        const imageUrl = data.metadata["og:image"];
-        const uploadedImageUrl = await downloadAndUploadImage(userId, imageUrl);
-        data.metadata["og:image"] = uploadedImageUrl;
-      } else {
-        data.metadata["og:image"] = null;
+      console.log(data.mediaType);
+  
+      // Validate and sanitize metadata
+      const sanitizedMetadata = {};
+      for (const key in data.metadata) {
+        if (data.metadata[key] !== undefined) {
+          sanitizedMetadata[key] = data.metadata[key];
+        }
       }
-
-      setUrlMetaData(data);
-      setTitle(data?.metadata["og:title"]);
+  
+      if (sanitizedMetadata["og:image"]) {
+        const imageUrl = sanitizedMetadata["og:image"];
+        const uploadedImageUrl = await downloadAndUploadImage(userId, imageUrl);
+        sanitizedMetadata["og:image"] = uploadedImageUrl;
+      } else {
+        sanitizedMetadata["og:image"] = '';
+      }
+  
+      const mediaType = data.mediaType || sanitizedMetadata["og:type"] || '';
+  
+      setUrlMetaData({
+        mediaType: mediaType,
+        metadata: sanitizedMetadata,
+      });
+      setTitle(sanitizedMetadata["og:title"]);
       setLink(url);
     } catch (error) {
       setError('Failed to fetch media type. Please try again.');
@@ -78,6 +92,8 @@ export default function AddLinkForm({ toggleAddLink, setItems, userId, setAddLin
       setLoading(false);
     }
   };
+  
+  
 
   return (
     <div className={styles.addLinkFormContainer}>
@@ -94,7 +110,7 @@ export default function AddLinkForm({ toggleAddLink, setItems, userId, setAddLin
             <button type="submit" disabled={!url || loading}>
               {loading ? 'Scanning URL...' : 'Add'}
             </button>
-            <button type="button" onClick={() => setAddLinkActive()}>
+            <button type="button" onClick={() => setAddLinkActive(false)}>
               Cancel
             </button>
           </form>
