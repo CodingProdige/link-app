@@ -38,7 +38,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
           href={link.link} 
           target="_blank" 
           rel="noopener noreferrer"
-          style={{...theme?.PILLS}}
+          style={{...theme?.PILLS || {}}}
         >
           <li className={styles.linkItem}>
             {link?.metadata?.metadata["og:icon"] ? (
@@ -56,9 +56,15 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
                 )}
               </div>
             )}
-            <p className={styles.linkTitle}>{link.title ? link.title : "Title"}</p>
+            <p 
+              style={{...theme?.TEXT || {}}}
+              className={styles.linkTitle}>{link.title ? link.title : "Title"}
+            </p>
             <div className={styles.linkOptions}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-link-45deg" viewBox="0 0 16 16">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-link-45deg" viewBox="0 0 16 16"
+                style={{...theme?.TEXT || {}}}
+              >
                 <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
                 <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
               </svg>
@@ -75,7 +81,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
           href={link.link} 
           target="_blank" 
           rel="noopener noreferrer"
-          style={link?.metadata?.metadata["og:image"] ? {backgroundImage: `url("${link?.metadata?.metadata["og:image"]}")`, ...theme?.PILLS} : {...theme?.PILLS}}
+          style={link?.metadata?.metadata["og:image"] ? {backgroundImage: `url("${link?.metadata?.metadata["og:image"]}")`, ...theme?.PILLS || {} } : {...theme?.PILLS || {}}}
         >
           <li className={styles.linkItem}>
             <div className={styles.selectedIcon}>
@@ -86,9 +92,15 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
               )}
             </div>
             <div className={styles.linkContent}>
-              <p className={styles.linkTitle}>{link.title ? link.title : "Title"}</p>
+              <p 
+                style={{...theme?.TEXT || {}}}
+                className={styles.linkTitle}>{link.title ? link.title : "Title"}
+              </p>
               <div className={styles.linkOptions}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-link-45deg" viewBox="0 0 16 16">
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-link-45deg" viewBox="0 0 16 16"
+                  style={{...theme?.TEXT || {}}}
+                >
                   <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
                   <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
                 </svg>
@@ -104,7 +116,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
         return (
           <div 
             className={styles.linkPillVideo}
-            style={{...theme?.PILLS}}
+            style={{...theme?.PILLS || {}}}
           >
             <li className={styles.linkItem}>
               <div className={styles.selectedIcon}>
@@ -125,11 +137,15 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
                 )}
               </div>
               <div className={styles.linkContent}>
-                <p className={styles.linkTitle}>{link.title ? link.title : "Title"}</p>
+                <p 
+                  style={{...theme?.TEXT || {}}}
+                  className={styles.linkTitle}>{link.title ? link.title : "Title"}
+                </p>
                 <div className={styles.linkOptions}>
                   <svg 
                     onClick={() => handleShareLink(link.link)}
                     xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-copy" viewBox="0 0 16 16"
+                    style={{...theme?.TEXT  || {}}}
                   >
                     <path fillRule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
                   </svg>
@@ -144,7 +160,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
         return (
           <div 
             className={styles.linkPillMusic}
-            style={{...theme?.PILLS}}
+            style={{...theme?.PILLS || {}}}
           >
             <li className={styles.linkItem}>
               <div className={styles.selectedIcon}>
@@ -165,11 +181,15 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
                 )}
               </div>
               <div className={styles.linkContent}>
-                <p className={styles.linkTitle}>{link.title ? link.title : "Title"}</p>
+                <p 
+                  style={{...theme?.TEXT || {}}}
+                  className={styles.linkTitle}>{link.title ? link.title : "Title"}
+                </p>
                 <div className={styles.linkOptions}>
                   <svg 
                     onClick={() => handleShareLink(link.link)}
                     xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-copy" viewBox="0 0 16 16"
+                    style={{...theme?.TEXT || {}}}
                   >
                     <path fillRule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
                   </svg>
@@ -190,7 +210,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
           href={link.link} 
           target="_blank" 
           rel="noopener noreferrer"
-          style={{...theme?.PILLS}}
+          style={{...theme?.PILLS  || {}}}
         >
           <li className={styles.linkItem}>
             {link?.metadata?.metadata["og:icon"] ? (
@@ -208,7 +228,10 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
                 )}
               </div>
             )}
-            <p className={styles.linkTitle}>{link.title ? link.title : "Title"}</p>
+            <p 
+              style={{...theme?.TEXT || {}}}
+              className={styles.linkTitle}>{link.title ? link.title : "Title"}
+            </p>
             <div className={styles.linkOptions}>
               {/* Optional link options */}
             </div>
@@ -272,9 +295,9 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
     <div className={styles.containerPublicProfile}>
       <div 
         className={styles.background}
-        style={{...theme?.BACKGROUND}}
+        style={{...theme?.BACKGROUND || {} }}
       >
-        {theme.BACKGROUND_VIDEO && (
+        {theme?.BACKGROUND_VIDEO && (
           <video
               autoPlay
               loop
@@ -288,9 +311,26 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
                   objectFit: 'cover',
               }}
           >
-              <source src={theme.BACKGROUND_VIDEO.videoUrl} type="video/mp4" />
+              <source src={theme?.BACKGROUND_VIDEO.videoUrl || '' } type="video/mp4" />
               Your browser does not support the video tag.
           </video>
+        )}
+        {theme?.BACKGROUND_IMAGE && (
+          <Image 
+            src={theme?.BACKGROUND_IMAGE.imageUrl || ''} 
+            alt={theme?.NAME || ''} 
+            layout="fill" 
+            objectFit="cover"
+            style={{ 
+              objectPosition: 'center',
+              position: 'absolute',
+              top: '0',
+              left: '0',
+              width: '100%',
+              height: '100%',
+              ...theme?.BACKGROUND_IMAGE_STYLING || {}
+            }}
+          />
         )}
       </div>
       <div className={styles.innerContainer}>
@@ -305,7 +345,10 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
             />
           )}
           <div className={styles.nameContainer}>
-            <p className={styles.username}>@{userData.username}</p>
+            <p 
+              style={{...theme?.HEADER_TEXT}}
+              className={styles.username}>@{userData.username}
+            </p>
             {userData?.name && <p className={styles.name}>{userData.name}</p>}
           </div>
         </div>

@@ -9,6 +9,7 @@ import { fetchUserData, updateUserTheme  } from '@/utils/firebaseUtils';
 import MobilePreview from '@/components/MobilePreview';
 import MobilePreviewSmall from '@/components/MobilePreviewSmall';
 import { THEMES } from '@/lib/constants';
+import Image from 'next/image';
 
 export default function Appearance() {
   const { user, loading: authLoading } = useAuth();
@@ -73,7 +74,7 @@ export default function Appearance() {
                   >
                     <div className={styles.themePreviewContainer}>
                       <div className={styles.themePreview} style={{ ...theme.BACKGROUND }}>
-                        {theme.BACKGROUND_VIDEO && (
+                        {theme?.BACKGROUND_VIDEO && (
                           <video
                               autoPlay
                               loop
@@ -91,11 +92,28 @@ export default function Appearance() {
                               Your browser does not support the video tag.
                           </video>
                         )}
+                        {theme?.BACKGROUND_IMAGE && (
+                          <Image 
+                            src={theme?.BACKGROUND_IMAGE.imageUrl} 
+                            alt={theme?.NAME} 
+                            layout="fill" 
+                            objectFit="cover"
+                            style={{ 
+                              objectPosition: 'center',
+                              position: 'absolute',
+                              top: '0',
+                              left: '0',
+                              width: '100%',
+                              height: '100%',
+                              ...theme?.BACKGROUND_IMAGE_STYLING || {}
+                            }}
+                          />
+                        )}
                         <ul className={styles.themePillsList}>
-                          <li style={{...theme.PILLS}}></li>
-                          <li style={{...theme.PILLS}}></li>
-                          <li style={{...theme.PILLS}}></li>
-                          <li style={{...theme.PILLS}}></li>
+                          <li style={{...theme?.PILLS  || {} }}></li>
+                          <li style={{...theme?.PILLS  || {} }}></li>
+                          <li style={{...theme?.PILLS  || {} }}></li>
+                          <li style={{...theme?.PILLS  || {} }}></li>
                         </ul>
                       </div>
                       <p className={styles.themeName}>{theme.NAME}</p>
@@ -103,8 +121,16 @@ export default function Appearance() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            <div className={styles.customContainer}>
+              <h4 className={styles.customTitle}>Customize</h4>
+              <div className={styles.customWrapper}>
+
+              </div>
+            </div>
+
           </div>
-        </div>
 
           
           {linkPageUrl && userData && (

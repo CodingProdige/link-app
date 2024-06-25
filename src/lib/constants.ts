@@ -1,3 +1,5 @@
+
+
 // lib/constants.ts
 export const ROUTES = {
     HOME: {
@@ -68,7 +70,6 @@ export const THEMES = [
         },
         PILLS: {
             backgroundColor: '#FFFFFF',
-            color: '#000000',
             borderRadius: '25px',
         },
         HEADER_TEXT: {
@@ -85,7 +86,6 @@ export const THEMES = [
         },
         PILLS: {
             backgroundColor: '#FFFFFF',
-            color: '#FFA500',
             borderRadius: '25px',
             boxShadow: '3px 3px 0px 0px #000',
         },
@@ -103,7 +103,6 @@ export const THEMES = [
         },
         PILLS: {
             backgroundColor: '#FFFFFF',
-            color: '#1E90FF',
             borderRadius: '20px',
         },
         HEADER_TEXT: {
@@ -120,7 +119,6 @@ export const THEMES = [
         },
         PILLS: {
             backgroundColor: '#FFFFFF',
-            color: '#228B22',
             borderRadius: '10px',
         },
         HEADER_TEXT: {
@@ -137,7 +135,6 @@ export const THEMES = [
         },
         PILLS: {
             backgroundColor: '#FFFFFF',
-            color: '#EDC9AF',
             borderRadius: '25px',
         },
         HEADER_TEXT: {
@@ -152,16 +149,18 @@ export const THEMES = [
         BACKGROUND: {
             backgroundColor: '#E6E6FA',
         },
+        BACKGROUND_IMAGE: {
+            imageUrl: 'https://firebasestorage.googleapis.com/v0/b/linkapp-a5ccb.appspot.com/o/Platform%20Images%2F501.jpg?alt=media&token=866ee213-cdfc-4413-96fd-f4f3b32b2118',
+        },
         PILLS: {
-            backgroundColor: '#FFFFFF',
-            color: '#E6E6FA',
+            backgroundColor: '#53528e',
             borderRadius: '25px',
         },
         HEADER_TEXT: {
             color: '#000000',
         },
         TEXT: {
-            color: '#000000',
+            color: '#fff',
         },
     },
     {
@@ -171,7 +170,6 @@ export const THEMES = [
         },
         PILLS: {
             backgroundColor: '#FFFFFF',
-            color: '#9B111E',
             borderRadius: '25px',
         },
         HEADER_TEXT: {
@@ -188,7 +186,6 @@ export const THEMES = [
         },
         PILLS: {
             backgroundColor: '#FFFFFF',
-            color: '#98FF98',
             borderRadius: '15px',
         },
         HEADER_TEXT: {
@@ -220,9 +217,11 @@ export const THEMES = [
         BACKGROUND: {
             backgroundColor: '#FF7F50',
         },
+        BACKGROUND_IMAGE: {
+            imageUrl: 'https://firebasestorage.googleapis.com/v0/b/linkapp-a5ccb.appspot.com/o/Platform%20Images%2Fsmiling-young-woman-using-mobile-phone-against-sky.jpg?alt=media&token=fda1f0b3-61ee-4ca8-a374-0cdcf7fcc3ad',
+        },
         PILLS: {
             backgroundColor: '#FFFFFF',
-            color: '#FF7F50',
             borderRadius: '25px',
         },
         HEADER_TEXT: {
@@ -242,8 +241,7 @@ export const THEMES = [
         },
         PILLS: {
             backgroundColor: '#000000',
-            color: '#FFFFF0',
-            borderRadius: '45px',
+            borderRadius: '25px',
             outline: '1px solid #000',
             outlineOffset: '1px',
         },
@@ -259,9 +257,14 @@ export const THEMES = [
         BACKGROUND: {
             backgroundColor: '#708090',
         },
+        BACKGROUND_IMAGE: {
+            imageUrl: 'https://firebasestorage.googleapis.com/v0/b/linkapp-a5ccb.appspot.com/o/Platform%20Images%2Fblack-prism-concept-ai-generated.jpg?alt=media&token=5386da92-7696-46e1-8147-5d838fa35164',
+        },
+        BACKGROUND_IMAGE_STYLING: {
+            filter: 'blur(2px)',
+        },
         PILLS: {
             backgroundColor: '#FFFFFF',
-            color: '#708090',
             borderRadius: '25px',
         },
         HEADER_TEXT: {
