@@ -126,7 +126,6 @@ const DraggableList = ({ items = [], userId, setItems }) => {
   const handleChange = (e) => {
     setCurrentValue(e.target.value); // Update local state, not the items array
   };
-
   const handleFetchMetadata = async (url, index) => {
     if (!validateUrl(url)) {
       setError('Invalid URL format');
@@ -140,28 +139,32 @@ const DraggableList = ({ items = [], userId, setItems }) => {
         body: JSON.stringify({ url }),
       });
       const data = await res.json();
-
-      if (data?.metadata["og:image"]) {
-        const imageUrl = data.metadata["og:image"];
+  
+      // Validate and sanitize metadata
+      const sanitizedMetadata = {};
+      for (const key in data.metadata) {
+        if (data.metadata[key] !== undefined) {
+          sanitizedMetadata[key] = data.metadata[key];
+        }
+      }
+  
+      if (sanitizedMetadata["og:image"]) {
+        const imageUrl = sanitizedMetadata["og:image"];
         const image = await downloadAndUploadImage(userId, imageUrl);
-        data.metadata["og:image"] = image;
+        sanitizedMetadata["og:image"] = image;
       } else {
-        data.metadata["og:image"] = null;
+        sanitizedMetadata["og:image"] = null;
       }
-
+  
       const updatedItems = [...items];
-      updatedItems[index].metadata = data;
-      if (data?.metadata["og:title"]) {
-        updatedItems[index].title = data?.metadata["og:title"];
-      }
-      if (data?.metadata["og:image"]) {
-        updatedItems[index].image = data?.metadata["og:image"];
-      }
+      updatedItems[index].metadata = sanitizedMetadata;
+      updatedItems[index].title = sanitizedMetadata["og:title"] || '';
+      updatedItems[index].image = sanitizedMetadata["og:image"] || '';
       updatedItems[index].layout = 'classic';
       updatedItems[index].linkType = 'external';
-      updatedItems[index].link = url;
+      updatedItems[index].link = sanitizedMetadata["og:url"] || url;
       setItems(updatedItems);
-
+  
       await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata
       console.log('Link and metadata updated successfully');
     } catch (error) {

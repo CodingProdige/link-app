@@ -110,6 +110,34 @@ const EmbedContainer = styled.div`
         overflow: hidden;
     }
 
+    .generic-embed {
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 16 / 9;
+        border-radius: 25px;
+        overflow: hidden;
+
+        span {
+            width: 100% !important;
+            height: 100% !important;
+
+            iframe {
+                width: 100% !important;
+                height: 100% !important;
+
+                ._9kkd {
+                    padding-bottom: 56.25% !important;
+                }
+                #u_0_4_0f {
+                    padding-bottom: 56.25% !important;}
+            }
+        }
+    }
+
+    .fb-video ._9kkd {
+        padding-bottom: 56.25% !important;
+    }
+
     .spotify-embed {
         width: 100%;
         height: 100%;

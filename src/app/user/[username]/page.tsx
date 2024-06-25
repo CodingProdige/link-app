@@ -11,6 +11,8 @@ import styles from '@/styles/userlinkPage.module.scss';
 import * as FaIcons from 'react-icons/fa'; // Import all FontAwesome icons
 import { IconContext } from 'react-icons';
 import EmbedComponent from '@/components/EmbedUrl';
+import VideoEmbed from '@/components/VideoEmbed';
+
 
 interface UserPageProps {
   params: {
@@ -18,160 +20,6 @@ interface UserPageProps {
   };
 }
 
-const LinkComponent = ({ link }) => {
-  if (link?.layout === "classic" && link?.linkType === "external") {
-    return (
-      <Link className={styles.linkPill} href={link.link} key={link.id} target="_blank" rel="noopener noreferrer">
-        <li className={styles.linkItem} key={link.id}>
-          {link?.metadata?.metadata["og:icon"] ? (
-            <div className={styles.selectedIcon}>
-              <IconContext.Provider value={{ size: '32px' }}>
-                {React.createElement(FaIcons[link?.metadata?.metadata["og:icon"]])}
-              </IconContext.Provider>
-            </div>
-          ) : (
-            <div className={styles.imageIconWrapper}>
-              {link?.metadata?.metadata["og:image"] ? (
-                <div className={styles.linkImageContainer} style={{backgroundImage: `url("${link.metadata.metadata["og:image"]}")`}}></div>
-              ) : (
-                <div className={styles.emptyThumbnail}></div>
-              )}
-            </div>
-          )}
-          <p className={styles.linkTitle}>{link.title ? link.title : "Title"}</p>
-          <div className={styles.linkOptions}>
-            {/* Optional link options */}
-          </div>
-        </li>
-      </Link>
-    )
-  }
-
-  if (link?.layout === "featured" && link?.linkType === "external") {
-    return (
-      <Link 
-        className={styles.linkPillFeatured} 
-        href={link.link} 
-        key={link.id} 
-        target="_blank" 
-        rel="noopener noreferrer"
-        style={link?.metadata?.metadata["og:image"] ? {backgroundImage: `url("${link?.metadata?.metadata["og:image"]}")`} : {}}
-      >
-        <li className={styles.linkItem} key={link.id}>
-          <div className={styles.selectedIcon}>
-            {link?.metadata?.metadata["og:icon"] && (
-              <IconContext.Provider value={{ size: '32px' }}>
-                {React.createElement(FaIcons[link?.metadata?.metadata["og:icon"]])}
-              </IconContext.Provider>
-            )}
-          </div>
-          <div className={styles.linkContent}>
-            <p className={styles.linkTitle}>{link.title ? link.title : "Title"}</p>
-            <div className={styles.linkOptions}>
-              {/* Optional link options */}
-            </div>
-          </div>
-        </li>
-      </Link>
-    )
-  }
-
-  if (link?.linkType === "embed") {
-    if (link?.metadata?.mediaType.includes("video")) {
-      return (
-        <div className={styles.linkPillVideo} key={link.id}>
-          <li className={styles.linkItem} key={link.id}>
-            <div className={styles.selectedIcon}>
-              {link?.metadata?.metadata["og:icon"] ? (
-                <div className={styles.selectedIcon}>
-                  <IconContext.Provider value={{ size: '32px' }}>
-                    {React.createElement(FaIcons[link?.metadata?.metadata["og:icon"]])}
-                  </IconContext.Provider>
-                </div>
-              ) : (
-                <div className={styles.imageIconWrapper}>
-                  {link?.metadata?.metadata["og:image"] ? (
-                    <div className={styles.linkImageContainer} style={{backgroundImage: `url("${link.metadata.metadata["og:image"]}")`}}></div>
-                  ) : (
-                    <div className={styles.emptyThumbnail}></div>
-                  )}
-                </div>
-              )}
-            </div>
-            <div className={styles.linkContent}>
-              <p className={styles.linkTitle}>{link.title ? link.title : "Title"}</p>
-              <div className={styles.linkOptions}>
-                {/* Optional link options */}
-              </div>
-            </div>
-          </li>
-          <EmbedComponent url={`${link?.link}`} />
-        </div>
-      );
-    } else if (link?.metadata?.mediaType.includes("music")) {
-      return (
-        <div className={styles.linkPillMusic} key={link.id}>
-          <li className={styles.linkItem} key={link.id}>
-            <div className={styles.selectedIcon}>
-              {link?.metadata?.metadata["og:icon"] ? (
-                <div className={styles.selectedIcon}>
-                  <IconContext.Provider value={{ size: '32px' }}>
-                    {React.createElement(FaIcons[link?.metadata?.metadata["og:icon"]])}
-                  </IconContext.Provider>
-                </div>
-              ) : (
-                <div className={styles.imageIconWrapper}>
-                  {link?.metadata?.metadata["og:image"] ? (
-                    <div className={styles.linkImageContainer} style={{backgroundImage: `url("${link.metadata.metadata["og:image"]}")`}}></div>
-                  ) : (
-                    <div className={styles.emptyThumbnail}></div>
-                  )}
-                </div>
-              )}
-            </div>
-            <div className={styles.linkContent}>
-              <p className={styles.linkTitle}>{link.title ? link.title : "Title"}</p>
-              <div className={styles.linkOptions}>
-                {/* Optional link options */}
-              </div>
-            </div>
-          </li>
-          <EmbedComponent url={`${link?.link}`} />
-        </div>
-      );
-    }
-  }
-
-  if (link?.linkType === "external") {
-    return (
-      <Link className={styles.linkPill} href={link.link} key={link.id} target="_blank" rel="noopener noreferrer">
-        <li className={styles.linkItem} key={link.id}>
-          {link?.metadata?.metadata["og:icon"] ? (
-            <div className={styles.selectedIcon}>
-              <IconContext.Provider value={{ size: '32px' }}>
-                {React.createElement(FaIcons[link?.metadata?.metadata["og:icon"]])}
-              </IconContext.Provider>
-            </div>
-          ) : (
-            <div className={styles.imageIconWrapper}>
-              {link?.metadata?.metadata["og:image"] ? (
-                <div className={styles.linkImageContainer} style={{backgroundImage: `url("${link.metadata.metadata["og:image"]}")`}}></div>
-              ) : (
-                <div className={styles.emptyThumbnail}></div>
-              )}
-            </div>
-          )}
-          <p className={styles.linkTitle}>{link.title ? link.title : "Title"}</p>
-          <div className={styles.linkOptions}>
-            {/* Optional link options */}
-          </div>
-        </li>
-      </Link>
-    );
-  }
-
-  return null; // Return null for unsupported layouts or link types
-};
 
 const UserPage = ({ params: { username } }: UserPageProps) => {
   const [userData, setUserData] = useState<any>(null);
@@ -179,6 +27,180 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
   const [error, setError] = useState<string | null>(null);
   const { settings, loading: prismicLoading } = usePrismic();
   const [theme, setTheme] = useState(null);
+
+  const LinkComponent = ({ link }) => {
+
+    if (link?.layout === "classic" && link?.linkType === "external") {
+      return (
+        <Link className={styles.linkPill} href={link.link} key={link.id} target="_blank" rel="noopener noreferrer">
+          <li className={styles.linkItem} key={link.id}>
+            {link?.metadata?.metadata["og:icon"] ? (
+              <div className={styles.selectedIcon}>
+                <IconContext.Provider value={{ size: '32px' }}>
+                  {React.createElement(FaIcons[link?.metadata?.metadata["og:icon"]])}
+                </IconContext.Provider>
+              </div>
+            ) : (
+              <div className={styles.imageIconWrapper}>
+                {link?.metadata?.metadata["og:image"] ? (
+                  <div className={styles.linkImageContainer} style={{backgroundImage: `url("${link.metadata.metadata["og:image"]}")`}}></div>
+                ) : (
+                  <div className={styles.emptyThumbnail}></div>
+                )}
+              </div>
+            )}
+            <p className={styles.linkTitle}>{link.title ? link.title : "Title"}</p>
+            <div className={styles.linkOptions}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-link-45deg" viewBox="0 0 16 16">
+                <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
+                <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
+              </svg>
+            </div>
+          </li>
+        </Link>
+      )
+    }
+  
+    if (link?.layout === "featured" && link?.linkType === "external") {
+      return (
+        <Link 
+          className={styles.linkPillFeatured} 
+          href={link.link} 
+          key={link.id} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          style={link?.metadata?.metadata["og:image"] ? {backgroundImage: `url("${link?.metadata?.metadata["og:image"]}")`} : {}}
+        >
+          <li className={styles.linkItem} key={link.id}>
+            <div className={styles.selectedIcon}>
+              {link?.metadata?.metadata["og:icon"] && (
+                <IconContext.Provider value={{ size: '32px' }}>
+                  {React.createElement(FaIcons[link?.metadata?.metadata["og:icon"]])}
+                </IconContext.Provider>
+              )}
+            </div>
+            <div className={styles.linkContent}>
+              <p className={styles.linkTitle}>{link.title ? link.title : "Title"}</p>
+              <div className={styles.linkOptions}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-link-45deg" viewBox="0 0 16 16">
+                  <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1 1 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4 4 0 0 1-.128-1.287z"/>
+                  <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243z"/>
+                </svg>
+              </div>
+            </div>
+          </li>
+        </Link>
+      )
+    }
+  
+    if (link?.linkType === "embed") {
+      if (link?.metadata?.mediaType.includes("video")) {
+        return (
+          <div className={styles.linkPillVideo} key={link.id}>
+            <li className={styles.linkItem} key={link.id}>
+              <div className={styles.selectedIcon}>
+                {link?.metadata?.metadata["og:icon"] ? (
+                  <div className={styles.selectedIcon}>
+                    <IconContext.Provider value={{ size: '32px' }}>
+                      {React.createElement(FaIcons[link?.metadata?.metadata["og:icon"]])}
+                    </IconContext.Provider>
+                  </div>
+                ) : (
+                  <div className={styles.imageIconWrapper}>
+                    {link?.metadata?.metadata["og:image"] ? (
+                      <div className={styles.linkImageContainer} style={{backgroundImage: `url("${link.metadata.metadata["og:image"]}")`}}></div>
+                    ) : (
+                      <div className={styles.emptyThumbnail}></div>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className={styles.linkContent}>
+                <p className={styles.linkTitle}>{link.title ? link.title : "Title"}</p>
+                <div className={styles.linkOptions}>
+                  <svg 
+                    onClick={() => handleShareLink(link.link)}
+                    xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-copy" viewBox="0 0 16 16"
+                  >
+                    <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
+                  </svg>
+                </div>
+              </div>
+            </li>
+            {/* <EmbedComponent url={`${link?.link}`} /> */}
+            <VideoEmbed url={`${link?.link}`} />
+          </div>
+        );
+      } else if (link?.metadata?.mediaType.includes("music")) {
+        return (
+          <div className={styles.linkPillMusic} key={link.id}>
+            <li className={styles.linkItem} key={link.id}>
+              <div className={styles.selectedIcon}>
+                {link?.metadata?.metadata["og:icon"] ? (
+                  <div className={styles.selectedIcon}>
+                    <IconContext.Provider value={{ size: '32px' }}>
+                      {React.createElement(FaIcons[link?.metadata?.metadata["og:icon"]])}
+                    </IconContext.Provider>
+                  </div>
+                ) : (
+                  <div className={styles.imageIconWrapper}>
+                    {link?.metadata?.metadata["og:image"] ? (
+                      <div className={styles.linkImageContainer} style={{backgroundImage: `url("${link.metadata.metadata["og:image"]}")`}}></div>
+                    ) : (
+                      <div className={styles.emptyThumbnail}></div>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className={styles.linkContent}>
+                <p className={styles.linkTitle}>{link.title ? link.title : "Title"}</p>
+                <div className={styles.linkOptions}>
+                  <svg 
+                    onClick={() => handleShareLink(link.link)}
+                    xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-copy" viewBox="0 0 16 16"
+                  >
+                    <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
+                  </svg>
+                </div>
+              </div>
+            </li>
+            {/* <EmbedComponent url={`${link?.link}`} /> */}
+            <VideoEmbed url={`${link?.link}`} />
+          </div>
+        );
+      }
+    }
+  
+    if (link?.linkType === "external") {
+      return (
+        <Link className={styles.linkPill} href={link.link} key={link.id} target="_blank" rel="noopener noreferrer">
+          <li className={styles.linkItem} key={link.id}>
+            {link?.metadata?.metadata["og:icon"] ? (
+              <div className={styles.selectedIcon}>
+                <IconContext.Provider value={{ size: '32px' }}>
+                  {React.createElement(FaIcons[link?.metadata?.metadata["og:icon"]])}
+                </IconContext.Provider>
+              </div>
+            ) : (
+              <div className={styles.imageIconWrapper}>
+                {link?.metadata?.metadata["og:image"] ? (
+                  <div className={styles.linkImageContainer} style={{backgroundImage: `url("${link.metadata.metadata["og:image"]}")`}}></div>
+                ) : (
+                  <div className={styles.emptyThumbnail}></div>
+                )}
+              </div>
+            )}
+            <p className={styles.linkTitle}>{link.title ? link.title : "Title"}</p>
+            <div className={styles.linkOptions}>
+              {/* Optional link options */}
+            </div>
+          </li>
+        </Link>
+      );
+    }
+  
+    return null; // Return null for unsupported layouts or link types
+  };
 
   const handleShareLink = async ({ url }: { url: string }) => {
     try {
@@ -188,6 +210,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
       console.error('Failed to copy the link: ', err);
     }
   };
+
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -264,7 +287,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
         <div className={styles.fanslinkLogo}>
           <PrismicNextImage field={settings.data.logo} className={styles.fanslinkLogoImage} />
         </div>
-      )}
+      )}            
     </div>
   );
 };

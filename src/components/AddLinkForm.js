@@ -84,7 +84,7 @@ export default function AddLinkForm({ toggleAddLink, setItems, userId, setAddLin
         metadata: sanitizedMetadata,
       });
       setTitle(sanitizedMetadata["og:title"]);
-      setLink(url);
+      setLink(sanitizedMetadata["og:url"] ? sanitizedMetadata["og:url"] : url);
     } catch (error) {
       setError('Failed to fetch media type. Please try again.');
     } finally {
