@@ -154,9 +154,11 @@ export const fetchUserDataByUsername = async (username) => {
   }
 };
 
-/**
- * Fetches a user's links from Firestore.
- */
+// Function to generate a random 10-digit ID
+const generateRandomId = () => {
+  return Math.floor(1000000000 + Math.random() * 9000000000).toString();
+};
+
 export const addLinkToFirestore = async ({ title, link, userId, urlMetaData }) => {
   if (!title || !link || !userId || !urlMetaData) {
     throw new Error('Missing required fields');
@@ -166,12 +168,10 @@ export const addLinkToFirestore = async ({ title, link, userId, urlMetaData }) =
   const userDoc = await getDoc(userDocRef);
 
   let currentLinks = [];
-  let newId = 1;
 
   if (userDoc.exists()) {
     const userData = userDoc.data();
     currentLinks = userData.links || [];
-    newId = currentLinks.length + 1;
   }
 
   // Ensure urlMetaData and its fields have no undefined values
@@ -181,6 +181,12 @@ export const addLinkToFirestore = async ({ title, link, userId, urlMetaData }) =
       validatedUrlMetaData.metadata[key] = urlMetaData.metadata[key];
     }
   }
+
+  // Generate a unique ID
+  let newId;
+  do {
+    newId = generateRandomId();
+  } while (currentLinks.some(link => link.id === newId));
 
   const newLink = { 
     id: newId, 
@@ -444,6 +450,30 @@ export const uploadImage = async (userId, imageFile) => {
     return downloadURL;
   } catch (error) {
     console.error('Error uploading image: ', error);
+    throw error;
+  }
+};
+
+/**
+ * Updates the theme data in Firestore.
+ * @param {string} userId - The ID of the user.
+ * @param {object} theme - The new theme object to update.
+ */
+export const updateUserTheme = async (userId, theme) => {
+  try {
+    const userRef = doc(db, 'users', userId);
+    const userDoc = await getDoc(userRef);
+
+    if (userDoc.exists()) {
+      await updateDoc(userRef, { theme });
+
+      console.log(`User theme updated successfully`);
+      return theme;
+    } else {
+      throw new Error('User document does not exist');
+    }
+  } catch (error) {
+    console.error('Error updating user theme: ', error);
     throw error;
   }
 };

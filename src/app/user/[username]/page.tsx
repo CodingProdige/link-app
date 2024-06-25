@@ -28,12 +28,19 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
   const { settings, loading: prismicLoading } = usePrismic();
   const [theme, setTheme] = useState(null);
 
-  const LinkComponent = ({ link }) => {
+
+  const LinkComponent = ({ link, theme }) => {
 
     if (link?.layout === "classic" && link?.linkType === "external") {
       return (
-        <Link className={styles.linkPill} href={link.link} key={link.id} target="_blank" rel="noopener noreferrer">
-          <li className={styles.linkItem} key={link.id}>
+        <Link 
+          className={styles.linkPill} 
+          href={link.link} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          style={{...theme?.PILLS}}
+        >
+          <li className={styles.linkItem}>
             {link?.metadata?.metadata["og:icon"] ? (
               <div className={styles.selectedIcon}>
                 <IconContext.Provider value={{ size: '32px' }}>
@@ -66,12 +73,11 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
         <Link 
           className={styles.linkPillFeatured} 
           href={link.link} 
-          key={link.id} 
           target="_blank" 
           rel="noopener noreferrer"
-          style={link?.metadata?.metadata["og:image"] ? {backgroundImage: `url("${link?.metadata?.metadata["og:image"]}")`} : {}}
+          style={link?.metadata?.metadata["og:image"] ? {backgroundImage: `url("${link?.metadata?.metadata["og:image"]}")`, ...theme?.PILLS} : {...theme?.PILLS}}
         >
-          <li className={styles.linkItem} key={link.id}>
+          <li className={styles.linkItem}>
             <div className={styles.selectedIcon}>
               {link?.metadata?.metadata["og:icon"] && (
                 <IconContext.Provider value={{ size: '32px' }}>
@@ -96,8 +102,11 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
     if (link?.linkType === "embed") {
       if (link?.metadata?.mediaType.includes("video")) {
         return (
-          <div className={styles.linkPillVideo} key={link.id}>
-            <li className={styles.linkItem} key={link.id}>
+          <div 
+            className={styles.linkPillVideo}
+            style={{...theme?.PILLS}}
+          >
+            <li className={styles.linkItem}>
               <div className={styles.selectedIcon}>
                 {link?.metadata?.metadata["og:icon"] ? (
                   <div className={styles.selectedIcon}>
@@ -122,7 +131,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
                     onClick={() => handleShareLink(link.link)}
                     xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-copy" viewBox="0 0 16 16"
                   >
-                    <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
+                    <path fillRule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
                   </svg>
                 </div>
               </div>
@@ -133,8 +142,11 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
         );
       } else if (link?.metadata?.mediaType.includes("music")) {
         return (
-          <div className={styles.linkPillMusic} key={link.id}>
-            <li className={styles.linkItem} key={link.id}>
+          <div 
+            className={styles.linkPillMusic}
+            style={{...theme?.PILLS}}
+          >
+            <li className={styles.linkItem}>
               <div className={styles.selectedIcon}>
                 {link?.metadata?.metadata["og:icon"] ? (
                   <div className={styles.selectedIcon}>
@@ -159,7 +171,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
                     onClick={() => handleShareLink(link.link)}
                     xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-copy" viewBox="0 0 16 16"
                   >
-                    <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
+                    <path fillRule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z"/>
                   </svg>
                 </div>
               </div>
@@ -173,8 +185,14 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
   
     if (link?.linkType === "external") {
       return (
-        <Link className={styles.linkPill} href={link.link} key={link.id} target="_blank" rel="noopener noreferrer">
-          <li className={styles.linkItem} key={link.id}>
+        <Link 
+          className={styles.linkPill} 
+          href={link.link} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          style={{...theme?.PILLS}}
+        >
+          <li className={styles.linkItem}>
             {link?.metadata?.metadata["og:icon"] ? (
               <div className={styles.selectedIcon}>
                 <IconContext.Provider value={{ size: '32px' }}>
@@ -252,7 +270,29 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
 
   return (
     <div className={styles.containerPublicProfile}>
-      <div className={styles.background}></div>
+      <div 
+        className={styles.background}
+        style={{...theme?.BACKGROUND}}
+      >
+        {theme.BACKGROUND_VIDEO && (
+          <video
+              autoPlay
+              loop
+              muted
+              style={{
+                  position: 'absolute',
+                  top: '0',
+                  left: '0',
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+              }}
+          >
+              <source src={theme.BACKGROUND_VIDEO.videoUrl} type="video/mp4" />
+              Your browser does not support the video tag.
+          </video>
+        )}
+      </div>
       <div className={styles.innerContainer}>
         <div className={styles.profileContainer}>
           {userData?.photoUrl && (
@@ -275,7 +315,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
               {userData?.links.map((link: any) => (
                 <div className={styles.linkWrapper} key={link.id}>
                   {link?.active && (
-                    <LinkComponent link={link} />
+                    <LinkComponent link={link} theme={theme} />
                   )}
                 </div>
               ))}

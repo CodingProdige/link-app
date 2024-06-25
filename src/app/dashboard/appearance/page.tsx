@@ -5,9 +5,10 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/firebase/auth';
 import { usePrismic } from '@/context/PrismicContext';
 import styles from '@/styles/dashboardAppearance.module.scss';
-import { fetchUserData, getAllTemplates } from '@/utils/firebaseUtils';
+import { fetchUserData, updateUserTheme  } from '@/utils/firebaseUtils';
 import MobilePreview from '@/components/MobilePreview';
 import MobilePreviewSmall from '@/components/MobilePreviewSmall';
+import { THEMES } from '@/lib/constants';
 
 export default function Appearance() {
   const { user, loading: authLoading } = useAuth();
@@ -15,10 +16,13 @@ export default function Appearance() {
   const router = useRouter();
   const [theme, setTheme] = useState({});
   const [userData, setUserData] = useState(null);
-  const [themeTemplates, setThemeTemplates] = useState([]);
   const [previewKey, setPreviewKey] = useState(0); // Key to force MobilePreview re-render
   const linkPageUrl = userData ? `${window.location.origin}/user/${userData.username}` : '';
   const [isPreviewSmall, setIsPreviewSmall] = useState(false);
+
+  const handlePreviewToggle = () => {
+    setIsPreviewSmall(prevState => !prevState);
+  };
 
   useEffect(() => {
     const getUserData = async () => {
@@ -33,30 +37,74 @@ export default function Appearance() {
       }
     };
 
-    const getThemeTemplates = async () => {
-      try {
-        const templates = await getAllTemplates();
-        setThemeTemplates(templates);
-      } catch (error) {
-        console.error('Error fetching theme templates:', error);
-      }
-    };
-
     if (!authLoading && user) {
       getUserData();
-      getThemeTemplates();
     }
   }, [authLoading, user]);
 
-  const handlePreviewToggle = () => {
-    setIsPreviewSmall(prevState => !prevState);
+
+  const handleThemeSelect = async (selectedTheme) => {
+    if (user) {
+      try {
+        const theme = await updateUserTheme(user.uid, selectedTheme);
+        setPreviewKey(prevKey => prevKey + 1); // Force re-render of MobilePreview
+        console.log('Theme updated:', theme);
+      } catch (error) {
+        console.error('Error updating user theme:', error);
+      }
+    }
   };
 
   return (
     <>
       {userData && (
         <div className={styles.appearancePage}>
-          <h4>Appearance</h4>
+
+          <div className={styles.appearanceContainer}>
+    
+            <div className={styles.themesContainer}>
+              <h4 className={styles.appearanceTitle}>Themes</h4>
+              <div className={styles.themeContainerWrapper}>
+                {THEMES.map((theme, index) => (
+                  <div 
+                    key={index} 
+                    className={styles.themeContainer} 
+                    onClick={() => handleThemeSelect(theme)}
+                  >
+                    <div className={styles.themePreviewContainer}>
+                      <div className={styles.themePreview} style={{ ...theme.BACKGROUND }}>
+                        {theme.BACKGROUND_VIDEO && (
+                          <video
+                              autoPlay
+                              loop
+                              muted
+                              style={{
+                                  position: 'absolute',
+                                  top: '0',
+                                  left: '0',
+                                  width: '100%',
+                                  height: '100%',
+                                  objectFit: 'cover',
+                              }}
+                          >
+                              <source src={theme.BACKGROUND_VIDEO.videoUrl} type="video/mp4" />
+                              Your browser does not support the video tag.
+                          </video>
+                        )}
+                        <ul className={styles.themePillsList}>
+                          <li style={{...theme.PILLS}}></li>
+                          <li style={{...theme.PILLS}}></li>
+                          <li style={{...theme.PILLS}}></li>
+                          <li style={{...theme.PILLS}}></li>
+                        </ul>
+                      </div>
+                      <p className={styles.themeName}>{theme.NAME}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+          </div>
+        </div>
 
           
           {linkPageUrl && userData && (

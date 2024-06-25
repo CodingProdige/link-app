@@ -8,15 +8,12 @@ import { FcGoogle } from "react-icons/fc";
 import { fetchSettingsAndNavigation } from '@/lib/prismicClient';
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 import Link from 'next/link';
-import { DEFAULT_THEME } from '@/lib/constants';
 
 async function handleSignIn(email, password, setError, setLoading) {
   try {
     setLoading(true);
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
-
-    const theme = 'default';
 
     const response = await fetch('/api/generate-token', {
       method: 'POST',
@@ -29,15 +26,6 @@ async function handleSignIn(email, password, setError, setLoading) {
     if (response.ok) {
       const { customToken } = await response.json();
       document.cookie = `token=${customToken}; Path=/;`;
-
-      await fetch('/api/check-theme', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ uid: user.uid, theme }),
-      });
-
       window.location.href = '/dashboard';
     } else {
       const error = await response.json();
@@ -59,8 +47,6 @@ async function handleGoogleSignIn(setError, setLoading) {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    const theme = 'default';
-
     const response = await fetch('/api/generate-token', {
       method: 'POST',
       headers: {
@@ -72,15 +58,6 @@ async function handleGoogleSignIn(setError, setLoading) {
     if (response.ok) {
       const { customToken } = await response.json();
       document.cookie = `token=${customToken}; Path=/;`;
-
-      await fetch('/api/check-theme', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ uid: user.uid, theme }),
-      });
-
       window.location.href = '/dashboard';
     } else {
       const error = await response.json();
