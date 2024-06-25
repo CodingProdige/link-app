@@ -162,7 +162,7 @@ const DraggableList = ({ items = [], userId, setItems }) => {
       updatedItems[index].image = sanitizedMetadata["og:image"] || '';
       updatedItems[index].layout = 'classic';
       updatedItems[index].linkType = 'external';
-      updatedItems[index].link = sanitizedMetadata["og:url"] || url;
+      updatedItems[index].link = sanitizedMetadata["og:url"] ? sanitizedMetadata["og:url"] : url;
       setItems(updatedItems);
   
       await updateLinks(userId, updatedItems); // Update the Firestore links array after fetching metadata

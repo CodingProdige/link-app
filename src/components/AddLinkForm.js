@@ -147,10 +147,14 @@ export default function AddLinkForm({ toggleAddLink, setItems, userId, setAddLin
               onChange={(e) => setLink(e.target.value)}
               className={error ? styles.inputError : ''}
               required
+              readOnly
             />
             {error && <p className={styles.error}>{error}</p>}
             <button type="submit" disabled={!title || !link || loading}>
               {loading ? 'Saving...' : 'Save'}
+            </button>
+            <button type="button" onClick={() => setAddLinkActive(false)}>
+              Cancel
             </button>
           </form>
         </div>
