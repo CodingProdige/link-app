@@ -10,7 +10,6 @@ import { fetchSettingsAndNavigation } from '@/lib/prismicClient';
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 import Link from 'next/link';
 import { IMAGES } from '@/lib/images';
-import { DEFAULT_THEME } from '@/lib/constants';
 
 function getRandomHumanImage() {
   const humanImages = Object.values(IMAGES.PROFILE.HUMANS);
@@ -31,7 +30,6 @@ async function handleEmailSignUp(email, password, setError, setLoading) {
       photoURL: user.photoURL || getRandomHumanImage(),
       createdAt: new Date(),
       username: '',
-      theme: DEFAULT_THEME,
     });
 
     const response = await fetch('/api/generate-token', {
@@ -73,7 +71,6 @@ async function handleGoogleSignUp(setError, setLoading) {
       photoURL: user.photoURL || getRandomHumanImage(),
       createdAt: new Date(),
       username: '',
-      theme: DEFAULT_THEME,
     });
 
     const response = await fetch('/api/generate-token', {
