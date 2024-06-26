@@ -62,6 +62,7 @@ export const DASHBOARD_ROUTES = {
 export const THEMES = [
     {
         NAME: 'Midnight',
+        BACKGROUND_MEDIA: 'video',// 'image' or 'video' or 'color'
         BACKGROUND: {
             backgroundColor: '#000',
         },
@@ -81,6 +82,7 @@ export const THEMES = [
     },
     {
         NAME: 'Sunrise',
+        BACKGROUND_MEDIA: 'gradient',// 'image' or 'video' or 'color'
         BACKGROUND: {
             backgroundImage: 'linear-gradient(120deg, #f6d365 0%, #fda085 100%)',
         },
@@ -98,6 +100,7 @@ export const THEMES = [
     },
     {
         NAME: 'Ocean',
+        BACKGROUND_MEDIA: 'gradient',// 'image' or 'video' or 'color'
         BACKGROUND: {
             backgroundImage: 'linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)',
         },
@@ -114,6 +117,7 @@ export const THEMES = [
     },
     {
         NAME: 'Forest',
+        BACKGROUND_MEDIA: 'color',// 'image' or 'video' or 'color'
         BACKGROUND: {
             backgroundColor: '#228B22',
         },
@@ -130,6 +134,7 @@ export const THEMES = [
     },
     {
         NAME: 'Desert',
+        BACKGROUND_MEDIA: 'color',// 'image' or 'video' or 'color'
         BACKGROUND: {
             backgroundColor: '#EDC9AF',
         },
@@ -146,6 +151,7 @@ export const THEMES = [
     },
     {
         NAME: 'Lavender',
+        BACKGROUND_MEDIA: 'image',// 'image' or 'video' or 'color'
         BACKGROUND: {
             backgroundColor: '#E6E6FA',
         },
@@ -165,6 +171,7 @@ export const THEMES = [
     },
     {
         NAME: 'Ruby',
+        BACKGROUND_MEDIA: 'color',// 'image' or 'video' or 'color'
         BACKGROUND: {
             backgroundColor: '#9B111E',
         },
@@ -181,6 +188,7 @@ export const THEMES = [
     },
     {
         NAME: 'Mint',
+        BACKGROUND_MEDIA: 'color',// 'image' or 'video' or 'color'
         BACKGROUND: {
             backgroundColor: '#98FF98',
         },
@@ -197,6 +205,7 @@ export const THEMES = [
     },
     {
         NAME: 'Sunset',
+        BACKGROUND_MEDIA: 'color',// 'image' or 'video' or 'color'
         BACKGROUND: {
             backgroundColor: '#FF4500',
         },
@@ -214,6 +223,7 @@ export const THEMES = [
     },
     {
         NAME: 'Coral',
+        BACKGROUND_MEDIA: 'image',// 'image' or 'video' or 'color'
         BACKGROUND: {
             backgroundColor: '#FF7F50',
         },
@@ -233,11 +243,15 @@ export const THEMES = [
     },
     {
         NAME: 'Ivory',
+        BACKGROUND_MEDIA: 'video',// 'image' or 'video' or 'color'
         BACKGROUND: {
             backgroundColor: '#FFFFF0',
         },
         BACKGROUND_VIDEO: {
             videoUrl: 'https://firebasestorage.googleapis.com/v0/b/linkapp-a5ccb.appspot.com/o/Platform%20Videos%2F5255452_2018_Background_1280x720.mp4?alt=media&token=4a37041e-3515-4bf6-90c3-794dbd520a20',
+        },
+        BACKGROUND_VIDEO_STYLING: {
+            filter: 'blur(2px)',
         },
         PILLS: {
             backgroundColor: '#000000',
@@ -254,6 +268,7 @@ export const THEMES = [
     },
     {
         NAME: 'Slate',
+        BACKGROUND_MEDIA: 'image',// 'image' or 'video' or 'color'
         BACKGROUND: {
             backgroundColor: '#708090',
         },

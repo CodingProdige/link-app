@@ -295,9 +295,14 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
     <div className={styles.containerPublicProfile}>
       <div 
         className={styles.background}
-        style={{...theme?.BACKGROUND || {} }}
+        style={{
+          ...theme?.BACKGROUND || {},
+          ...(theme?.GRADIENT_ONE && theme?.GRADIENT_TWO && {
+            backgroundImage: `linear-gradient(${theme.GRADIENT_ANGLE || 0}deg, ${theme.GRADIENT_ONE}, ${theme.GRADIENT_TWO})`
+          })
+        }}
       >
-        {theme?.BACKGROUND_VIDEO && (
+        {theme?.BACKGROUND_VIDEO?.videoUrl && theme?.BACKGROUND_MEDIA == 'video' && (
           <video
               autoPlay
               loop
@@ -309,13 +314,14 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
+                  filter: `blur(${theme?.BACKGROUND_VIDEO?.filter || '0'}px)` || '0',
               }}
           >
-              <source src={theme?.BACKGROUND_VIDEO.videoUrl || '' } type="video/mp4" />
+              <source src={theme?.BACKGROUND_VIDEO?.videoUrl || '' } type="video/mp4" />
               Your browser does not support the video tag.
           </video>
         )}
-        {theme?.BACKGROUND_IMAGE && (
+        {theme?.BACKGROUND_IMAGE?.imageUrl && theme?.BACKGROUND_MEDIA == 'image' && (
           <Image 
             src={theme?.BACKGROUND_IMAGE.imageUrl || ''} 
             alt={theme?.NAME || ''} 
@@ -328,7 +334,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
               left: '0',
               width: '100%',
               height: '100%',
-              ...theme?.BACKGROUND_IMAGE_STYLING || {}
+              filter: `blur(${theme?.BACKGROUND_IMAGE?.filter || '0'}px)` || '0',
             }}
           />
         )}

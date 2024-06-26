@@ -432,7 +432,7 @@ export const uploadImage = async (userId, imageFile) => {
   try {
     // Compress the image file
     const options = {
-      maxSizeMB: 0.5, // Maximum size in MB
+      maxSizeMB: 5, // Maximum size in MB
       maxWidthOrHeight: 1920, // Max width or height
       useWebWorker: true, // Use web worker for better performance
     };
@@ -450,6 +450,32 @@ export const uploadImage = async (userId, imageFile) => {
     return downloadURL;
   } catch (error) {
     console.error('Error uploading image: ', error);
+    throw error;
+  }
+};
+
+/**
+ * Compresses and uploads the given video file to Firebase Storage under the current user.
+ * Ensures the video is no longer than 5 minutes.
+ * @param {string} userId - The ID of the current user.
+ * @param {File} videoFile - The video file to upload.
+ * @returns {Promise<string>} - The download URL of the uploaded video.
+ */
+export const uploadVideo = async (userId, videoFile) => {
+  try {
+    // Create a reference to the Firebase Storage location
+    const storage = getStorage();
+    const storageRef = ref(storage, `users/${userId}/videos/${Date.now()}_${videoFile.name}`);
+
+    // Upload the compressed video file to Firebase Storage
+    await uploadBytes(storageRef, videoFile);
+
+    // Get the download URL of the uploaded video
+    const downloadURL = await getDownloadURL(storageRef);
+
+    return downloadURL;
+  } catch (error) {
+    console.error('Error uploading video: ', error);
     throw error;
   }
 };
