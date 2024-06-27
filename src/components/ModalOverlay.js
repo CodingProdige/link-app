@@ -1,13 +1,14 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import styles from '@/styles/modalOverlay.module.scss';
-import { hasUsernameField, isUsernameTaken, updateUsername } from '@/utils/firebaseUtils';
+import { hasUsernameField, isUsernameTaken, updateUsername, fetchUserData, updateUserTheme } from '@/utils/firebaseUtils';
 import { useAuth } from '@/firebase/auth';
 import { PrismicNextImage } from "@prismicio/next";
 import { useRouter } from 'next/navigation';
 import Loading from '@/components/Loading';
+import ThemeSelector from '@/components/ThemeSelector'; // Adjust the import path if necessary
 
-const ModalOverlay = ({ settings }) => {
+const ModalOverlay = ({ settings, onUsernameUpdate }) => {
   const [username, setUsername] = useState('');
   const [usernameExists, setUsernameExists] = useState(false);
   const [usernameError, setUsernameError] = useState('');
@@ -16,6 +17,9 @@ const ModalOverlay = ({ settings }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const { user, loading } = useAuth();
   const router = useRouter();
+  const [userData, setUserData] = useState(null);
+  const [theme, setTheme] = useState(null);
+  const [continueLoading, setContinueLoading] = useState(false);
 
   useEffect(() => {
     const checkUsername = async () => {
@@ -28,7 +32,22 @@ const ModalOverlay = ({ settings }) => {
       }
     };
 
-    checkUsername();
+    const getUserData = async () => {
+      if (user) {
+        try {
+          const userData = await fetchUserData(user.uid);
+          setUserData(userData);
+          setTheme(userData.theme);
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      }
+    };
+
+    if (user) {
+      checkUsername();
+      getUserData();
+    }
   }, [user]);
 
   const validateUsername = (username) => {
@@ -91,11 +110,17 @@ const ModalOverlay = ({ settings }) => {
   const handleContinueClick = async () => {
     if (user && user.uid && isUsernameValid) {
       try {
+        setContinueLoading(true);
         await updateUsername(user.uid, username);
+        await updateUserTheme(user.uid, theme);
+
+        onUsernameUpdate(username);
         setModalVisible(false); // Hide the modal on successful username update
         router.reload(); // Reload the page to reflect the new username
       } catch (error) {
         setUsernameError('Error updating username');
+      } finally {
+        setContinueLoading(false);
       }
     }
   };
@@ -126,34 +151,56 @@ const ModalOverlay = ({ settings }) => {
             <PrismicNextImage field={settings.data.logo} />
           </div>
           <div className={styles.modal}>
-            <div className={styles.titleText}>
-              <h2>Choose a username</h2>
-              <p>Choose a Fanslink URL for your new shareable link. You can always change it later.</p>
+            <div className={styles.logoContainerSmallScreen}>
+              <PrismicNextImage field={settings.data.logo} />
             </div>
-            <div className={styles.inputContainer}>
-              <span className={styles.baseUrl}>fansl.ink /</span>
-              <input
-                type="text"
-                value={username}
-                onChange={handleUsernameChange}
-                placeholder="Username"
-                className={getInputClassNames()}
+            <div className={styles.usernameSelectorContainer}>
+              <div className={styles.titleText}>
+                <h2>Choose a username</h2>
+                <p>Choose a Fanslink URL for your new shareable link. You can always change it later.</p>
+              </div>
+              <div className={styles.inputContainer}>
+                <span className={styles.baseUrl}>fansl.ink /</span>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={handleUsernameChange}
+                  placeholder="Username"
+                  className={getInputClassNames()}
+                />
+              </div>
+              {usernameError && <p className={styles.error}>{usernameError}</p>}
+              {suggestedUsernames.length > 0 && (
+                <div className={styles.nameSuggestions}>
+                  <p>Available:</p>
+                  <ul>
+                    {suggestedUsernames.map((suggestion) => (
+                      <li key={suggestion} onClick={() => handleSuggestionClick(suggestion)}>
+                        {suggestion}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            <div className={styles.themeSelectContainer}>
+              <div className={styles.titleText}>
+                <h2>Choose a theme</h2>
+                <p>Choose a theme to get started. You can always change it later.</p>
+              </div>
+              <ThemeSelector
+                user={user}
+                userData={userData}
+                theme={theme}
+                setTheme={setTheme}
+                linkPageUrl={`${window.location.origin}/user/${userData.username}`}
               />
             </div>
-            {usernameError && <p className={styles.error}>{usernameError}</p>}
-            {suggestedUsernames.length > 0 && (
-              <div className={styles.nameSuggestions}>
-                <p>Available:</p>
-                <ul>
-                  {suggestedUsernames.map((suggestion) => (
-                    <li key={suggestion} onClick={() => handleSuggestionClick(suggestion)}>
-                      {suggestion}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <button disabled={!isUsernameValid} onClick={handleContinueClick}>Continue</button>
+
+            <button disabled={!isUsernameValid || !theme} onClick={handleContinueClick}>
+              {continueLoading ? 'Finalizing...' : 'Continue'}
+            </button>
           </div>
         </div>
       )}

@@ -15,39 +15,7 @@ export default function Appearance() {
   const { user, loading: authLoading } = useAuth();
   const { settings, loading: prismicLoading } = usePrismic();
   const router = useRouter();
-  const [theme, setTheme] = useState({
-    NAME: null,
-    GRADIENT_ONE: null,
-    GRADIENT_TWO: null,
-    GRADIENT_ANGLE: null,
-    BACKGROUND_MEDIA: null,
-    BACKGROUND: {
-      backgroundColor: null,
-    },
-    BACKGROUND_IMAGE: {
-      imageUrl: null,
-      filter: null,
-    },
-    BACKGROUND_IMAGE_STYLING: {
-      filter: null,
-    },
-    BACKGROUND_VIDEO: {
-      videoUrl: null,
-      filter: null,
-    },
-    PILLS: {
-      backgroundColor: null,
-      borderRadius: null,
-      outline: null,
-      outlineOffset: null,
-    },
-    HEADER_TEXT: {
-      color: null,
-    },
-    TEXT: {
-      color: null,
-    },
-  });
+  const [theme, setTheme] = useState(null);
   const [userData, setUserData] = useState(null);
   const [previewKey, setPreviewKey] = useState(0); // Key to force MobilePreview re-render
   const linkPageUrl = userData ? `${window.location.origin}/user/${userData.username}` : '';
@@ -55,6 +23,9 @@ export default function Appearance() {
   const [isUploading, setIsUploading] = useState(false);
   const imageInputRef = useRef(null);
   const videoInputRef = useRef(null);
+  const [videoUrl, setVideoUrl] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
+
 
   const handlePreviewToggle = () => {
     setIsPreviewSmall((prevState) => !prevState);
@@ -67,6 +38,8 @@ export default function Appearance() {
           const userData = await fetchUserData(user.uid);
           setUserData(userData);
           setTheme(userData.theme);
+          setImageUrl(userData.theme?.BACKGROUND_IMAGE?.imageUrl || '');
+          setVideoUrl(userData.theme?.BACKGROUND_VIDEO?.videoUrl || '');
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
@@ -83,6 +56,8 @@ export default function Appearance() {
       try {
         const updatedTheme = await updateUserTheme(user.uid, selectedTheme);
         setTheme(updatedTheme);
+        setImageUrl(updatedTheme.BACKGROUND_IMAGE?.imageUrl || '');
+        setVideoUrl(updatedTheme.BACKGROUND_VIDEO?.videoUrl || '');
         setPreviewKey((prevKey) => prevKey + 1); // Force re-render of MobilePreview
         console.log('Theme updated:', updatedTheme);
         alert('Theme updated!');
@@ -93,32 +68,51 @@ export default function Appearance() {
   };
 
   const handleInputChange = async (e) => {
+    if (!theme) {
+      console.error('Theme is null');
+      return;
+    }
+
     const { name, value } = e.target;
     const updatedTheme = { ...theme };
 
+    // Helper function to ensure the nested object exists
+    const ensureNestedObject = (obj, key) => {
+      if (!obj[key]) {
+        obj[key] = {};
+      }
+    };
+
     switch (name) {
       case 'backgroundColor':
+        ensureNestedObject(updatedTheme, 'BACKGROUND');
         updatedTheme.BACKGROUND.backgroundColor = value;
         break;
       case 'textColor':
+        ensureNestedObject(updatedTheme, 'TEXT');
         updatedTheme.TEXT.color = value;
         break;
       case 'headerTextColor':
+        ensureNestedObject(updatedTheme, 'HEADER_TEXT');
         updatedTheme.HEADER_TEXT.color = value;
         break;
-      case 'pillBackgroundColor':
-        updatedTheme.PILLS.backgroundColor = value;
+      case 'opacityLayerBackgroundColor':
+        ensureNestedObject(updatedTheme, 'OPACITY_LAYER');
+        updatedTheme.OPACITY_LAYER.backgroundColor = value;
         break;
       case 'pillRadius':
+        ensureNestedObject(updatedTheme, 'PILLS');
         updatedTheme.PILLS.borderRadius = `${value}px`;
         break;
       case 'backgroundMedia':
         updatedTheme.BACKGROUND_MEDIA = value;
         break;
       case 'imageBlur':
+        ensureNestedObject(updatedTheme, 'BACKGROUND_IMAGE');
         updatedTheme.BACKGROUND_IMAGE.filter = value;
         break;
       case 'videoBlur':
+        ensureNestedObject(updatedTheme, 'BACKGROUND_VIDEO');
         updatedTheme.BACKGROUND_VIDEO.filter = value;
         break;
       case 'gradientAngle':
@@ -130,7 +124,12 @@ export default function Appearance() {
       case 'gradientColorTwo':
         updatedTheme.GRADIENT_TWO = value;
         break;
+      case 'pillOpacity':
+        ensureNestedObject(updatedTheme, 'OPACITY_LAYER');
+        updatedTheme.OPACITY_LAYER.opacity = value;
+        break;
       default:
+        updatedTheme[name] = value; // Handle direct values
         break;
     }
 
@@ -141,16 +140,21 @@ export default function Appearance() {
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    const updatedTheme = { ...theme };
+    if (!user || !theme) {
+      console.error('User or theme is undefined');
+      return;
+    }
+
     if (file) {
       try {
         setIsUploading(true);
+        setImageUrl(null);
         const imageUrl = await uploadImage(user.uid, file);
-        updatedTheme.BACKGROUND_IMAGE.imageUrl = imageUrl;
-        setTheme(updatedTheme);
+        const updatedTheme = { ...theme, BACKGROUND_IMAGE: { ...theme.BACKGROUND_IMAGE, imageUrl } };
         await updateUserTheme(user.uid, updatedTheme);
-        setPreviewKey((prevKey) => prevKey + 1); // Force re-render of MobilePreview
-        console.log('Theme updated:', updatedTheme);
+        setTheme(updatedTheme);
+        setImageUrl(updatedTheme.BACKGROUND_IMAGE?.imageUrl || '');
+        setPreviewKey((prevKey) => prevKey + 1);
       } catch (error) {
         console.error('Error uploading image:', error);
       } finally {
@@ -161,16 +165,21 @@ export default function Appearance() {
 
   const handleVideoUpload = async (e) => {
     const file = e.target.files[0];
-    const updatedTheme = { ...theme };
+    if (!user || !theme) {
+      console.error('User or theme is undefined');
+      return;
+    }
+
     if (file) {
       try {
         setIsUploading(true);
+        setVideoUrl(null);
         const videoUrl = await uploadVideo(user.uid, file);
-        updatedTheme.BACKGROUND_VIDEO.videoUrl = videoUrl;
-        setTheme(updatedTheme);
+        const updatedTheme = { ...theme, BACKGROUND_VIDEO: { ...theme.BACKGROUND_VIDEO, videoUrl } };
         await updateUserTheme(user.uid, updatedTheme);
-        setPreviewKey((prevKey) => prevKey + 1); // Force re-render of MobilePreview
-        console.log('Theme updated:', updatedTheme);
+        setTheme(updatedTheme);
+        setVideoUrl(updatedTheme.BACKGROUND_VIDEO?.videoUrl || '');
+        setPreviewKey((prevKey) => prevKey + 1);
       } catch (error) {
         console.error('Error uploading video:', error);
       } finally {
@@ -198,8 +207,16 @@ export default function Appearance() {
                     onClick={() => handleThemeSelect(theme)}
                   >
                     <div className={styles.themePreviewContainer}>
-                      <div className={styles.themePreview} style={{ ...theme.BACKGROUND }}>
-                        {theme?.BACKGROUND_VIDEO && (
+                      <div 
+                        className={styles.themePreview} 
+                        style={{
+                          ...(theme?.BACKGROUND_MEDIA === "color" &&  { backgroundColor: theme?.BACKGROUND?.backgroundColor || ""}),
+                          ...(theme?.BACKGROUND_MEDIA === "gradient" && theme?.GRADIENT_ONE && theme?.GRADIENT_TWO && {
+                            backgroundImage: `linear-gradient(${theme?.GRADIENT_ANGLE || 0}deg, ${theme?.GRADIENT_ONE}, ${theme?.GRADIENT_TWO})`
+                          })
+                        }}
+                      >
+                        {theme?.BACKGROUND_VIDEO?.videoUrl && (
                           <video
                             autoPlay
                             loop
@@ -213,13 +230,13 @@ export default function Appearance() {
                               objectFit: 'cover',
                             }}
                           >
-                            <source src={theme.BACKGROUND_VIDEO.videoUrl} type="video/mp4" />
+                            <source src={theme?.BACKGROUND_VIDEO?.videoUrl} type="video/mp4" />
                             Your browser does not support the video tag.
                           </video>
                         )}
-                        {theme?.BACKGROUND_IMAGE && (
+                        {theme?.BACKGROUND_IMAGE?.imageUrl && (
                           <Image
-                            src={theme?.BACKGROUND_IMAGE.imageUrl}
+                            src={theme?.BACKGROUND_IMAGE?.imageUrl}
                             alt={theme?.NAME}
                             layout="fill"
                             objectFit="cover"
@@ -235,10 +252,14 @@ export default function Appearance() {
                           />
                         )}
                         <ul className={styles.themePillsList}>
-                          <li style={{ ...theme?.PILLS || {} }}></li>
-                          <li style={{ ...theme?.PILLS || {} }}></li>
-                          <li style={{ ...theme?.PILLS || {} }}></li>
-                          <li style={{ ...theme?.PILLS || {} }}></li>
+                          {[...Array(4)].map((_, idx) => (
+                            <li key={idx} style={{ ...theme?.PILLS, position: "relative" }}>
+                              <div 
+                                className={styles.pillOpacityLayer}
+                                style={{...theme?.OPACITY_LAYER}}
+                              ></div>
+                            </li>
+                          ))}
                         </ul>
                       </div>
                       <p className={styles.themeName}>{theme.NAME}</p>
@@ -248,6 +269,7 @@ export default function Appearance() {
               </div>
             </div>
 
+            {theme && (
             <div className={styles.customContainer}>
               <h4 className={styles.customTitle}>Customize</h4>
               <div className={styles.customWrapper}>
@@ -260,7 +282,7 @@ export default function Appearance() {
                         id="backgroundMedia"
                         className={styles.customSelect}
                         onChange={handleInputChange}
-                        value={theme.BACKGROUND_MEDIA || ''}
+                        value={theme?.BACKGROUND_MEDIA || 'color'}
                       >
                         <option value="image">Image</option>
                         <option value="video">Video</option>
@@ -268,6 +290,7 @@ export default function Appearance() {
                         <option value="gradient">Gradient</option>
                       </select>
                     </div>
+
                     {theme?.BACKGROUND_MEDIA === 'color' && (
                       <div className={styles.customInputContainer}>
                         <label htmlFor="backgroundColor">Background Color</label>
@@ -276,12 +299,13 @@ export default function Appearance() {
                             type="color"
                             id="backgroundColor"
                             name="backgroundColor"
-                            value={theme?.BACKGROUND.backgroundColor || '#ffffff'}
+                            value={theme?.BACKGROUND?.backgroundColor || '#ffffff'}
                             onChange={handleInputChange}
                           />
                         </div>
                       </div>
                     )}
+
                     {theme?.BACKGROUND_MEDIA === 'gradient' && (
                       <div className={styles.customInputContainer}>
                         <label htmlFor="gradientColor">Background Gradient Colors</label>
@@ -326,51 +350,83 @@ export default function Appearance() {
                         </div>
                       </div>
                     )}
+
                     <div className={styles.customInputContainer}>
-                      <label htmlFor="headerTextColor">Username & Bio Text Color</label>
+                      <div className={styles.inputHeaderContainer}>
+                        <label htmlFor="headerTextColor">Username & Bio Text Color</label>
+                        <p>{theme?.HEADER_TEXT?.color || '#FFFFFF'}</p>
+                      </div>
                       <div className={styles.inputColorContainer}>
                         <input
                           type="color"
                           id="headerTextColor"
                           name="headerTextColor"
-                          value={theme.HEADER_TEXT.color || '#000000'}
+                          value={theme?.HEADER_TEXT?.color || '#000000'}
                           onChange={handleInputChange}
                         />
                       </div>
                     </div>
+
                     <div className={styles.customInputContainer}>
-                      <label htmlFor="textColor">Text Color</label>
+                      <div className={styles.inputHeaderContainer}>
+                        <label htmlFor="textColor">Text Color</label>
+                        <p>{theme?.TEXT?.color || '#000000'}</p>
+                      </div>
                       <div className={styles.inputColorContainer}>
                         <input
                           type="color"
                           id="textColor"
                           name="textColor"
-                          value={theme.TEXT.color || '#000000'}
+                          value={theme?.TEXT?.color || '#000000'}
                           onChange={handleInputChange}
                         />
                       </div>
                     </div>
+
                     <div className={styles.customInputContainer}>
-                      <label htmlFor="pillBackgroundColor">Pill Color</label>
+                      <div className={styles.inputHeaderContainer}>
+                        <label htmlFor="opacityLayerBackgroundColor">Pill Color</label>
+                        <p>{theme?.OPACITY_LAYER?.backgroundColor || '#FFFFFF'}</p>
+                      </div>
                       <div className={styles.inputColorContainer}>
                         <input
                           type="color"
-                          id="pillBackgroundColor"
-                          name="pillBackgroundColor"
-                          value={theme.PILLS.backgroundColor || '#000000'}
+                          id="opacityLayerBackgroundColor"
+                          name="opacityLayerBackgroundColor"
+                          value={theme?.OPACITY_LAYER?.backgroundColor || '#FFFFFF'}
                           onChange={handleInputChange}
                         />
                       </div>
                     </div>
+
                     <div className={styles.customInputContainer}>
-                      <label htmlFor="pillRadius">Pill Border Radius</label>
+                      <div className={styles.inputHeaderContainer}>
+                        <label htmlFor="pillRadius">Pill Border Radius</label>
+                        <p>{theme?.PILLS?.borderRadius ? theme?.PILLS?.borderRadius : '0px'}</p>
+                      </div>
                       <input
                         type="range"
                         id="pillRadius"
                         name="pillRadius"
                         min="0"
                         max="25"
-                        value={theme.PILLS.borderRadius ? theme.PILLS.borderRadius.replace('px', '') : '0'}
+                        value={theme?.PILLS?.borderRadius ? theme?.PILLS?.borderRadius.replace('px', '') : '0'}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className={styles.customInputContainer}>
+                      <div className={styles.inputHeaderContainer}>
+                        <label htmlFor="pillOpacity">Pill Opacity</label>
+                        <p>{theme?.OPACITY_LAYER?.opacity ? theme?.OPACITY_LAYER?.opacity : '1'}</p>
+                      </div>
+                      <input
+                        type="range"
+                        id="pillOpacity"
+                        name="pillOpacity"
+                        min="0"
+                        max="1"
+                        step="0.1"
+                        value={theme?.OPACITY_LAYER?.opacity ? theme?.OPACITY_LAYER?.opacity : '1'}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -383,9 +439,9 @@ export default function Appearance() {
                         <h4>Image</h4>
                       )}
                       
-                      {theme?.BACKGROUND_MEDIA === 'video' && (
+                      {theme?.BACKGROUND_MEDIA === 'video' &&  (
                       <div className={styles.customInputContainerMedia}>
-                        {theme?.BACKGROUND_VIDEO?.videoUrl && theme?.BACKGROUND_MEDIA == 'video' && (
+                        {theme?.BACKGROUND_VIDEO?.videoUrl && theme?.BACKGROUND_MEDIA === 'video' && videoUrl && (
                           <video
                             autoPlay
                             loop
@@ -401,18 +457,20 @@ export default function Appearance() {
                             Your browser does not support the video tag.
                           </video>
                         )}
-                        <div className={styles.customInputContainer}>
-                          <label htmlFor="videoBlur">Video Blur</label>
-                          <input
-                            type="range"
-                            id="videoBlur"
-                            name="videoBlur"
-                            min="0"
-                            max="25"
-                            value={theme?.BACKGROUND_VIDEO?.filter ? theme.BACKGROUND_VIDEO.filter.replace('px', '') : '0'}
-                            onChange={handleInputChange}
-                          />
-                        </div>
+                        {theme?.BACKGROUND_VIDEO?.videoUrl && (
+                          <div className={styles.customInputContainer}>
+                            <label htmlFor="videoBlur">Video Blur</label>
+                            <input
+                              type="range"
+                              id="videoBlur"
+                              name="videoBlur"
+                              min="0"
+                              max="25"
+                              value={theme?.BACKGROUND_VIDEO?.filter ? theme?.BACKGROUND_VIDEO.filter.replace('px', '') : '0'}
+                              onChange={handleInputChange}
+                            />
+                          </div>
+                        )}
                         <button 
                           className={styles.mediaUploadButtons} 
                           disabled={isUploading}
@@ -434,7 +492,7 @@ export default function Appearance() {
                       )}
                       {theme?.BACKGROUND_MEDIA === 'image' && (
                         <div className={styles.customInputContainerMedia}>
-                          {theme?.BACKGROUND_IMAGE?.imageUrl && theme?.BACKGROUND_MEDIA == 'image' && (
+                          {theme?.BACKGROUND_IMAGE?.imageUrl && theme?.BACKGROUND_MEDIA === 'image' && imageUrl && (
                             <Image 
                               src={theme?.BACKGROUND_IMAGE.imageUrl || ''} 
                               alt={theme?.NAME || ''} 
@@ -448,18 +506,20 @@ export default function Appearance() {
                               }}
                             />
                           )}
-                          <div className={styles.customInputContainer}>
-                            <label htmlFor="imageBlur">Image Blur</label>
-                            <input
-                              type="range"
-                              id="imageBlur"
-                              name="imageBlur"
-                              min="0"
-                              max="25"
-                              value={theme?.BACKGROUND_IMAGE?.filter ? theme.BACKGROUND_IMAGE.filter.replace('px', '') : '0'}
-                              onChange={handleInputChange}
-                            />
-                          </div>
+                          {theme?.BACKGROUND_IMAGE?.imageUrl && (
+                            <div className={styles.customInputContainer}>
+                              <label htmlFor="imageBlur">Image Blur</label>
+                              <input
+                                type="range"
+                                id="imageBlur"
+                                name="imageBlur"
+                                min="0"
+                                max="25"
+                                value={theme?.BACKGROUND_IMAGE?.filter ? theme?.BACKGROUND_IMAGE.filter.replace('px', '') : '0'}
+                                onChange={handleInputChange}
+                              />
+                            </div>
+                          )}
                           <button 
                             className={styles.mediaUploadButtons} 
                             disabled={isUploading}
@@ -481,11 +541,10 @@ export default function Appearance() {
                       )}
                     </div>
                   </div>
-
-
                 </form>
               </div>
             </div>
+            )}
           </div>
 
           {linkPageUrl && userData && (

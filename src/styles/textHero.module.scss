@@ -8,13 +8,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 10rem 2rem;
+    padding: 0 2rem;
     width: 100%;
     height: auto;
 
-    @media (max-width: $screen-lg) {
-        padding: 3rem 2rem;
-    }
 
     .textHeroInnerContainer {
         display: flex;
@@ -25,6 +22,7 @@
         width: 100%;
         max-width: $screen-xxl;
         height: auto;
+        margin: 10rem 0 10rem 0;
 
         .superText {
             font-size: 1rem;

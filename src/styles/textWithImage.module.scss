@@ -4,13 +4,16 @@
 @import './mixins';
 
 .textWithImage {
-    padding: 12rem 2rem;
-    height: 100vh;
-    @include flex-center;
+    padding: 0 2rem;
+    /* height: 100vh; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
   
     @media (max-width: $screen-lg) {
       height: auto;
-        padding: 3rem 2rem; 
+        padding: 0 2rem; 
     }
 
     .container {
@@ -21,6 +24,7 @@
         width: 100%;
         gap: 3rem;
         max-width: $screen-xxl;
+        margin: 10rem 0 10rem 0;
 
         @media (max-width: $screen-lg) {
             flex-direction: column;

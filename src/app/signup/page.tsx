@@ -4,10 +4,9 @@ import { auth, db } from '@/firebase/firebase';
 import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import styles from '@/styles/signup.module.scss';
-import { FaGoogle } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { fetchSettingsAndNavigation } from '@/lib/prismicClient';
-import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
+import { PrismicNextImage } from "@prismicio/next";
 import Link from 'next/link';
 import { IMAGES } from '@/lib/images';
 
@@ -23,14 +22,17 @@ async function handleEmailSignUp(email, password, setError, setLoading) {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
 
-    await setDoc(doc(db, 'users', user.uid), {
+    const userData = {
       uid: user.uid,
       email: user.email,
       displayName: user.displayName || '',
-      photoURL: user.photoURL || getRandomHumanImage(),
+      photoUrl: user.photoURL || getRandomHumanImage(),
       createdAt: new Date(),
       username: '',
-    });
+    };
+    console.log('User Data:', userData); // Log user data before writing to Firestore
+
+    await setDoc(doc(db, 'users', user.uid), userData);
 
     const response = await fetch('/api/generate-token', {
       method: 'POST',
@@ -63,14 +65,21 @@ async function handleGoogleSignUp(setError, setLoading) {
     const provider = new GoogleAuthProvider();
     const userCredential = await signInWithPopup(auth, provider);
     const user = userCredential.user;
+    console.log('User:', user);
 
-    await setDoc(doc(db, 'users', user.uid), {
+    const userData = {
       uid: user.uid,
       email: user.email,
       displayName: user.displayName || '',
-      photoURL: user.photoURL || getRandomHumanImage(),
+      photoUrl: user.photoURL || getRandomHumanImage(),
       createdAt: new Date(),
       username: '',
+    };
+    console.log('User Data:', userData); // Log user data before writing to Firestore
+
+    await setDoc(doc(db, 'users', user.uid), userData).catch((error) => {
+      setError('Error setting user document: ' + error.message);
+      console.error('Error setting user document:', error);
     });
 
     const response = await fetch('/api/generate-token', {
@@ -178,7 +187,7 @@ export default function SignUpPage() {
             </button>
           </div>
           <div className={styles.redirectContainer}>
-            <p>Already have an account? <Link href={"/signin"}>Signin</Link></p>
+            <p>Already have an account? <Link href="/signin">Signin</Link></p>
           </div>
         </form>
       </div>

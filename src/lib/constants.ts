@@ -61,6 +61,26 @@ export const DASHBOARD_ROUTES = {
 
 export const THEMES = [
     {
+        NAME: 'Simple',
+        BACKGROUND_MEDIA: 'color',// 'image' or 'video' or 'color'
+        BACKGROUND: {
+            backgroundColor: '#2f4858',
+        },
+        PILLS: {
+            borderRadius: '10px',
+        },
+        OPACITY_LAYER: {
+            opacity: '1',
+            backgroundColor: '#FFFFFF',
+        },
+        HEADER_TEXT: {
+            color: '#FFFFFF',
+        },
+        TEXT: {
+            color: '#000000',
+        },
+    },
+    {
         NAME: 'Midnight',
         BACKGROUND_MEDIA: 'video',// 'image' or 'video' or 'color'
         BACKGROUND: {
@@ -70,8 +90,11 @@ export const THEMES = [
             videoUrl: 'https://firebasestorage.googleapis.com/v0/b/linkapp-a5ccb.appspot.com/o/Platform%20Videos%2F6323827_Tunnel_Arch_1280x720.mp4?alt=media&token=5c1433b2-918d-4966-97bc-e4448ea12fc0',
         },
         PILLS: {
-            backgroundColor: '#FFFFFF',
             borderRadius: '25px',
+        },
+        OPACITY_LAYER: {
+            opacity: '0.5',
+            backgroundColor: '#fff',
         },
         HEADER_TEXT: {
             color: '#FFFFFF',
@@ -83,13 +106,16 @@ export const THEMES = [
     {
         NAME: 'Sunrise',
         BACKGROUND_MEDIA: 'gradient',// 'image' or 'video' or 'color'
-        BACKGROUND: {
-            backgroundImage: 'linear-gradient(120deg, #f6d365 0%, #fda085 100%)',
-        },
+        GRADIENT_ONE: '#f6d365',
+        GRADIENT_TWO: '#fda085',
+        GRADIENT_ANGLE: '45',
         PILLS: {
-            backgroundColor: '#FFFFFF',
             borderRadius: '25px',
             boxShadow: '3px 3px 0px 0px #000',
+        },
+        OPACITY_LAYER: {
+            opacity: '1',
+            backgroundColor: '#fff',
         },
         HEADER_TEXT: {
             color: '#FFFFFF',
@@ -101,12 +127,15 @@ export const THEMES = [
     {
         NAME: 'Ocean',
         BACKGROUND_MEDIA: 'gradient',// 'image' or 'video' or 'color'
-        BACKGROUND: {
-            backgroundImage: 'linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)',
-        },
+        GRADIENT_ONE: 'blue',
+        GRADIENT_TWO: 'red',
+        GRADIENT_ANGLE: '45',
         PILLS: {
-            backgroundColor: '#FFFFFF',
             borderRadius: '20px',
+        },
+        OPACITY_LAYER: {
+            opacity: '1',
+            backgroundColor: '#fff',
         },
         HEADER_TEXT: {
             color: '#FFFFFF',
@@ -122,8 +151,11 @@ export const THEMES = [
             backgroundColor: '#228B22',
         },
         PILLS: {
-            backgroundColor: '#FFFFFF',
             borderRadius: '10px',
+        },
+        OPACITY_LAYER: {
+            opacity: '1',
+            backgroundColor: '#fff',
         },
         HEADER_TEXT: {
             color: '#FFFFFF',
@@ -139,8 +171,11 @@ export const THEMES = [
             backgroundColor: '#EDC9AF',
         },
         PILLS: {
-            backgroundColor: '#FFFFFF',
             borderRadius: '25px',
+        },
+        OPACITY_LAYER: {
+            opacity: '1',
+            backgroundColor: '#fff',
         },
         HEADER_TEXT: {
             color: '#000000',
@@ -159,8 +194,11 @@ export const THEMES = [
             imageUrl: 'https://firebasestorage.googleapis.com/v0/b/linkapp-a5ccb.appspot.com/o/Platform%20Images%2F501.jpg?alt=media&token=866ee213-cdfc-4413-96fd-f4f3b32b2118',
         },
         PILLS: {
-            backgroundColor: '#53528e',
             borderRadius: '25px',
+        },
+        OPACITY_LAYER: {
+            opacity: '1',
+            backgroundColor: '#53528e',
         },
         HEADER_TEXT: {
             color: '#000000',
@@ -176,8 +214,11 @@ export const THEMES = [
             backgroundColor: '#9B111E',
         },
         PILLS: {
-            backgroundColor: '#FFFFFF',
             borderRadius: '25px',
+        },
+        OPACITY_LAYER: {
+            opacity: '1',
+            backgroundColor: '#FFFFFF',
         },
         HEADER_TEXT: {
             color: '#FFFFFF',
@@ -193,8 +234,11 @@ export const THEMES = [
             backgroundColor: '#98FF98',
         },
         PILLS: {
-            backgroundColor: '#FFFFFF',
             borderRadius: '15px',
+        },
+        OPACITY_LAYER: {
+            opacity: '1',
+            backgroundColor: '#FFFFFF',
         },
         HEADER_TEXT: {
             color: '#000000',
@@ -210,9 +254,12 @@ export const THEMES = [
             backgroundColor: '#FF4500',
         },
         PILLS: {
-            backgroundColor: '#FFFFFF',
             color: '#FF4500',
             borderRadius: '0px',
+        },
+        OPACITY_LAYER: {
+            opacity: '0.5',
+            backgroundColor: '#fff',
         },
         HEADER_TEXT: {
             color: '#FFFFFF',
@@ -231,8 +278,11 @@ export const THEMES = [
             imageUrl: 'https://firebasestorage.googleapis.com/v0/b/linkapp-a5ccb.appspot.com/o/Platform%20Images%2Fsmiling-young-woman-using-mobile-phone-against-sky.jpg?alt=media&token=fda1f0b3-61ee-4ca8-a374-0cdcf7fcc3ad',
         },
         PILLS: {
-            backgroundColor: '#FFFFFF',
             borderRadius: '25px',
+        },
+        OPACITY_LAYER: {
+            opacity: '1',
+            backgroundColor: '#FFFFFF',
         },
         HEADER_TEXT: {
             color: '#FFFFFF',
@@ -254,10 +304,11 @@ export const THEMES = [
             filter: 'blur(2px)',
         },
         PILLS: {
-            backgroundColor: '#000000',
             borderRadius: '25px',
-            outline: '1px solid #000',
-            outlineOffset: '1px',
+        },
+        OPACITY_LAYER: {
+            opacity: '1',
+            backgroundColor: '#FFFFFF',
         },
         HEADER_TEXT: {
             color: '#000000',
@@ -279,8 +330,11 @@ export const THEMES = [
             filter: 'blur(2px)',
         },
         PILLS: {
-            backgroundColor: '#FFFFFF',
             borderRadius: '25px',
+        },
+        OPACITY_LAYER: {
+            opacity: '1',
+            backgroundColor: '#FFFFFF',
         },
         HEADER_TEXT: {
             color: '#FFFFFF',

@@ -12,6 +12,7 @@ import * as FaIcons from 'react-icons/fa'; // Import all FontAwesome icons
 import { IconContext } from 'react-icons';
 import EmbedComponent from '@/components/EmbedUrl';
 import VideoEmbed from '@/components/VideoEmbed';
+import {THEMES} from '@/lib/constants';
 
 
 interface UserPageProps {
@@ -38,8 +39,15 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
           href={link.link} 
           target="_blank" 
           rel="noopener noreferrer"
-          style={{...theme?.PILLS || {}}}
+          style={{...theme?.PILLS,
+            position: "relative"
+          }}
         >
+          <div 
+            className={styles.pillOpacityLayer}
+            style={{...theme?.OPACITY_LAYER}}
+          >
+          </div>
           <li className={styles.linkItem}>
             {link?.metadata?.metadata["og:icon"] ? (
               <div className={styles.selectedIcon}>
@@ -81,8 +89,12 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
           href={link.link} 
           target="_blank" 
           rel="noopener noreferrer"
-          style={link?.metadata?.metadata["og:image"] ? {backgroundImage: `url("${link?.metadata?.metadata["og:image"]}")`, ...theme?.PILLS || {} } : {...theme?.PILLS || {}}}
+          style={link?.metadata?.metadata["og:image"] ? {backgroundImage: `url("${link?.metadata?.metadata["og:image"]}")`, ...theme?.PILLS || "" } : {...theme?.PILLS || ""}}
         >
+          <div 
+            className={styles.pillOpacityLayer}
+            style={{...theme?.OPACITY_LAYER}}
+          ></div>
           <li className={styles.linkItem}>
             <div className={styles.selectedIcon}>
               {link?.metadata?.metadata["og:icon"] && (
@@ -116,8 +128,12 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
         return (
           <div 
             className={styles.linkPillVideo}
-            style={{...theme?.PILLS || {}}}
+            style={{...theme?.PILLS}}
           >
+            <div 
+              className={styles.pillOpacityLayer}
+              style={{...theme?.OPACITY_LAYER}}
+            ></div>
             <li className={styles.linkItem}>
               <div className={styles.selectedIcon}>
                 {link?.metadata?.metadata["og:icon"] ? (
@@ -160,8 +176,12 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
         return (
           <div 
             className={styles.linkPillMusic}
-            style={{...theme?.PILLS || {}}}
+            style={{...theme?.PILLS}}
           >
+            <div 
+              className={styles.pillOpacityLayer}
+              style={{...theme?.OPACITY_LAYER}}
+            ></div>
             <li className={styles.linkItem}>
               <div className={styles.selectedIcon}>
                 {link?.metadata?.metadata["og:icon"] ? (
@@ -210,8 +230,12 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
           href={link.link} 
           target="_blank" 
           rel="noopener noreferrer"
-          style={{...theme?.PILLS  || {}}}
+          style={{...theme?.PILLS}}
         >
+          <div 
+            className={styles.pillOpacityLayer}
+            style={{...theme?.OPACITY_LAYER}}
+          ></div>
           <li className={styles.linkItem}>
             {link?.metadata?.metadata["og:icon"] ? (
               <div className={styles.selectedIcon}>
@@ -296,9 +320,9 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
       <div 
         className={styles.background}
         style={{
-          ...theme?.BACKGROUND || {},
-          ...(theme?.GRADIENT_ONE && theme?.GRADIENT_TWO && {
-            backgroundImage: `linear-gradient(${theme.GRADIENT_ANGLE || 0}deg, ${theme.GRADIENT_ONE}, ${theme.GRADIENT_TWO})`
+          ...(theme?.BACKGROUND_MEDIA == "color" &&  { backgroundColor: theme?.BACKGROUND.backgroundColor || {}}),
+          ...(theme?.BACKGROUND_MEDIA == "gradient" && theme?.GRADIENT_ONE && theme?.GRADIENT_TWO && {
+            backgroundImage: `linear-gradient(${theme?.GRADIENT_ANGLE || 0}deg, ${theme?.GRADIENT_ONE}, ${theme?.GRADIENT_TWO})`
           })
         }}
       >
