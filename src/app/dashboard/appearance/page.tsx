@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/firebase/auth';
 import { usePrismic } from '@/context/PrismicContext';
 import styles from '@/styles/dashboardAppearance.module.scss';
-import { fetchUserData, updateUserTheme, uploadVideo, uploadImage } from '@/utils/firebaseUtils';
+import { fetchUserData, updateUserTheme, uploadVideo, uploadImage, updateUserBio, updateUserTitle, updateUserPhotoUrl, deleteUserPhotoUrl  } from '@/utils/firebaseUtils';
 import MobilePreview from '@/components/MobilePreview';
 import MobilePreviewSmall from '@/components/MobilePreviewSmall';
 import { THEMES } from '@/lib/constants';
@@ -23,9 +23,33 @@ export default function Appearance() {
   const [isUploading, setIsUploading] = useState(false);
   const imageInputRef = useRef(null);
   const videoInputRef = useRef(null);
+  const profileInputRef = useRef(null);
   const [videoUrl, setVideoUrl] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
+  const [bio, setBio] = useState('');
+  const [title, setTitle] = useState('');
+  const [bioCharCount, setBioCharCount] = useState(120);
+  const [titleCharCount, setTitleCharCount] = useState(30);
+  const [isProfileUploading, setIsProfileUploading] = useState(false);
+  const [removingProfileImage, setRemovingProfileImage] = useState(false);
 
+  const handleBioChange = (event) => {
+    const newBio = event.target.value;
+    if (newBio.length <= 120) {
+      setBio(newBio);
+      setBioCharCount(120 - newBio.length);
+      updateUserBio(user.uid, newBio);
+    }
+  };
+
+  const handleTitleChange = (event) => {
+    const newTitle = event.target.value;
+    if (newTitle.length <= 30) {
+      setTitle(newTitle);
+      setTitleCharCount(30 - newTitle.length);
+      updateUserTitle(user.uid, newTitle);
+    }
+  };
 
   const handlePreviewToggle = () => {
     setIsPreviewSmall((prevState) => !prevState);
@@ -40,6 +64,10 @@ export default function Appearance() {
           setTheme(userData.theme);
           setImageUrl(userData.theme?.BACKGROUND_IMAGE?.imageUrl || '');
           setVideoUrl(userData.theme?.BACKGROUND_VIDEO?.videoUrl || '');
+          setBio(userData.bio || '');
+          setTitle(userData.title || '');
+          setBioCharCount(120 - (userData.bio?.length || 0));
+          setTitleCharCount(30 - (userData.title?.length || 0));
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
@@ -49,7 +77,7 @@ export default function Appearance() {
     if (!authLoading && user) {
       getUserData();
     }
-  }, [authLoading, user]);
+  }, [authLoading, user, isProfileUploading, removingProfileImage]);
 
   const handleThemeSelect = async (selectedTheme) => {
     if (user) {
@@ -163,6 +191,27 @@ export default function Appearance() {
     }
   };
 
+  const handleProfileImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!user || !theme) {
+      console.error('User or theme is undefined');
+      return;
+    }
+
+    if (file) {
+      try {
+        setIsProfileUploading(true);
+        const imageUrl = await uploadImage(user.uid, file);
+        await updateUserPhotoUrl(user.uid, imageUrl);
+        setPreviewKey((prevKey) => prevKey + 1);
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      } finally {
+        setIsProfileUploading(false);
+      }
+    }
+  };
+
   const handleVideoUpload = async (e) => {
     const file = e.target.files[0];
     if (!user || !theme) {
@@ -188,15 +237,98 @@ export default function Appearance() {
     }
   };
 
+  const handleRemoveProfileImage = async () => {
+    try {
+      setRemovingProfileImage(true);
+      await deleteUserPhotoUrl(user.uid);
+      setPreviewKey((prevKey) => prevKey + 1);
+    } catch (error) {
+      console.error('Error removing profile image:', error);
+    } finally {
+      setRemovingProfileImage(false);
+    }
+  }
+
   const handleButtonClick = (inputRef) => {
     inputRef.current.click();
   };
+
+  const initial = userData?.username?.toUpperCase();
 
   return (
     <>
       {userData && (
         <div className={styles.appearancePage}>
           <div className={styles.appearanceContainer}>
+            <div className={styles.profileContainer}>
+              <h4 className={styles.profileTitle}>Profile</h4>
+              <div className={styles.profileWrapper}>
+                <div className={styles.profileInfoContainer}>
+                  <div 
+                    className={styles.profileImageContainer}
+                    style={
+                      userData?.photoUrl ? { backgroundImage: `url(${userData?.photoUrl})` } : { backgroundColor: '#000000' }
+                    }
+                  >
+                    {!userData?.photoUrl && (
+                      <h2>{initial.split('')[0]}</h2>
+                    )}
+                  </div>
+                  <div className={styles.profileImageButtons}>
+                    <button 
+                      className={styles.mediaUploadButtons} 
+                      disabled={isProfileUploading}
+                      type="button" 
+                      onClick={() => handleButtonClick(profileInputRef)}
+                    >
+                      {isProfileUploading ? 'Uploading...' : userData?.photoUrl ? 'Change Profile Image' : 'Upload Profile Image'}
+                    </button>
+                    <input
+                      type="file"
+                      id="profileImage"
+                      name="profileImage"
+                      accept="image/*"
+                      ref={profileInputRef}
+                      style={{ display: 'none' }}
+                      onChange={handleProfileImageUpload}
+                    />
+                    <button 
+                      className={styles.uploadButton}
+                      onClick={handleRemoveProfileImage}
+                      disabled={removingProfileImage}
+                    >
+                      {removingProfileImage ? 'Removing...' : 'Remove Profile Image'}
+                    </button>
+                  </div>
+                </div>
+                <div className={styles.profileFormContainer}>
+                  <form className={styles.profileForm}>
+                    <div className={styles.profileFormInputContainer}>
+                      <label htmlFor="title">Profile Title</label>
+                      <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        value={title}
+                        onChange={handleTitleChange}
+                      />
+                      <span>{titleCharCount} characters left</span>
+                    </div>
+                    <div className={styles.profileFormInputContainer}>
+                      <label htmlFor="bio">Bio</label>
+                      <textarea
+                        id="bio"
+                        name="bio"
+                        value={bio}
+                        onChange={handleBioChange}
+                      />
+                      <span>{bioCharCount} characters left</span>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
             <div className={styles.themesContainer}>
               <h4 className={styles.appearanceTitle}>Themes</h4>
               <div className={styles.themeContainerWrapper}>

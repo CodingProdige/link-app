@@ -28,7 +28,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
   const [error, setError] = useState<string | null>(null);
   const { settings, loading: prismicLoading } = usePrismic();
   const [theme, setTheme] = useState(null);
-
+  const initial = userData?.username?.toUpperCase();
 
   const LinkComponent = ({ link, theme }) => {
 
@@ -365,21 +365,33 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
       </div>
       <div className={styles.innerContainer}>
         <div className={styles.profileContainer}>
-          {userData?.photoUrl && (
-            <Image 
-              src={userData.photoUrl} 
-              alt={userData.username} 
-              width={150} 
-              height={150} 
-              className={styles.profileImage}
-            />
-          )}
+          <div 
+            className={styles.profileImageContainer}
+            style={
+              userData?.photoUrl ? { backgroundImage: `url(${userData?.photoUrl})` } : { backgroundColor: '#000000' }
+            }
+          >
+            {!userData?.photoUrl && (
+              <h2>{initial.split('')[0]}</h2>
+            )}
+          </div>
           <div className={styles.nameContainer}>
-            <p 
-              style={{...theme?.HEADER_TEXT}}
-              className={styles.username}>@{userData.username}
-            </p>
-            {userData?.name && <p className={styles.name}>{userData.name}</p>}
+            {userData?.title && (
+              <p 
+                style={{...theme?.HEADER_TEXT}}
+                className={styles.username}
+              >
+                {userData?.title ? userData?.title : userData?.username}
+              </p>
+            )}
+            {userData?.bio && (
+              <p 
+                style={{...theme?.HEADER_TEXT}}
+                className={styles.linkBio}
+              >
+                {userData?.bio ? userData?.bio : "Bio"}
+              </p>
+            )}
           </div>
         </div>
         {userData?.links && (

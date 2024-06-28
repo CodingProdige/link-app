@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import styles from '@/styles/modalOverlay.module.scss';
-import { hasUsernameField, isUsernameTaken, updateUsername, fetchUserData, updateUserTheme } from '@/utils/firebaseUtils';
+import { hasUsernameField, isUsernameTaken, updateUsername, fetchUserData, updateUserTheme, updateUserTitle } from '@/utils/firebaseUtils';
 import { useAuth } from '@/firebase/auth';
 import { PrismicNextImage } from "@prismicio/next";
 import { useRouter } from 'next/navigation';
@@ -113,6 +113,7 @@ const ModalOverlay = ({ settings, onUsernameUpdate }) => {
         setContinueLoading(true);
         await updateUsername(user.uid, username);
         await updateUserTheme(user.uid, theme);
+        await updateUserTitle(user.uid, username);
 
         onUsernameUpdate(username);
         setModalVisible(false); // Hide the modal on successful username update

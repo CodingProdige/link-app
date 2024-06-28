@@ -1,5 +1,5 @@
 import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs, arrayUnion, updateDoc } from 'firebase/firestore';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteField } from 'firebase/storage';
 import { sendPasswordResetEmail } from "firebase/auth";
 import {auth, db, storage } from '@/firebase/firebase';
 import axios from 'axios';
@@ -98,6 +98,75 @@ export const updateUsername = async (uid, username) => {
 };
 
 
+
+/**
+ * Update the bio of a user in Firestore.
+ * @param {string} uid - User ID.
+ * @param {string} bio - New bio.
+ * @returns {Promise<void>}
+ */
+export const updateUserBio = async (uid, bio) => {
+  try {
+    const userDocRef = doc(db, 'users', uid);
+    await setDoc(userDocRef, { bio }, { merge: true });
+    console.log('Bio updated successfully');
+  } catch (error) {
+    console.error('Error updating bio:', error.message);
+    throw new Error('Bio update failed');
+  }
+};
+
+/**
+ * Update the bio of a user in Firestore.
+ * @param {string} uid - User ID.
+ * @param {string} title - New title.
+ * @returns {Promise<void>}
+ */
+export const updateUserTitle = async (uid, title) => {
+  try {
+    const userDocRef = doc(db, 'users', uid);
+    await setDoc(userDocRef, { title }, { merge: true });
+    console.log('Title updated successfully');
+  } catch (error) {
+    console.error('Error updating title:', error.message);
+    throw new Error('Title update failed');
+  }
+};
+
+/**
+ * Update the photo URL of a user in Firestore.
+ * @param {string} uid - User ID.
+ * @param {string} photoUrl - New photo URL.
+ * @returns {Promise<void>}
+ */
+export const updateUserPhotoUrl = async (uid, photoUrl) => {
+  try {
+    const userDocRef = doc(db, 'users', uid);
+    await setDoc(userDocRef, { photoUrl }, { merge: true });
+    console.log('Photo URL updated successfully');
+  } catch (error) {
+    console.error('Error updating photo URL:', error.message);
+    throw new Error('Photo URL update failed');
+  }
+};
+
+/**
+ * Delete the photo URL of a user in Firestore.
+ * @param {string} uid - User ID.
+ * @returns {Promise<void>}
+ */
+export const deleteUserPhotoUrl = async (uid) => {
+  try {
+    const userDocRef = doc(db, 'users', uid);
+    await setDoc(userDocRef, { photoUrl: '' }, { merge: true });
+    console.log('Photo URL cleared successfully');
+  } catch (error) {
+    console.error('Error clearing photo URL:', error.message);
+    throw new Error('Photo URL clearing failed');
+  }
+};
+
+
 /**
  * Checks for an active subscription on the user.
  * @param {string} uid - User ID.
@@ -192,7 +261,7 @@ export const addLinkToFirestore = async ({ title, link, userId, urlMetaData }) =
     id: newId, 
     title, 
     link,
-    active: false,
+    active: true,
     metadata: validatedUrlMetaData,
     layout: 'classic',
     linkType: 'external',

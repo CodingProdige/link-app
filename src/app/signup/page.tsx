@@ -29,6 +29,7 @@ async function handleEmailSignUp(email, password, setError, setLoading) {
       photoUrl: user.photoURL || getRandomHumanImage(),
       createdAt: new Date(),
       username: '',
+      title: '',
     };
     console.log('User Data:', userData); // Log user data before writing to Firestore
 
@@ -74,6 +75,7 @@ async function handleGoogleSignUp(setError, setLoading) {
       photoUrl: user.photoURL || getRandomHumanImage(),
       createdAt: new Date(),
       username: '',
+      title: '',
     };
     console.log('User Data:', userData); // Log user data before writing to Firestore
 

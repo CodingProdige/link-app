@@ -26,6 +26,125 @@
             max-width: 100%;
         }
 
+        .profileContainer {
+            width: 100%;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            background-color: #ffffff;
+            padding: 1rem;
+            border-radius: 25px;
+            gap: 1rem;
+
+            .profileWrapper {
+                display: flex;
+                flex-direction: column;
+                justify-self: flex-start;
+                align-items: flex-start;
+                gap: 2rem;
+                width: 100%;
+
+                .profileInfoContainer {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 1rem;
+                    width: 100%;
+
+                    @media (max-width: $screen-lg) {
+                        flex-direction: column;
+                    }
+
+                    .profileImageContainer {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        width: 6rem;
+                        height: 6rem;
+                        border-radius: 50px;
+                        background-position: center;
+                        background-repeat: no-repeat;
+                        background-size: cover;
+                        overflow: hidden;
+                        flex-shrink: 0; 
+                        flex-grow: 0; 
+    
+                        h2 {
+                            color: #ffffff;
+                        }
+                    }
+
+                    .profileImageButtons {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: flex-start;
+                        align-items: flex-start;
+                        gap: 1rem;
+                        width: 100%;
+
+                        button {
+                            padding: 0.5rem 1rem;
+                            background-color: $color-off-black;
+                            color: $color-white;
+                            border-radius: 50px;
+                            cursor: pointer;
+                            transition: background-color 0.3s;
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                            width: 100%;
+
+                            &:hover {
+                                background-color: $color-off-black-light;
+                            }
+                        }
+                    }
+                }
+
+
+                .profileFormContainer {
+                    width: 100%;
+
+                    .profileForm {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: flex-start;
+                        align-items: flex-start;
+                        gap: 1rem;
+                        width: 100%;
+
+                        .profileFormInputContainer {
+                            width: 100%;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: flex-start;
+                            align-items: flex-start;
+                            gap: 0.5rem;
+
+                            label {
+                                font-size: 1rem;
+                                font-weight: 700;
+                                color: $color-off-black;
+                            }
+                            input,
+                            textarea {
+                                width: 100%;
+                            }
+                            span {
+                                font-size: 0.8rem;
+                                font-weight: 500;
+                                color: $color-off-black;
+                                width: 100%;
+                                text-align: right;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         .themesContainer {
             width: 100%;
             height: auto;

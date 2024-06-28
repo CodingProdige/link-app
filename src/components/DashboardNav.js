@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { createCustomerPortal } from '@/components/CustomerPortal';
 import checkStripeSubscription from '@/lib/subscriptionStatus';
 import DashboardPricing from '@/components/DashboardPricing';
+import { RiH2 } from 'react-icons/ri';
 
 function getRandomHumanImage() {
   const humanImages = Object.values(IMAGES.PROFILE.HUMANS);
@@ -80,6 +81,7 @@ const DashboardNav = ({ settings }) => {
     router.push(`/dashboard/${route}`);
   };
 
+  const initial = userData?.username.toUpperCase();
 
   const dashboardRoutesArray = Object.values(DASHBOARD_ROUTES);
 
@@ -159,8 +161,20 @@ const DashboardNav = ({ settings }) => {
         }
         <div className={styles.profileImageContainer}>
           {userData && (
-            <div className={styles.profileInnerContainer} onClick={handleProfileMenuToggle}>
-              <Image src={userData.photoUrl || getRandomHumanImage()} alt={userData.displayName} width={40} height={40} />
+            <div 
+              className={styles.profileInnerContainer} 
+              onClick={handleProfileMenuToggle}
+            >
+              <div 
+                className={styles.profileImage}
+                style={
+                  userData?.photoUrl ? { backgroundImage: `url(${userData?.photoUrl})` } : {backgroundColor: '#000000'}
+                }
+              >
+                {!userData?.photoUrl && (
+                  <h2>{initial.split('')[0]}</h2>
+                )}
+              </div>              
               <div className={styles.userInfo}>
                 <p>@{userData.username}</p>
               </div>
@@ -171,7 +185,16 @@ const DashboardNav = ({ settings }) => {
             <div className={styles.profileDropdownMenu}>
               {userData && (
                 <div className={styles.profileMenuUserDetailsContainer}>
-                  <Image src={userData?.photoUrl || getRandomHumanImage()} alt={userData.displayName} width={40} height={40} />
+                  <div 
+                    className={styles.profileImage}
+                    style={
+                      userData?.photoUrl ? { backgroundImage: `url(${userData?.photoUrl})` } : {backgroundColor: '#000000'}
+                    }
+                  >
+                    {!userData?.photoUrl && (
+                      <h2>{initial.split('')[0]}</h2>
+                    )}
+                  </div>  
                   <div className={styles.userInfo}>
                     <p>@{userData.username}</p>
                     <sub>fansl.ink/user/{userData.username}</sub>

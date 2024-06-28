@@ -197,6 +197,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: flex-start;
             border-radius: 50px;
             padding: 0.5rem;
             background-color: $color-off-white;
@@ -205,6 +206,9 @@
 
             @media (max-width: $screen-lg) {
                 width: auto;
+                padding: 0.2rem;
+                align-items: center;
+                justify-content: center;
             }
     
     
@@ -229,6 +233,38 @@
                 justify-content: flex-start;
                 gap: 0.5rem;
                 width: 100%;
+
+                @media (max-width: $screen-lg) {
+                    width: auto;
+                    height: 100%;
+                }
+
+
+                .profileImage {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    width: 3rem;
+                    height: 3rem;
+                    border-radius: 50px;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                    overflow: hidden;
+                    flex-shrink: 0;  // Prevents the container from shrinking
+                    flex-grow: 0; 
+
+                    @media (max-width: $screen-lg) {
+                        width: 3rem;
+                        height: 3rem;
+                    }
+
+                    h2 {
+                        font-size: 1rem;
+                        color: $color-white;
+                    }
+                }
     
                 img {
                     border-radius: 50%;
@@ -292,9 +328,26 @@
                     align-items: flex-start;
                     gap: 0.5rem;
                     margin-bottom: 1rem;
-        
-                    img {
-                        border-radius: 50%;
+
+                    .profileImage {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        width: 3rem;
+                        height: 3rem;
+                        border-radius: 50px;
+                        background-position: center;
+                        background-repeat: no-repeat;
+                        background-size: cover;
+                        overflow: hidden;
+                        flex-shrink: 0;  // Prevents the container from shrinking
+                        flex-grow: 0; 
+    
+                        h2 {
+                            font-size: 1rem;
+                            color: $color-white;
+                        }
                     }
             
                     .userInfo {
