@@ -1,9 +1,26 @@
-import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs, arrayUnion, updateDoc } from 'firebase/firestore';
+import { 
+  getFirestore, 
+  doc, 
+  getDoc, 
+  setDoc, 
+  collection, 
+  query, 
+  where, 
+  getDocs, 
+  arrayUnion, 
+  updateDoc, 
+  increment, 
+  serverTimestamp, 
+  runTransaction,
+  Timestamp,
+} from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteField } from 'firebase/storage';
 import { sendPasswordResetEmail } from "firebase/auth";
-import {auth, db, storage } from '@/firebase/firebase';
+import {auth, db, storage, analytics } from '@/firebase/firebase';
+import { logEvent } from "firebase/analytics";
 import axios from 'axios';
 import imageCompression from 'browser-image-compression';
+
 
 /**
  * Fetch user data by UID.
@@ -597,4 +614,148 @@ export const updateUserTheme = async (userId, theme) => {
     console.error('Error updating user theme: ', error);
     throw error;
   }
+};
+
+
+
+// ANALYTICS FUNCTIONS
+const LOCATION_RETENTION_DAYS = 30;
+
+export const trackUserVisit = async (uid) => {
+  const docRef = doc(db, "analytics", uid);
+
+  try {
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) {
+      await setDoc(docRef, {
+        visits: 1,
+        lastVisit: new Date().toISOString(),
+        links: [],
+        locations: [],
+        mobile: 0,
+        desktop: 0,
+      });
+    } else {
+      await updateDoc(docRef, {
+        visits: increment(1),
+        lastVisit: new Date().toISOString(),
+      });
+    }
+  } catch (error) {
+    console.error("Error tracking user visit:", error);
+  }
+};
+
+/**
+ * Track device type and increment the respective count.
+ * @param {string} userId - The ID of the user.
+ * @param {string} deviceType - The type of device (e.g., 'mobile', 'desktop').
+ */
+export const trackDeviceType = async (userId, deviceType) => {
+  const docRef = doc(db, "analytics", userId);
+
+  try {
+    await updateDoc(docRef, {
+      [deviceType]: increment(1),
+    });
+  } catch (error) {
+    console.error("Error tracking device type:", error);
+  }
+};
+
+/**
+ * Track visitor location and add it to the user's analytics document.
+ * @param {string} userId - The ID of the user.
+ * @param {object} location - The location data (e.g., city, country).
+ */
+export const trackVisitorLocation = async (userId, location) => {
+  const docRef = doc(db, "analytics", userId);
+
+  if (!location.city || !location.country_name) {
+    console.error('Invalid location data:', location);
+    return;
+  }
+
+  try {
+    const userDoc = await getDoc(docRef);
+    if (!userDoc.exists()) {
+      throw new Error("User document does not exist!");
+    }
+
+    const locationData = {
+      city: location.city,
+      country: location.country_name,
+      timestamp: new Date().toISOString(),
+    };
+
+    const userData = userDoc.data();
+    const locations = userData.locations || [];
+
+    const cutoffTimestamp = new Date(Date.now() - LOCATION_RETENTION_DAYS * 24 * 60 * 60 * 1000).toISOString();
+    const filteredLocations = locations.filter(loc => new Date(loc.timestamp) > new Date(cutoffTimestamp));
+
+    filteredLocations.push(locationData);
+
+    await updateDoc(docRef, {
+      locations: filteredLocations,
+      lastLocation: location.city,
+    });
+  } catch (error) {
+    console.error('Error tracking visitor location:', error);
+  }
+};
+
+/**
+ * Updates the analytics of a specific link in Firestore.
+ * If the link does not exist, it adds the link with the default value.
+ * @param {string} userId - The ID of the user.
+ * @param {number} linkId - The ID of the link.
+ * @param {string} title - The title of the link.
+ * @param {string} field - The field to update (e.g., 'clicks', 'hovers').
+ */
+const updateLinkAnalytics = async (userId, linkId, title, field) => {
+  try {
+    const userRef = doc(db, 'analytics', userId);
+    const userDoc = await getDoc(userRef);
+
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      const links = userData.links || [];
+      
+      const updatedLinks = links.map(link => {
+        if (link.id === linkId) {
+          return { ...link, [field]: (link[field] || 0) + 1 };
+        }
+        return link;
+      });
+
+      if (!updatedLinks.find(link => link.id === linkId)) {
+        updatedLinks.push({ id: linkId, title, clicks: 0, hovers: 0, [field]: 1 });
+      }
+
+      await updateDoc(userRef, { links: updatedLinks });
+
+      console.log(`Link ${field} updated successfully`);
+      return updatedLinks;
+    } else {
+      throw new Error('User document does not exist');
+    }
+  } catch (error) {
+    console.error(`Error updating link ${field}: `, error);
+    throw error;
+  }
+};
+
+export const trackLinkClick = (userId, linkId, title) => updateLinkAnalytics(userId, linkId, title, 'clicks');
+export const trackLinkHover = (userId, linkId, title) => updateLinkAnalytics(userId, linkId, title, 'hovers');
+
+export const fetchUserAnalytics = async (userId) => {
+  const docRef = doc(db, "analytics", userId);
+  const docSnap = await getDoc(docRef);
+  if (!docSnap.exists()) {
+    return null;
+  }
+
+  const data = docSnap.data();
+  return data;
 };
