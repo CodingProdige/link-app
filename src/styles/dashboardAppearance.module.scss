@@ -249,6 +249,104 @@
             }
         }
 
+        .showLogoContainer {
+            width: 100%;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            background-color: #ffffff;
+            padding: 1rem;
+            border-radius: 25px;
+            gap: 1rem;
+
+            .showLogoWrapper {
+                display: flex;
+                flex-direction: column;
+                justify-self: flex-start;
+                align-items: flex-start;
+                gap: 2rem;
+                width: 100%;
+
+                .showLogoPreviewContainer {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: 1rem;
+
+                    .navLogoContainer {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: center;
+                        align-items: center;
+                        height: 3rem;
+                        width: auto;
+
+                        img {
+                            width: auto;
+                            height: 100%;
+                            object-fit: contain;
+                        }
+                    }
+                }
+
+                .toggleContainer {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+
+                }
+                
+                .switch {
+                    position: relative;
+                    display: inline-block;
+                    width: 34px;
+                    height: 20px;
+                }
+                
+                .switch input {
+                    opacity: 0;
+                    width: 0;
+                    height: 0;
+                }
+                
+                .slider {
+                    position: absolute;
+                    cursor: pointer;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: #ccc;
+                    transition: .4s;
+                    border-radius: 34px;
+                }
+                
+                .slider:before {
+                    position: absolute;
+                    content: "";
+                    height: 14px;
+                    width: 14px;
+                    left: 3px;
+                    bottom: 3px;
+                    background-color: white;
+                    transition: .4s;
+                    border-radius: 50%;
+                }
+                
+                input:checked + .slider {
+                    background-color: #2196F3;
+                }
+                
+                input:checked + .slider:before {
+                    transform: translateX(14px);
+                }
+            }
+        }
+
         .customContainer {
             width: 100%;
             height: auto;

@@ -5,33 +5,42 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/firebase/auth';
 import { usePrismic } from '@/context/PrismicContext';
 import styles from '@/styles/dashboardAppearance.module.scss';
-import { fetchUserData, updateUserTheme, uploadVideo, uploadImage, updateUserBio, updateUserTitle, updateUserPhotoUrl, deleteUserPhotoUrl  } from '@/utils/firebaseUtils';
+import { 
+  fetchUserData, updateUserTheme, uploadVideo, uploadImage, 
+  updateUserBio, updateUserTitle, updateUserPhotoUrl, 
+  deleteUserPhotoUrl, updateUserShowLogo  
+} from '@/utils/firebaseUtils';
 import MobilePreview from '@/components/MobilePreview';
 import MobilePreviewSmall from '@/components/MobilePreviewSmall';
 import { THEMES } from '@/lib/constants';
 import Image from 'next/image';
+import { PrismicNextImage } from "@prismicio/next";
 
 export default function Appearance() {
   const { user, loading: authLoading } = useAuth();
-  const { settings, loading: prismicLoading } = usePrismic();
+  const { settings } = usePrismic();
   const router = useRouter();
+
   const [theme, setTheme] = useState(null);
   const [userData, setUserData] = useState(null);
   const [previewKey, setPreviewKey] = useState(0); // Key to force MobilePreview re-render
-  const linkPageUrl = userData ? `${window.location.origin}/user/${userData.username}` : '';
   const [isPreviewSmall, setIsPreviewSmall] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const imageInputRef = useRef(null);
-  const videoInputRef = useRef(null);
-  const profileInputRef = useRef(null);
+  const [isProfileUploading, setIsProfileUploading] = useState(false);
+  const [removingProfileImage, setRemovingProfileImage] = useState(false);
   const [videoUrl, setVideoUrl] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [bio, setBio] = useState('');
   const [title, setTitle] = useState('');
   const [bioCharCount, setBioCharCount] = useState(120);
   const [titleCharCount, setTitleCharCount] = useState(30);
-  const [isProfileUploading, setIsProfileUploading] = useState(false);
-  const [removingProfileImage, setRemovingProfileImage] = useState(false);
+  const [showLogo, setShowLogo] = useState(true);
+
+  const imageInputRef = useRef(null);
+  const videoInputRef = useRef(null);
+  const profileInputRef = useRef(null);
+
+  const linkPageUrl = userData ? `${window.location.origin}/user/${userData.username}` : '';
 
   const handleBioChange = (event) => {
     const newBio = event.target.value;
@@ -68,6 +77,7 @@ export default function Appearance() {
           setTitle(userData.title || '');
           setBioCharCount(120 - (userData.bio?.length || 0));
           setTitleCharCount(30 - (userData.title?.length || 0));
+          setShowLogo(userData.showLogo || false); // Set showLogo from userData
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
@@ -87,7 +97,6 @@ export default function Appearance() {
         setImageUrl(updatedTheme.BACKGROUND_IMAGE?.imageUrl || '');
         setVideoUrl(updatedTheme.BACKGROUND_VIDEO?.videoUrl || '');
         setPreviewKey((prevKey) => prevKey + 1); // Force re-render of MobilePreview
-        console.log('Theme updated:', updatedTheme);
         alert('Theme updated!');
       } catch (error) {
         console.error('Error updating user theme:', error);
@@ -247,10 +256,22 @@ export default function Appearance() {
     } finally {
       setRemovingProfileImage(false);
     }
-  }
+  };
 
   const handleButtonClick = (inputRef) => {
     inputRef.current.click();
+  };
+
+  const handleShowLogoChange = async (e) => {
+    const newShowLogo = e.target.checked;
+    setShowLogo(newShowLogo);
+
+    try {
+      const updatedData = await updateUserShowLogo(user.uid, newShowLogo);
+      setUserData(updatedData);
+    } catch (error) {
+      console.error('Error updating show logo:', error);
+    }
   };
 
   const initial = userData?.username?.toUpperCase();
@@ -266,9 +287,7 @@ export default function Appearance() {
                 <div className={styles.profileInfoContainer}>
                   <div 
                     className={styles.profileImageContainer}
-                    style={
-                      userData?.photoUrl ? { backgroundImage: `url(${userData?.photoUrl})` } : { backgroundColor: '#000000' }
-                    }
+                    style={userData?.photoUrl ? { backgroundImage: `url(${userData?.photoUrl})` } : { backgroundColor: '#000000' }}
                   >
                     {!userData?.photoUrl && (
                       <h2>{initial.split('')[0]}</h2>
@@ -677,6 +696,30 @@ export default function Appearance() {
               </div>
             </div>
             )}
+
+            <div className={styles.showLogoContainer}>
+              <h4 className={styles.showLogoTitle}>Show Logo</h4>
+              <div className={styles.showLogoWrapper}>
+                <div className={styles.showLogoPreviewContainer}>
+
+                  <div className={styles.navLogoContainer}>
+                    <PrismicNextImage field={settings.data.logo} />
+                  </div>
+                  <div className={styles.toggleContainer}>
+                    <label className={styles.switch}>
+                      <input
+                        type="checkbox"
+                        checked={showLogo}
+                        onChange={handleShowLogoChange}
+                      />
+                      <span className={styles.slider}></span>
+                    </label>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
           </div>
 
           {linkPageUrl && userData && (

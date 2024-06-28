@@ -63,6 +63,7 @@ export const hasUsernameField = async (uid) => {
   }
 };
 
+
 /**
  * Check if the username is already taken.
  * @param {string} username - Username to check.
@@ -94,6 +95,31 @@ export const updateUsername = async (uid, username) => {
   } catch (error) {
     console.error('Error updating username:', error.message);
     throw new Error('Username update failed');
+  }
+};
+
+/**
+ * Update the showLogo field of a user in Firestore.
+ * @param {string} uid - User ID.
+ * @param {boolean} showLogo - Boolean value to set showLogo to.
+ * @returns {Promise<object>} - The updated user data.
+ */
+export const updateUserShowLogo = async (uid, showLogo) => {
+  try {
+    const userDocRef = doc(db, 'users', uid);
+    await setDoc(userDocRef, { showLogo }, { merge: true });
+    console.log('showLogo field updated successfully');
+
+    // Fetch the updated document
+    const updatedDoc = await getDoc(userDocRef);
+    if (updatedDoc.exists()) {
+      return updatedDoc.data();
+    } else {
+      throw new Error('User document does not exist');
+    }
+  } catch (error) {
+    console.error('Error updating showLogo field:', error.message);
+    throw new Error('showLogo field update failed');
   }
 };
 

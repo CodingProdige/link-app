@@ -408,7 +408,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
           </div>
         )}
       </div>
-      {userData?.fanslinkLogo && userData?.fanslinkLogo !== false && (
+      {userData?.showLogo && userData?.showLogo !== false && (
         <div className={styles.fanslinkLogo}>
           <PrismicNextImage field={settings.data.logo} className={styles.fanslinkLogoImage} />
         </div>
