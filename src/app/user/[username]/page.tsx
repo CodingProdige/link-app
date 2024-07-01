@@ -43,7 +43,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
         }
 
         setUserData(data);
-        trackUserVisit(data.uid);  // Track user visit by UID
+        trackUserVisit(data.uid, document.referrer);  // Track user visit with referrer
 
         // Detect device type
         const deviceType = /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop';

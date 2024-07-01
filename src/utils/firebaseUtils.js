@@ -621,7 +621,7 @@ export const updateUserTheme = async (userId, theme) => {
 // ANALYTICS FUNCTIONS
 const LOCATION_RETENTION_DAYS = 30;
 
-export const trackUserVisit = async (uid) => {
+export const trackUserVisit = async (uid, referrer) => {
   const docRef = doc(db, "analytics", uid);
 
   try {
@@ -634,11 +634,19 @@ export const trackUserVisit = async (uid) => {
         locations: [],
         mobile: 0,
         desktop: 0,
+        referrers: referrer ? [referrer] : [],
       });
     } else {
+      const data = docSnap.data();
+      const referrers = data.referrers || [];
+      if (referrer && !referrers.includes(referrer)) {
+        referrers.push(referrer);
+      }
+
       await updateDoc(docRef, {
         visits: increment(1),
         lastVisit: new Date().toISOString(),
+        referrers,
       });
     }
   } catch (error) {
