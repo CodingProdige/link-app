@@ -32,6 +32,7 @@
       }
 
       .inputContainer {
+        position: relative;
         display: flex;
         flex-direction: row;
         justify-content: center;
@@ -40,7 +41,7 @@
 
         .baseUrl {
           position: absolute;
-          left: 3rem;
+          left: 1rem;
         }
 
         input {

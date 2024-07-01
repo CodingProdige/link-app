@@ -10,6 +10,7 @@ import {
   arrayUnion, 
   updateDoc, 
   increment, 
+  writeBatch ,
   serverTimestamp, 
   runTransaction,
   Timestamp,
@@ -474,6 +475,22 @@ export const deleteLinkById = async (userId, linkId) => {
     const userRef = doc(db, 'users', userId);
     const userDoc = await getDoc(userRef);
 
+    const analyticsRef = doc(db, 'analytics', userId);
+    const analyticsDoc = await getDoc(analyticsRef);
+
+    if (analyticsDoc.exists()) {
+      const analyticsData = analyticsDoc.data();
+      const links = analyticsData.links || [];
+      
+      const updatedLinks = links.filter(link => link.id !== linkId);
+
+      await updateDoc(analyticsRef, { links: updatedLinks });
+
+      console.log('Analytics link deleted successfully: ', updatedLinks);
+    } else {
+      throw new Error('analytics document does not exist');
+    }
+
     if (userDoc.exists()) {
       const userData = userDoc.data();
       const links = userData.links || [];
@@ -492,6 +509,7 @@ export const deleteLinkById = async (userId, linkId) => {
     throw error;
   }
 };
+
 
 /**
  * Validates a URL against a specified regex pattern.
@@ -630,7 +648,8 @@ export const trackUserVisit = async (uid, referer) => {
     const docSnap = await getDoc(docRef);
     const visitData = {
       timestamp: new Date().toISOString(),
-      referer: referer || document.referrer
+      referer: referer || document.referrer,
+      deviceType: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
     };
 
     if (!docSnap.exists()) {
@@ -639,9 +658,9 @@ export const trackUserVisit = async (uid, referer) => {
         lastVisit: new Date().toISOString(),
         links: [],
         locations: [],
-        mobile: 0,
-        desktop: 0,
-        referers: referer ? [referer] : [],
+        mobile: visitData.deviceType === 'mobile' ? 1 : 0,
+        desktop: visitData.deviceType === 'desktop' ? 1 : 0,
+        referers: referer ? [visitData] : [],
       });
     } else {
       const userData = docSnap.data();
@@ -651,15 +670,18 @@ export const trackUserVisit = async (uid, referer) => {
 
       filteredVisits.push(visitData);
 
-      const referrers = userData.referrers || [];
-      if (referer && !referrers.includes(referer)) {
-        referrers.push(referer);
+      const referrers = userData.referers || [];
+      if (referer && !referrers.find(r => r.referer === referer)) {
+        referrers.push({ referer, timestamp: visitData.timestamp });
       }
+
+      const deviceCountUpdate = visitData.deviceType === 'mobile' ? { mobile: increment(1) } : { desktop: increment(1) };
 
       await updateDoc(docRef, {
         visits: filteredVisits,
         lastVisit: new Date().toISOString(),
-        referers: referrers
+        referers: referrers,
+        ...deviceCountUpdate
       });
     }
   } catch (error) {

@@ -34,10 +34,10 @@ const LinkAnalyticsChart = ({ link }) => {
   const chartData = prepareChartData(link.events);
 
   const option = {
-    title: {
-      text: `${link.title || `Link ${link.id}`} Analytics`,
-      left: 'center'
-    },
+    // title: {
+    //   text: `${link.title || `Link ${link.id}`} Analytics`,
+    //   left: 'left',
+    // },
     tooltip: {
       trigger: 'axis'
     },
@@ -71,7 +71,7 @@ const LinkAnalyticsChart = ({ link }) => {
 
   return (
     <div>
-      <ReactEcharts option={option} style={{ height: '400px', width: '100%' }} />
+      <ReactEcharts option={option} style={{ height: '20rem', width: '100%' }} />
     </div>
   );
 };

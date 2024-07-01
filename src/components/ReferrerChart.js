@@ -3,7 +3,8 @@ import React from 'react';
 import ReactEcharts from 'echarts-for-react';
 
 const ReferrerChart = ({ data }) => {
-  const referrerCounts = data.reduce((acc, referrer) => {
+  const referrerCounts = data.reduce((acc, referrerObj) => {
+    const referrer = referrerObj.referer;
     acc[referrer] = (acc[referrer] || 0) + 1;
     return acc;
   }, {});
@@ -16,7 +17,7 @@ const ReferrerChart = ({ data }) => {
   const option = {
     title: {
       text: 'Top Referrers',
-      left: 'center'
+      left: 'left'
     },
     tooltip: {
       trigger: 'axis',
@@ -45,7 +46,7 @@ const ReferrerChart = ({ data }) => {
 
   return (
     <div>
-      <ReactEcharts option={option} style={{ height: '400px', width: '100%' }} />
+      <ReactEcharts option={option} style={{ height: '20rem', width: '100%' }} />
     </div>
   );
 };

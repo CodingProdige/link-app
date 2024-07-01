@@ -41,24 +41,27 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
         }
 
         setUserData(data);
-        trackUserVisit(data.uid, document.referrer);  // Track user visit with referrer
+        if(!document.referrer.includes('dashboard')) {
+          trackUserVisit(data.uid, document.referrer);  // Track user visit with referrer
 
-        // Detect device type
-        const deviceType = /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop';
-        trackDeviceType(data.uid, deviceType);
+          // Detect device type
+          const deviceType = /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop';
+          trackDeviceType(data.uid, deviceType);
 
-        // Track visitor location
-        const fetchVisitorLocation = async () => {
-          try {
-            const response = await axios.get('https://api.ipgeolocation.io/ipgeo?apiKey=' + process.env.NEXT_PUBLIC_IPGEOLOCATION_API_KEY);
-            trackVisitorLocation(data.uid, response?.data);
-            console.log('Visitor location:', response?.data);
-          } catch (error) {
-            console.error('Error fetching visitor location:', error);
-          }
+          // Track visitor location
+          const fetchVisitorLocation = async () => {
+            try {
+              const response = await axios.get('https://api.ipgeolocation.io/ipgeo?apiKey=' + process.env.NEXT_PUBLIC_IPGEOLOCATION_API_KEY);
+              trackVisitorLocation(data.uid, response?.data);
+              console.log('Visitor location:', response?.data);
+            } catch (error) {
+              console.error('Error fetching visitor location:', error);
+            }
+          };
+
+          fetchVisitorLocation();
         };
 
-        fetchVisitorLocation();
 
         if (data.theme) {
           setTheme(data.theme);
@@ -84,14 +87,20 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
   if (!userData) {
     return <div className={styles.error}>User data not found.</div>;
   }
+
+
   const LinkComponent = ({ link, theme }) => {
 
     const handleLinkClick = (linkId, title) => {
-      trackLinkClick(userData.uid, linkId, title);
+      if(!document.referrer.includes('dashboard')) {
+        trackLinkClick(userData.uid, linkId, title);
+      }
     };
 
     const handleLinkHover = (linkId, title) => {
-      trackLinkHover(userData.uid, linkId, title);
+      if(!document.referrer.includes('dashboard')) {
+        trackLinkHover(userData.uid, linkId, title);
+      }
     };
 
     if (link?.layout === "classic" && link?.linkType === "external") {
@@ -187,7 +196,12 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
     if (link?.linkType === "embed") {
       if (link?.metadata?.mediaType.includes("video")) {
         return (
-          <div className={styles.linkPillVideo} style={{ ...theme?.PILLS }} onMouseEnter={() => handleLinkHover(link.id, link.title)}>
+          <div 
+            className={styles.linkPillVideo} 
+            style={{ ...theme?.PILLS }} 
+            onMouseEnter={() => handleLinkHover(link.id, link.title)}
+            onClick={() => handleLinkClick(link.id, link.title)}
+          >
             <div className={styles.pillOpacityLayer} style={{ ...theme?.OPACITY_LAYER }}></div>
             <li className={styles.linkItem}>
               <div className={styles.selectedIcon}>
@@ -230,7 +244,12 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
         );
       } else if (link?.metadata?.mediaType.includes("music")) {
         return (
-          <div className={styles.linkPillMusic} style={{ ...theme?.PILLS }} onMouseEnter={() => handleLinkHover(link.id, link.title)}>
+          <div 
+            className={styles.linkPillMusic} 
+            style={{ ...theme?.PILLS }} 
+            onMouseEnter={() => handleLinkHover(link.id, link.title)}
+            onClick={() => handleLinkClick(link.id, link.title)}
+          >
             <div className={styles.pillOpacityLayer} style={{ ...theme?.OPACITY_LAYER }}></div>
             <li className={styles.linkItem}>
               <div className={styles.selectedIcon}>

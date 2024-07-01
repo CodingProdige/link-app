@@ -12,7 +12,7 @@ const DailyVisitorChart = ({ visits }) => {
   const prepareChartData = (visits) => {
     const filteredVisits = filterVisitsForLastThreeMonths(visits);
     const dates = filteredVisits.map(visit => new Date(visit.timestamp).toLocaleDateString());
-    const uniqueDates = Array.from(new Set(dates)); // Convert Set to array
+    const uniqueDates = Array.from(new Set(dates));
 
     const visitCounts = uniqueDates.map(date => ({
       date,
@@ -30,7 +30,7 @@ const DailyVisitorChart = ({ visits }) => {
   const option = {
     title: {
       text: 'Daily Visitors',
-      left: 'center'
+      left: 'left'
     },
     tooltip: {
       trigger: 'axis'
@@ -55,7 +55,7 @@ const DailyVisitorChart = ({ visits }) => {
 
   return (
     <div>
-      <ReactEcharts option={option} style={{ height: '400px', width: '100%' }} />
+      <ReactEcharts option={option} style={{ height: '20rem', width: '100%' }} />
     </div>
   );
 };

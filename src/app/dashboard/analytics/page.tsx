@@ -11,6 +11,9 @@ import AnalyticsChart from '@/components/AnalyticsChart';
 import LinkAnalyticsChart from '@/components/LinkAnalyticsChart';
 import ReferrerChart from '@/components/ReferrerChart';
 import DailyVisitorChart from '@/components/DailyVisitorsChart';
+import DeviceTypeChart from '@/components/DeviceTypeChart';
+import TopLocationsChart from '@/components/TopLocationsChart';
+import styles from '@/styles/dashboardAnalytics.module.scss';
 
 export default function Analytics() {
   const { user, loading: authLoading } = useAuth();
@@ -45,58 +48,47 @@ export default function Analytics() {
     return null;
   }
 
-  const filterVisitsForLastThreeMonths = (visits) => {
-    const threeMonthsAgo = new Date();
-    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-    return visits.filter(visit => new Date(visit.timestamp) >= threeMonthsAgo);
-  };
 
-  const prepareChartData = (data) => {
-    const visits = filterVisitsForLastThreeMonths(data.visits);
-    const dates = visits.map(visit => new Date(visit.timestamp).toLocaleDateString());
-    const uniqueDates = Array.from(new Set(dates)); // Convert Set to array
-
-    const visitCounts = uniqueDates.map(date => ({
-      date,
-      count: visits.filter(visit => new Date(visit.timestamp).toLocaleDateString() === date).length,
-    }));
-
-    return visitCounts;
-  };
-
-  const chartData = analyticsData ? prepareChartData(analyticsData) : null;
 
   return (
-    <div>
-      <h1>Analytics for {user.displayName || user.email}</h1>
-      {analyticsData ? (
-        <div>
-          <p>Visits: {analyticsData.visits.length}</p>
-          <p>Last Visit: {analyticsData.lastVisit ? new Date(analyticsData.lastVisit).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) + ' at ' + new Date(analyticsData.lastVisit).toLocaleTimeString('en-GB', { hour: 'numeric', minute: 'numeric', hour12: true }) : 'N/A'}</p>
-          <p>Mobile Visits: {analyticsData.mobile || 0}</p>
-          <p>Desktop Visits: {analyticsData.desktop || 0}</p>
-          <p>Last Location: {analyticsData.lastLocation || 'N/A'}</p>
-          <h2>Referrers</h2>
-          <ul>
-            {analyticsData.referers && analyticsData.referers.map((referrer, index) => (
-              <li key={index}>{referrer}</li>
-            ))}
-          </ul>
-          {analyticsData.referers && <ReferrerChart data={analyticsData.referers} />}
+    <div className={styles.analyticsPage}>
 
-          <h2>Link Analytics</h2>
-          {analyticsData.links && analyticsData.links.map(link => (
-            <div key={link.id}>
-              <h3>{link.title || `Link ${link.id}`}</h3>
-              <LinkAnalyticsChart link={link} />
+        <div className={styles.analyticsCardsContainer}>
+
+          <div className={styles.generalAnalyticsWrapper}>
+            <h3>General Analytics</h3>  
+            <div className={styles.generalAnalyticsContainer}>
+              <div className={styles.analyticsCard}>
+                <DailyVisitorChart visits={analyticsData ? analyticsData.visits : []} />
+              </div>
+
+              <div className={styles.analyticsCard}>
+                <DeviceTypeChart visits={analyticsData ? analyticsData.visits : []} />
+              </div>
+
+              <div className={styles.analyticsCard}>
+                <TopLocationsChart locations={analyticsData ? analyticsData.locations : []} />
+              </div>
+
+              <div className={styles.analyticsCard}>
+                <ReferrerChart data={analyticsData ? analyticsData.referers : []} />
+              </div>
             </div>
-          ))}
+          </div>
 
-          {analyticsData.visits && <DailyVisitorChart visits={analyticsData.visits} />}
+          <div className={styles.analyticsLinksWrapper}>
+            <h3>Link Analytics</h3>
+            <div className={styles.analyticsLinksContainer}>
+              {analyticsData && analyticsData.links ? analyticsData.links.map(link => (
+                <div className={styles.analyticsCard} key={link.id}>
+                  <h3>{link.title || `Link ${link.id}`}</h3>
+                  <LinkAnalyticsChart link={link} />
+                </div>
+              )) : <p>No link analytics data available.</p>}
+            </div>
+          </div>
         </div>
-      ) : (
-        <p>No analytics data available.</p>
-      )}
+
     </div>
   );
 }
