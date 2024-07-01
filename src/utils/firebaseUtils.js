@@ -620,33 +620,46 @@ export const updateUserTheme = async (userId, theme) => {
 
 // ANALYTICS FUNCTIONS
 const LOCATION_RETENTION_DAYS = 30;
+const EVENT_RETENTION_DAYS = 90; // 3 months
+const VISIT_RETENTION_DAYS = 90; // 3 months
 
-export const trackUserVisit = async (uid, referrer) => {
+export const trackUserVisit = async (uid, referer) => {
   const docRef = doc(db, "analytics", uid);
 
   try {
     const docSnap = await getDoc(docRef);
+    const visitData = {
+      timestamp: new Date().toISOString(),
+      referer: referer || document.referrer
+    };
+
     if (!docSnap.exists()) {
       await setDoc(docRef, {
-        visits: 1,
+        visits: [visitData],
         lastVisit: new Date().toISOString(),
         links: [],
         locations: [],
         mobile: 0,
         desktop: 0,
-        referrers: referrer ? [referrer] : [],
+        referers: referer ? [referer] : [],
       });
     } else {
-      const data = docSnap.data();
-      const referrers = data.referrers || [];
-      if (referrer && !referrers.includes(referrer)) {
-        referrers.push(referrer);
+      const userData = docSnap.data();
+      const visits = userData.visits || [];
+      const cutoffTimestamp = new Date(Date.now() - VISIT_RETENTION_DAYS * 24 * 60 * 60 * 1000).toISOString();
+      const filteredVisits = visits.filter(visit => new Date(visit.timestamp) > new Date(cutoffTimestamp));
+
+      filteredVisits.push(visitData);
+
+      const referrers = userData.referrers || [];
+      if (referer && !referrers.includes(referer)) {
+        referrers.push(referer);
       }
 
       await updateDoc(docRef, {
-        visits: increment(1),
+        visits: filteredVisits,
         lastVisit: new Date().toISOString(),
-        referrers,
+        referers: referrers
       });
     }
   } catch (error) {
@@ -654,11 +667,6 @@ export const trackUserVisit = async (uid, referrer) => {
   }
 };
 
-/**
- * Track device type and increment the respective count.
- * @param {string} userId - The ID of the user.
- * @param {string} deviceType - The type of device (e.g., 'mobile', 'desktop').
- */
 export const trackDeviceType = async (userId, deviceType) => {
   const docRef = doc(db, "analytics", userId);
 
@@ -671,11 +679,6 @@ export const trackDeviceType = async (userId, deviceType) => {
   }
 };
 
-/**
- * Track visitor location and add it to the user's analytics document.
- * @param {string} userId - The ID of the user.
- * @param {object} location - The location data (e.g., city, country).
- */
 export const trackVisitorLocation = async (userId, location) => {
   const docRef = doc(db, "analytics", userId);
 
@@ -713,15 +716,7 @@ export const trackVisitorLocation = async (userId, location) => {
   }
 };
 
-/**
- * Updates the analytics of a specific link in Firestore.
- * If the link does not exist, it adds the link with the default value.
- * @param {string} userId - The ID of the user.
- * @param {number} linkId - The ID of the link.
- * @param {string} title - The title of the link.
- * @param {string} field - The field to update (e.g., 'clicks', 'hovers').
- */
-const updateLinkAnalytics = async (userId, linkId, title, field) => {
+const updateLinkEvent = async (userId, linkId, title, eventType) => {
   try {
     const userRef = doc(db, 'analytics', userId);
     const userDoc = await getDoc(userRef);
@@ -729,33 +724,40 @@ const updateLinkAnalytics = async (userId, linkId, title, field) => {
     if (userDoc.exists()) {
       const userData = userDoc.data();
       const links = userData.links || [];
-      
+      const event = {
+        type: eventType,
+        timestamp: new Date().toISOString(),
+      };
+
       const updatedLinks = links.map(link => {
         if (link.id === linkId) {
-          return { ...link, [field]: (link[field] || 0) + 1 };
+          const events = link.events || [];
+          const cutoffTimestamp = new Date(Date.now() - EVENT_RETENTION_DAYS * 24 * 60 * 60 * 1000).toISOString();
+          const filteredEvents = events.filter(event => new Date(event.timestamp) > new Date(cutoffTimestamp));
+          return { ...link, title, events: [...filteredEvents, event] };
         }
         return link;
       });
 
       if (!updatedLinks.find(link => link.id === linkId)) {
-        updatedLinks.push({ id: linkId, title, clicks: 0, hovers: 0, [field]: 1 });
+        updatedLinks.push({ id: linkId, title, events: [event] });
       }
 
       await updateDoc(userRef, { links: updatedLinks });
 
-      console.log(`Link ${field} updated successfully`);
+      console.log(`Link ${eventType} event updated successfully`);
       return updatedLinks;
     } else {
       throw new Error('User document does not exist');
     }
   } catch (error) {
-    console.error(`Error updating link ${field}: `, error);
+    console.error(`Error updating link ${eventType} event: `, error);
     throw error;
   }
 };
 
-export const trackLinkClick = (userId, linkId, title) => updateLinkAnalytics(userId, linkId, title, 'clicks');
-export const trackLinkHover = (userId, linkId, title) => updateLinkAnalytics(userId, linkId, title, 'hovers');
+export const trackLinkClick = (userId, linkId, title) => updateLinkEvent(userId, linkId, title, 'click');
+export const trackLinkHover = (userId, linkId, title) => updateLinkEvent(userId, linkId, title, 'hover');
 
 export const fetchUserAnalytics = async (userId) => {
   const docRef = doc(db, "analytics", userId);

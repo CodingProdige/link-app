@@ -11,9 +11,7 @@ import { PrismicNextImage } from '@prismicio/next';
 import styles from '@/styles/userlinkPage.module.scss';
 import * as FaIcons from 'react-icons/fa'; // Import all FontAwesome icons
 import { IconContext } from 'react-icons';
-import EmbedComponent from '@/components/EmbedUrl';
 import VideoEmbed from '@/components/VideoEmbed';
-import { THEMES } from '@/lib/constants';
 import { trackUserVisit, trackLinkClick, trackLinkHover, trackDeviceType, trackVisitorLocation } from '@/utils/firebaseUtils';
 import axios from 'axios';
 
@@ -341,6 +339,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
             autoPlay
             loop
             muted
+            playsInline
             style={{
               position: 'absolute',
               top: '0',

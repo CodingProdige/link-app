@@ -8,6 +8,9 @@ import { usePrismic } from '@/context/PrismicContext';
 import { fetchUserAnalytics } from '@/utils/firebaseUtils';
 import Loading from '@/components/Loading';
 import AnalyticsChart from '@/components/AnalyticsChart';
+import LinkAnalyticsChart from '@/components/LinkAnalyticsChart';
+import ReferrerChart from '@/components/ReferrerChart';
+import DailyVisitorChart from '@/components/DailyVisitorsChart';
 
 export default function Analytics() {
   const { user, loading: authLoading } = useAuth();
@@ -42,22 +45,25 @@ export default function Analytics() {
     return null;
   }
 
-  const prepareChartData = (data) => {
-    const titles = [];
-    const visits = [];
-    const clicks = [];
-    const hovers = [];
-  
-    data.links.forEach(link => {
-      titles.push(link.title || `Link ${link.id}`);
-      visits.push(link.visits || 0);
-      clicks.push(link.clicks || 0);
-      hovers.push(link.hovers || 0);
-    });
-  
-    return { titles, visits, clicks, hovers };
+  const filterVisitsForLastThreeMonths = (visits) => {
+    const threeMonthsAgo = new Date();
+    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+    return visits.filter(visit => new Date(visit.timestamp) >= threeMonthsAgo);
   };
-  
+
+  const prepareChartData = (data) => {
+    const visits = filterVisitsForLastThreeMonths(data.visits);
+    const dates = visits.map(visit => new Date(visit.timestamp).toLocaleDateString());
+    const uniqueDates = Array.from(new Set(dates)); // Convert Set to array
+
+    const visitCounts = uniqueDates.map(date => ({
+      date,
+      count: visits.filter(visit => new Date(visit.timestamp).toLocaleDateString() === date).length,
+    }));
+
+    return visitCounts;
+  };
+
   const chartData = analyticsData ? prepareChartData(analyticsData) : null;
 
   return (
@@ -65,28 +71,28 @@ export default function Analytics() {
       <h1>Analytics for {user.displayName || user.email}</h1>
       {analyticsData ? (
         <div>
-          <p>Visits: {analyticsData.visits}</p>
+          <p>Visits: {analyticsData.visits.length}</p>
           <p>Last Visit: {analyticsData.lastVisit ? new Date(analyticsData.lastVisit).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) + ' at ' + new Date(analyticsData.lastVisit).toLocaleTimeString('en-GB', { hour: 'numeric', minute: 'numeric', hour12: true }) : 'N/A'}</p>
           <p>Mobile Visits: {analyticsData.mobile || 0}</p>
           <p>Desktop Visits: {analyticsData.desktop || 0}</p>
           <p>Last Location: {analyticsData.lastLocation || 'N/A'}</p>
           <h2>Referrers</h2>
           <ul>
-            {analyticsData.referrers && analyticsData.referrers.map((referrer, index) => (
+            {analyticsData.referers && analyticsData.referers.map((referrer, index) => (
               <li key={index}>{referrer}</li>
             ))}
           </ul>
+          {analyticsData.referers && <ReferrerChart data={analyticsData.referers} />}
 
           <h2>Link Analytics</h2>
           {analyticsData.links && analyticsData.links.map(link => (
             <div key={link.id}>
               <h3>{link.title || `Link ${link.id}`}</h3>
-              <p>Clicks: {link.clicks}</p>
-              <p>Hovers: {link.hovers}</p>
+              <LinkAnalyticsChart link={link} />
             </div>
           ))}
 
-          {chartData && <AnalyticsChart data={chartData} />}
+          {analyticsData.visits && <DailyVisitorChart visits={analyticsData.visits} />}
         </div>
       ) : (
         <p>No analytics data available.</p>
