@@ -2,7 +2,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
+import { notFound, usePathname } from 'next/navigation';
 import Loading from '@/components/Loading';
 import Link from 'next/link';
 import { fetchUserDataByUsername } from '@/utils/firebaseUtils';
@@ -14,6 +14,7 @@ import { IconContext } from 'react-icons';
 import VideoEmbed from '@/components/VideoEmbed';
 import { trackUserVisit, trackLinkClick, trackLinkHover, trackDeviceType, trackVisitorLocation } from '@/utils/firebaseUtils';
 import axios from 'axios';
+import Head from 'next/head';
 
 interface UserPageProps {
   params: {
@@ -28,6 +29,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
   const { settings, loading: prismicLoading } = usePrismic();
   const [theme, setTheme] = useState(null);
   const initial = userData?.username?.toUpperCase();
+  const pathname = usePathname();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -344,6 +346,15 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
 
   return (
     <div className={styles.containerPublicProfile}>
+      <head>
+        <title>{userData.metaData?.title || userData.username}</title>
+        <meta name="description" content={userData.metaData?.description || 'User Fanslink page'} />
+        <meta property="og:title" content={userData.openGraph?.title || userData.username} />
+        <meta property='og:url' content={`https://fansl.ink/user/${userData.username}`} />
+        <meta property="og:description" content={userData.openGraph?.description || 'User Fanslink page'} />
+        <meta property="og:image" content={userData.openGraph?.image || 'https://images.prismic.io/link-app/ZmrRoJm069VX1tdU_placeholder.webp?auto=format,compress'} />
+        <meta property="og:type" content="website" />
+      </head>
       <div
         className={styles.background}
         style={{

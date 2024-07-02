@@ -211,6 +211,44 @@ export const deleteUserPhotoUrl = async (uid) => {
   }
 };
 
+/**
+ * Updates the user's Opengraph data in Firestore.
+ * @param {string} userId - The ID of the user.
+ * @param {any} openGraphDetails - The Open Graph details to update.
+ */
+export const updateOpenGraphDetails = async (userId, openGraphDetails) => {
+  const userDocRef = doc(db, 'users', userId);
+
+  try {
+    await updateDoc(userDocRef, {
+      openGraph: openGraphDetails
+    });
+    console.log('Open Graph details updated successfully');
+  } catch (error) {
+    console.error('Error updating Open Graph details:', error);
+    throw new Error('Failed to update Open Graph details');
+  }
+};
+
+/**
+ * Updates the user's Meta data in Firestore.
+ * @param {string} userId - The ID of the user.
+ * @param {any} metaDataDetails - The Open Meta data to update.
+ */
+export const updateMetaDataDetails = async (userId, metaDataDetails) => {
+  const userDocRef = doc(db, 'users', userId);
+
+  try {
+    await updateDoc(userDocRef, {
+      metaData: metaDataDetails
+    });
+    console.log('Meta Data details updated successfully');
+  } catch (error) {
+    console.error('Error updating Meta Data details:', error);
+    throw new Error('Failed to update Meta Data details');
+  }
+};
+
 
 /**
  * Checks for an active subscription on the user.
@@ -843,3 +881,6 @@ export const fetchUserAnalytics = async (userId) => {
   const data = docSnap.data();
   return data;
 };
+
+
+
