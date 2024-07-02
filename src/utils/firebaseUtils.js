@@ -44,6 +44,7 @@ export const fetchUserData = async (uid) => {
   }
 };
 
+
 /**
  * Add or update user data in Firestore.
  * @param {string} uid - User ID.
@@ -240,6 +241,57 @@ export const checkSubscriptionStatus = async (uid) => {
   });
 
   return hasActiveSubscription;
+};
+
+/**
+ * Checks for an active subscription on the user.
+ * @param {string} uid - User ID.
+ * @param {boolean} status - The new premium status.
+ */
+export const updatePremiumStatus = async (uid, status) => {
+  const userRef = doc(db, 'users', uid);
+  await updateDoc(userRef, {
+    premium: status
+  });
+};
+
+/**
+ * Checks if the provided code exists in the activationCodes collection.
+ * @param {string} code - The code to check.
+ * @returns {Promise<boolean>} - Returns true if the code exists, false otherwise.
+ */
+export const checkIfCodeExists = async (code) => {
+  try {
+    const docRef = doc(db, 'activationCodes', 'codesList');
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const existingCodes = docSnap.data().codes || [];
+      return existingCodes.includes(code);
+    } else {
+      console.error('Document does not exist.');
+      return false;
+    }
+  } catch (error) {
+    console.error('Error checking if code exists:', error);
+    return false;
+  }
+};
+
+/**
+ * Removes a code from the activationCodes collection.
+ * @param {string} code - The code to remove.
+ * @returns {Promise<void>}
+ */
+export const removeCode = async (code) => {
+  try {
+    const docRef = doc(db, 'activationCodes', 'codesList');
+    await updateDoc(docRef, {
+      codes: arrayRemove(code),
+    });
+  } catch (error) {
+    console.error('Error removing code:', error);
+  }
 };
 
 /**

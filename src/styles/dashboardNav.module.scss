@@ -15,6 +15,7 @@
     height: 100%;
     width: 15rem;
     padding: 1rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
     @media (max-width: $screen-lg) {
         flex-direction: row;

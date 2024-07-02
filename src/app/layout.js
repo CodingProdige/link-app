@@ -40,6 +40,7 @@ export default async function RootLayout({ children }) {
           </>
         )}
         <GoogleAnalytics trackingId={settings?.data?.googleAnalyticsTag} />
+        <script defer src="//widget.tagembed.com/embed.min.js" type="text/javascript"></script>
       </head>
       <body>
         <AuthProvider>

@@ -1,0 +1,93 @@
+@import './variables';
+@import './mixins';
+
+
+.premiumBanner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+
+    .banner {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+        padding: 2rem;
+        background-image: linear-gradient(to right, $color-primary, $color-accent-dark);
+        border-radius: 25px;
+
+        @media (max-width: $screen-md) {
+            flex-direction: column;
+        }
+
+        .bannerInfo {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 1rem;
+
+            h2 {
+                font-size: 2rem;
+                color: $color-white;
+            }
+
+            p {
+                font-size: 1rem;
+                color: $color-white;
+            }
+
+            ul {
+                list-style-type: none;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                gap: 0.5rem;
+
+                li {
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    gap: 0.5rem;
+                    color: $color-white;
+
+                    svg {
+                        width: 1rem;
+                        height: 1rem;
+                        flex-grow: 0;
+                        flex-shrink: 0;
+                    }
+                }
+            }
+
+            button {
+                color: $color-accent-dark;
+                cursor: pointer;
+                transition: background-color 0.3s;
+
+                &:hover {
+                    background-color: $color-accent-dark;
+                    color: $color-white;
+                }
+            
+            }
+        }
+
+        .bannerImage {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto;
+
+            @media (max-width: $screen-md) {
+                display: none;
+            }
+        }
+    }
+}

@@ -1,37 +1,28 @@
 import React from 'react';
-import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import styles  from '@/styles/youtube.module.scss'
 
-const YouTubeCarousel = ({ videos }) => {
+const YouTubeVideos = ({ videos }) => {
+  // Get the latest 4 videos
+  const latestVideos = videos.slice(0, 4);
+
   return (
-    <Carousel showThumbs={true} infiniteLoop useKeyboardArrows autoPlay 
-        showArrows={true} showStatus={true} showIndicators={true}
-        thumbWidth={100} thumbHeight={50}
-        interval={5000} stopOnHover={true}
-        swipeable={true} dynamicHeight={false}
-        emulateTouch={true} autoFocus={false}
-        centerMode={false} centerSlidePercentage={50}
-        swipeScrollTolerance={5}
-        selectedItem={0}
-        style={{ height: '50rem', width: '100%' }}
-
-    >
-      {videos.map(video => (
-        <div key={video.id.videoId}>
-          <iframe
-            width="560"
-            height="315"
-            src={`https://www.youtube.com/embed/${video.id.videoId}`}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            title={video.snippet.title}
-          ></iframe>
+    <div className={styles.youtubeInnerWrapper}>
+      {latestVideos.map(video => (
+        <div key={video.id.videoId} className={styles.youtubeContainer}>
+          <div className={styles.iframeWrapper}>
+            <iframe
+              src={`https://www.youtube.com/embed/${video.id.videoId}`}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title={video.snippet.title}
+            ></iframe>
+          </div>
           <p>{video.snippet.description}</p>
         </div>
       ))}
-    </Carousel>
+    </div>
   );
 };
 
-export default YouTubeCarousel;
+export default YouTubeVideos;

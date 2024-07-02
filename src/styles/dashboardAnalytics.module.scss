@@ -44,6 +44,7 @@
                     flex-basis: auto;
                     grid-column: span 2;
                     height: 100%; /* Ensure all cards stretch to the same height */
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         
                     @media (max-width: $screen-xxl) {
                         grid-column: span 1;
@@ -86,6 +87,7 @@
                     flex-basis: auto;
                     grid-column: span 2;
                     height: 100%; /* Ensure all cards stretch to the same height */
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         
                     @media (max-width: $screen-xxl) {
                         grid-column: span 1;
