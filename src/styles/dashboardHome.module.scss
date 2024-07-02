@@ -1,2 +1,20 @@
 @import './variables';
 @import './mixins';
+
+
+.dashboardPage {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2rem;
+
+    .sectionContainer {
+        background-color: $color-white;
+        border-radius: 25px;
+        padding: 2rem;
+        width: 100%;
+        
+    }
+}

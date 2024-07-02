@@ -1,4 +1,3 @@
-// components/ReferrerChart.js
 import React from 'react';
 import ReactEcharts from 'echarts-for-react';
 
@@ -9,10 +8,13 @@ const ReferrerChart = ({ data }) => {
     return acc;
   }, {});
 
-  const referrerData = Object.keys(referrerCounts).map(key => ({
+  let referrerData = Object.keys(referrerCounts).map(key => ({
     name: key,
     value: referrerCounts[key]
   }));
+
+  // Sort the data by value in descending order and slice the top 10
+  referrerData = referrerData.sort((a, b) => b.value - a.value).slice(0, 10);
 
   const option = {
     title: {
@@ -20,33 +22,35 @@ const ReferrerChart = ({ data }) => {
       left: 'left'
     },
     tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'shadow'
-      }
+      trigger: 'item'
     },
-    xAxis: {
-      type: 'category',
-      data: referrerData.map(item => item.name),
-    },
-    yAxis: {
-      type: 'value'
+    legend: {
+      bottom: 0,
+      left: 'left'
     },
     series: [
       {
         name: 'Referrers',
-        type: 'bar',
-        data: referrerData.map(item => item.value),
+        type: 'pie',
+        radius: ['30%', '70%'], // Adjust the inner and outer radius to create a ring
+        roseType: 'radius', // Makes the pie chart a rose chart
         itemStyle: {
-          color: '#73c0de'
-        }
+          borderRadius: 8, // Add rounded corners
+          borderColor: '#fff',
+          borderWidth: 2
+        },
+        label: {
+          show: true,
+          formatter: '{b}: {c} ({d}%)'
+        },
+        data: referrerData
       }
     ]
   };
 
   return (
     <div>
-      <ReactEcharts option={option} style={{ height: '20rem', width: '100%' }} />
+      <ReactEcharts option={option} style={{ height: '30rem', width: '100%' }} />
     </div>
   );
 };

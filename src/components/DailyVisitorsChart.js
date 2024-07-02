@@ -55,7 +55,7 @@ const DailyVisitorChart = ({ visits }) => {
 
   return (
     <div>
-      <ReactEcharts option={option} style={{ height: '20rem', width: '100%' }} />
+      <ReactEcharts option={option} style={{ height: '30rem', width: '100%' }} />
     </div>
   );
 };

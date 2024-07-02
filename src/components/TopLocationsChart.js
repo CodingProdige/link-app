@@ -1,64 +1,73 @@
-// components/TopLocationsChart.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactEcharts from 'echarts-for-react';
 
 const TopLocationsChart = ({ locations }) => {
-  const filterLocationsForLastThreeMonths = (locations) => {
-    const threeMonthsAgo = new Date();
-    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-    return locations.filter(location => new Date(location.timestamp) >= threeMonthsAgo);
-  };
+  const [chartData, setChartData] = useState([]);
 
-  const locationData = filterLocationsForLastThreeMonths(locations);
+  useEffect(() => {
+    const filterLocationsForLastThreeMonths = (locations) => {
+      const threeMonthsAgo = new Date();
+      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+      return locations.filter(location => new Date(location.timestamp) >= threeMonthsAgo);
+    };
 
-  const locationCountsByDate = locationData.reduce((acc, location) => {
-    const date = new Date(location.timestamp).toLocaleDateString();
-    const key = `${location.city}, ${location.country}`;
-    if (!acc[date]) {
-      acc[date] = {};
-    }
-    if (!acc[date][key]) {
-      acc[date][key] = 0;
-    }
-    acc[date][key]++;
-    return acc;
-  }, {});
+    const locationData = filterLocationsForLastThreeMonths(locations);
 
-  const dates = Array.from(new Set(locationData.map(loc => new Date(loc.timestamp).toLocaleDateString()))).sort();
-  const uniqueLocations = Array.from(new Set(locationData.map(loc => `${loc.city}, ${loc.country}`)));
+    const locationCounts = locationData.reduce((acc, location) => {
+      const key = `${location.city}, ${location.country}`;
+      if (!acc[key]) {
+        acc[key] = 0;
+      }
+      acc[key]++;
+      return acc;
+    }, {});
 
-  const series = uniqueLocations.map(location => ({
-    name: location,
-    type: 'line',
-    data: dates.map(date => locationCountsByDate[date] ? locationCountsByDate[date][location] || 0 : 0)
-  }));
+    let formattedData = Object.keys(locationCounts).map(key => ({
+      name: key,
+      value: locationCounts[key]
+    }));
+
+    // Sort the data by value in descending order and slice the top 10
+    formattedData = formattedData.sort((a, b) => b.value - a.value).slice(0, 10);
+
+    setChartData(formattedData);
+  }, [locations]);
 
   const option = {
     title: {
-      text: 'Top Cities',
+      text: 'Top Locations Over Time',
       left: 'left'
     },
     tooltip: {
-      trigger: 'axis'
+      trigger: 'item'
     },
     legend: {
-      data: uniqueLocations,
-      bottom: 0
+      bottom: 0,
+      left: 'left'
     },
-    xAxis: {
-      type: 'category',
-      boundaryGap: false,
-      data: dates
-    },
-    yAxis: {
-      type: 'value'
-    },
-    series
+    series: [
+      {
+        name: 'Locations',
+        type: 'pie',
+        radius: ['30%', '70%'], // Adjust the inner and outer radius to create a ring
+        roseType: 'radius', // Makes the pie chart a rose chart
+        itemStyle: {
+          borderRadius: 8, // Add rounded corners
+          borderColor: '#fff',
+          borderWidth: 2
+        },
+        label: {
+          show: true,
+          formatter: '{b}: {c} ({d}%)'
+        },
+        data: chartData
+      }
+    ]
   };
 
   return (
     <div>
-      <ReactEcharts option={option} style={{ height: '20rem', width: '100%' }} />
+      <ReactEcharts option={option} style={{ height: '500px', width: '100%' }} />
     </div>
   );
 };

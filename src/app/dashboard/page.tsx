@@ -6,8 +6,8 @@ import { useAuth } from '@/firebase/auth';
 import { usePrismic } from '@/context/PrismicContext';
 import axios from 'axios';
 import styles from '@/styles/dashboardHome.module.scss';
-
-
+import YouTubeCarousel from '@/components/YouTubeCarousel';
+import Image from 'next/image';
 
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -19,7 +19,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await axios.get(`https://www.googleapis.com/youtube/v3/search`, {
+        const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
           params: {
             part: 'snippet',
             channelId: process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID,
@@ -44,27 +44,18 @@ export default function Dashboard() {
   }
 
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <p>Welcome, {user?.email}</p>
-      <h2>Latest YouTube Videos</h2>
-      <div>
-        {videos.map(video => (
-          <div key={video.id.videoId}>
-            <h3>{video.snippet.title}</h3>
-            <iframe
-              width="560"
-              height="315"
-              src={`https://www.youtube.com/embed/${video.id.videoId}`}
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              title={video.snippet.title}
-            ></iframe>
-            <p>{video.snippet.description}</p>
-          </div>
-        ))}
+    <div className={styles.dashboardPage}>
+
+      <div className={styles.premiumBannerContainer}>
+        <Image src="/images/premium-banner.png" alt="Premium banner" width={1200} height={200} />
       </div>
+
+      {videos.length > 0 && (
+        <div className={styles.sectionContainer}>
+          <h2>Latest Fanslink Videos</h2>
+          <YouTubeCarousel videos={videos} />
+        </div>
+      )}
     </div>
   );
 }

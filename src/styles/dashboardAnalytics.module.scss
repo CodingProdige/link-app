@@ -33,6 +33,7 @@
                 .analyticsCard {
                     display: flex;
                     flex-direction: column;
+                    justify-content: space-between;
                     gap: 1rem;
                     padding: 1rem;
                     background-color: $color-white;
@@ -47,12 +48,6 @@
                     @media (max-width: $screen-xxl) {
                         grid-column: span 1;
                     }
-                    
-        
-                    .echarts-for-react  {
-                        width: 100% !important;
-                        height: 100% !important;
-                    }
         
                     h3 {
                         font-size: 1.2rem;
@@ -62,7 +57,6 @@
                 }
             }
         }
-
 
         .analyticsLinksWrapper {
             display: flex;
