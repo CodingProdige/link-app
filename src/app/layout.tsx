@@ -8,15 +8,28 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { AuthProvider } from '@/firebase/auth';
 import { PrismicProvider } from '@/context/PrismicContext';
-import { fetchSettingsAndNavigation } from "@/lib/prismicClient";
 import Loading from "@/components/Loading";
 import Footer from "@/components/Footer";
-import { Metadata } from "next";
+import { fetchSettingsAndNavigation } from "@/lib/prismicClient";
 
-export const metadata: Metadata = {
-  title: "My Site",
-  description: "My site description",
-}
+/**
+ * @returns {Promise<import("next").Metadata>}
+ */
+export async function generateMetadata({ username }) {
+    const { settings, navigation, page, footer, faqs } = await fetchSettingsAndNavigation();
+  
+    
+    return {
+      title: {
+        template: '%s | Fanslink',
+        default: 'Fanslink', // a default is required when creating a template
+      },
+      description: 'Fanslink is a platform that allows you to create a custom profile page with links to your social media, music, videos, and more.',
+      icons: {
+        icon: settings?.data?.favicon?.url || "/default-favicon.png",
+      },
+    };
+  }
 
 export default async function RootLayout({ children }) {
   const { settings, navigation, page, footer, faqs } = await fetchSettingsAndNavigation();
