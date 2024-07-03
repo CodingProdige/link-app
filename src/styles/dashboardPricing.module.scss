@@ -3,65 +3,202 @@
 @import './variables';
 @import './mixins';
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
-  }
-  
-  .title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  
-  .grid {
+.pricingPage {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+
+  .pricingCardsContainer {
     display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-rows: auto;
     gap: 2rem;
-  
-    @media (min-width: 768px) {
-      grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+
+    .card:first-of-type {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      background-color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      width: 100%;
+      height: 100%; // Ensures cards grow equally
+
+      .cardHeader {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 0.5rem;
+        width: 100%;
+
+        .cardTitle {
+          font-weight: 600;
+          font-size: clamp(2rem, 2vw, 2.5rem);
+          color: $color-off-black;
+        }
+
+        .cardDescription {
+          font-size: 1rem;
+          color: $color-text;
+        }
+
+        .cardSupper {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: $color-text-light;
+        }
+      }
+
+      .pricingFeatures {
+        list-style-type: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 0.5rem;
+        width: 100%;
+
+        li {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: center;
+          gap: 0.5rem;
+
+          svg {
+            color: $color-accent;
+            flex-grow: 0;
+            flex-shrink: 0;
+          }
+        }
+      }
+
+      .buttonAndPriceContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 1rem;
+        width: 100%;
+
+        .price {
+          font-size: 2rem;
+          font-weight: 900;
+          margin-bottom: 1rem;
+        }
+
+        .button {
+          background-color: $color-off-black;
+          color: white;
+          cursor: pointer;
+          transition: background-color 0.2s;
+          width: 100%;
+
+          &:hover {
+            background-color: $color-off-black-light;
+          }
+        }
+      }
     }
-  
-    @media (min-width: 1024px) {
-      grid-template-columns: repeat(3, 1fr);
+
+    .card:last-of-type {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      background-color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      width: 100%;
+      height: 100%; // Ensures cards grow equally
+      background-image: linear-gradient(45deg, #5e2bff, #c04cfd, #004fff);
+
+      .cardHeader {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 0.5rem;
+        width: 100%;
+
+        .cardTitle {
+          font-weight: 600;
+          font-size: clamp(2rem, 2vw, 2.5rem);
+          color: $color-white;
+        }
+
+        .cardDescription {
+          font-size: 1rem;
+          color: $color-white;
+        }
+
+        .cardSupper {
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: $color-white;
+        }
+      }
+
+      .pricingFeatures {
+        list-style-type: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 0.5rem;
+        width: 100%;
+
+        li {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: center;
+          gap: 0.5rem;
+          color: $color-white;
+
+          svg {
+            color: $color-sunny;
+            flex-grow: 0;
+            flex-shrink: 0;
+          }
+        }
+      }
+
+      .buttonAndPriceContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 1rem;
+        width: 100%;
+
+        .price {
+          font-size: 2rem;
+          font-weight: 900;
+          margin-bottom: 1rem;
+          color: $color-white;
+        }
+
+        .button {
+          background-color: $color-off-black;
+          color: white;
+          cursor: pointer;
+          transition: background-color 0.2s;
+          width: 100%;
+
+          &:hover {
+            background-color: $color-off-black-light;
+          }
+        }
+      }
     }
   }
-  
-  .card {
-    background-color: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-  }
-  
-  .cardTitle {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
-  
-  .cardDescription {
-    margin-bottom: 1rem;
-  }
-  
-  .price {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-  }
-  
-  .button {
-    background-color: #0070f3;
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  
-    &:hover {
-      background-color: #005bb5;
-    }
-  }
-  
+}

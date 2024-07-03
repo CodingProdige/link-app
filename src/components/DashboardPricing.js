@@ -10,6 +10,8 @@ import { checkSubscriptionStatus } from '@/utils/firebaseUtils'; // Import the u
 const Pricing = ({ currentUser }) => {
   const [products, setProducts] = useState([]);
   const router = useRouter(); // Correct usage of useRouter
+  const [startinCheckout, setStartingCheckout] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -40,40 +42,82 @@ const Pricing = ({ currentUser }) => {
   }, []);
 
   const handleCheckout = async (priceId) => {
-    const hasActiveSubscription = await checkSubscriptionStatus(currentUser.uid);
+    try {
+      setStartingCheckout(true);
+      setSelectedProductId(priceId);
+      const hasActiveSubscription = await checkSubscriptionStatus(currentUser.uid);
 
-    if (hasActiveSubscription) {
-      alert('You already have a premium subscription.');
-      return;
+      if (hasActiveSubscription) {
+        alert('You already have a premium subscription.');
+        return;
+      }
+
+      const docRef = await addDoc(collection(db, 'customers', currentUser.uid, 'checkout_sessions'), {
+        price: priceId,
+        success_url: window.location.origin + PAYMENT_ROUTES.SUCCESS.ROUTE,
+        cancel_url: window.location.origin + PAYMENT_ROUTES.FAILED.ROUTE,
+      });
+
+      onSnapshot(docRef, (snap) => {
+        const { error, url } = snap.data();
+        if (error) {
+          alert(`An error occurred: ${error.message}`);
+        }
+        if (url) {
+          window.location.assign(url);
+        }
+      });
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+    } finally {
+      setStartingCheckout(false);
+      setSelectedProductId(null);
     }
-
-    const docRef = await addDoc(collection(db, 'customers', currentUser.uid, 'checkout_sessions'), {
-      price: priceId,
-      success_url: window.location.origin + PAYMENT_ROUTES.SUCCESS.ROUTE,
-      cancel_url: window.location.origin + PAYMENT_ROUTES.FAILED.ROUTE,
-    });
-
-    onSnapshot(docRef, (snap) => {
-      const { error, url } = snap.data();
-      if (error) {
-        alert(`An error occurred: ${error.message}`);
-      }
-      if (url) {
-        window.location.assign(url);
-      }
-    });
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.title}>Pricing</h1>
-      <div className={styles.grid}>
+    <div className={styles.pricingPage}>
+
+      <div className={styles.pricingCardsContainer}>
         {products?.map((product) => (
           <div key={product.id} className={styles.card}>
-            <h2 className={styles.cardTitle}>{product.name}</h2>
-            <p className={styles.cardDescription}>{product.description}</p>
+            <div className={styles.cardHeader}>
+              <h2 className={styles.cardTitle}>{product.name}</h2>
+              {product.name === 'Premium Yearly' ? (
+                <p className={styles.cardSupper}>Save 20% with the yearly plan</p>
+              ) : (null)}
+              <p className={styles.cardDescription}>{product.description}</p>
+            </div>
+            
+            <ul className={styles.pricingFeatures}>
+              <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightning-charge" viewBox="0 0 16 16">
+                      <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09zM4.157 8.5H7a.5.5 0 0 1 .478.647L6.11 13.59l5.732-6.09H9a.5.5 0 0 1-.478-.647L9.89 2.41z"/>
+                  </svg>
+                  Unlimited links
+              </li>
+              <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightning-charge" viewBox="0 0 16 16">
+                      <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09zM4.157 8.5H7a.5.5 0 0 1 .478.647L6.11 13.59l5.732-6.09H9a.5.5 0 0 1-.478-.647L9.89 2.41z"/>
+                  </svg>
+                  Track visitor analytics
+              </li>
+              <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightning-charge" viewBox="0 0 16 16">
+                      <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09zM4.157 8.5H7a.5.5 0 0 1 .478.647L6.11 13.59l5.732-6.09H9a.5.5 0 0 1-.478-.647L9.89 2.41z"/>
+                  </svg>
+                  Priority support
+              </li>
+              <li>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightning-charge" viewBox="0 0 16 16">
+                      <path d="M11.251.068a.5.5 0 0 1 .227.58L9.677 6.5H13a.5.5 0 0 1 .364.843l-8 8.5a.5.5 0 0 1-.842-.49L6.323 9.5H3a.5.5 0 0 1-.364-.843l8-8.5a.5.5 0 0 1 .615-.09zM4.157 8.5H7a.5.5 0 0 1 .478.647L6.11 13.59l5.732-6.09H9a.5.5 0 0 1-.478-.647L9.89 2.41z"/>
+                  </svg>
+                  Remove the Fanslink branding
+              </li>
+            </ul>
+
             {product.prices.map((price) => (
-              <div key={price.id}>
+              <div className={styles.buttonAndPriceContainer} key={price.id}>
                 <p className={styles.price}>
                   {price.currency ? price.currency.toUpperCase() : ''} {(price.unit_amount / 100).toFixed(2)}
                 </p>
@@ -81,7 +125,7 @@ const Pricing = ({ currentUser }) => {
                   onClick={() => handleCheckout(price.id)}
                   className={styles.button}
                 >
-                  Buy
+                  {startinCheckout && selectedProductId === price.id ? 'Processing...' : 'Subscribe'}
                 </button>
               </div>
             ))}
