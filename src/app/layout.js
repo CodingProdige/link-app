@@ -23,23 +23,6 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <title>{page?.data?.page_title || "Default Title"}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <meta name="title" content={page?.data?.page_title || "Default Title"} />
-        <meta name="description" content={page?.data?.meta_description || "Default Description"} />
-        <meta name="favicon" content={settings?.data?.favicon?.url || "/default-favicon.png"} />
-        <meta name="robots" content="index, follow"/>
-        <meta name="author" content="Dillon Jurgens"/>
-        <link rel="icon" href={settings?.data?.favicon?.url || "/default-favicon.png"} type="image/png" />
-        {settings?.data?.openGraphImage && (
-          <>
-            <meta property="og:type" content="website" />
-            <meta property="og:url" content={"https://fansl.ink/"} />
-            <meta property="og:title" content={page?.data?.meta_title || "Default OG Title"} />
-            <meta property="og:description" content={page?.data?.meta_description || "Default OG Description"} />
-            <meta property="og:image" content={settings?.data?.meta_image?.url || "/default-og-image.png"} />
-          </>
-        )}
         <GoogleAnalytics trackingId={settings?.data?.googleAnalyticsTag} />
         <script defer src="//widget.tagembed.com/embed.min.js" type="text/javascript"></script>
       </head>

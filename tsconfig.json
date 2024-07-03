@@ -23,6 +23,6 @@
       "@/public/*": ["./public/*"],
     }
   },
-  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx", "src/app/[uid]/page.js", "src/components/Header.jsx", "generate-sitemap.js", "src/firebase/auth.js", "src/firebase/firebaseAdmin.js", "src/slices/TextHero/index.tsx"],
+  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx", "src/app/[uid]/page.js", "src/components/Header.jsx", "generate-sitemap.js", "src/firebase/auth.js", "src/firebase/firebaseAdmin.js", "src/slices/TextHero/index.tsx", "src/app/page.jsx"],
   "exclude": ["node_modules"]
 }
