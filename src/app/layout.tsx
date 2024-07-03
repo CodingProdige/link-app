@@ -11,7 +11,12 @@ import { PrismicProvider } from '@/context/PrismicContext';
 import { fetchSettingsAndNavigation } from "@/lib/prismicClient";
 import Loading from "@/components/Loading";
 import Footer from "@/components/Footer";
-import Head from 'next/head';
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "My Site",
+  description: "My site description",
+}
 
 export default async function RootLayout({ children }) {
   const { settings, navigation, page, footer, faqs } = await fetchSettingsAndNavigation();

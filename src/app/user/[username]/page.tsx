@@ -14,8 +14,7 @@ import { IconContext } from 'react-icons';
 import VideoEmbed from '@/components/VideoEmbed';
 import { trackUserVisit, trackLinkClick, trackLinkHover, trackDeviceType, trackVisitorLocation } from '@/utils/firebaseUtils';
 import axios from 'axios';
-import Head from 'next/head';
-import generateMetadata from '@/utils/generateMetadataUser';
+
 
 interface UserPageProps {
   params: {
@@ -23,9 +22,10 @@ interface UserPageProps {
   };
 }
 
+
+
 const UserPage = ({ params: { username } }: UserPageProps) => {
   const [userData, setUserData] = useState<any>(null);
-  const [metadata, setMetadata] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { settings, loading: prismicLoading } = usePrismic();
@@ -45,11 +45,6 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
         }
 
         setUserData(data);
-
-        // Generate metadata after fetching user data
-        const generatedMetadata = await generateMetadata({ username: data.username });
-        setMetadata(generatedMetadata);
-
         if(!document.referrer.includes('dashboard')) {
           trackUserVisit(data.uid, document.referrer);  // Track user visit with referrer
 
@@ -70,6 +65,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
 
           fetchVisitorLocation();
         };
+
 
         if (data.theme) {
           setTheme(data.theme);
@@ -96,7 +92,9 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
     return <div className={styles.error}>User data not found.</div>;
   }
 
+
   const LinkComponent = ({ link, theme }) => {
+
     const handleLinkClick = (linkId, title) => {
       if(!document.referrer.includes('dashboard')) {
         trackLinkClick(userData.uid, linkId, title);
@@ -350,20 +348,6 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
 
   return (
     <div className={styles.containerPublicProfile}>
-      {metadata && (
-        <head>
-          <title>{metadata.title.default}</title>
-          <meta name="description" content={metadata.description} />
-          <meta property="og:title" content={metadata.openGraph.title} />
-          <meta property="og:description" content={metadata.openGraph.description} />
-          <meta property="og:url" content={metadata.openGraph.url} />
-          <meta property="og:site_name" content={metadata.openGraph.siteName} />
-          {metadata.openGraph.images.map((image, index) => (
-            <meta key={index} property="og:image" content={image.url} />
-          ))}
-          <link rel="icon" href={metadata.icons.icon} />
-        </head>
-      )}
       <div
         className={styles.background}
         style={{

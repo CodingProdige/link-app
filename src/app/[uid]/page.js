@@ -4,6 +4,7 @@ import { SliceZone } from "@prismicio/react";
 
 import { createClient } from "@/prismicio";
 import { components } from "@/slices";
+import { fetchSettingsAndNavigation } from "@/lib/prismicClient";
 
 
 
@@ -16,22 +17,30 @@ import { components } from "@/slices";
  * @returns {Promise<import("next").Metadata>}
  */
 export async function generateMetadata({ params }) {
+  const { settings } = await fetchSettingsAndNavigation();
   const client = createClient();
   const page = await client
     .getByUID("page", params.uid)
     .catch(() => notFound());
 
-  return {
-    openGraph: {
-      title: page.data.meta_title,
+    return {
+      title: {
+        template: page.data.meta_title || '%s | Fanslink',
+        default: page.data.meta_title, // a default is required when creating a template
+      },
       description: page.data.meta_description,
-      images: [
-        {
-          url: page.data.meta_image.url,
-        },
-      ],
-    },
-  };
+      openGraph: {
+        title: page.data.meta_title,
+        images: [
+          {
+            url: page.data.meta_image.url,
+          },
+        ],
+      },
+      icons: {
+        icon: settings?.data?.favicon?.url || "/default-favicon.png",
+      },
+    };
 }
 
 /**
