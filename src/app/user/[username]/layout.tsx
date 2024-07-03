@@ -14,24 +14,24 @@ export async function generateMetadata({ params }): Promise<Metadata> {
   }
 
   return {
-    title: userData.metaData.title || 'Fanslink User Profile',
-    description: userData.metaData.description,
+    title: userData?.metaData?.title || 'Fanslink User Profile',
+    description: userData?.metaData?.description,
     openGraph: {
-      title: userData.openGraph.title || userData.username,
-      description: userData.openGraph.description || userData.bio,
-      url: `https://fansl.ink/user/${userData.username}`,
+      title: userData?.openGraph?.title || userData?.username,
+      description: userData?.openGraph?.description || userData?.bio,
+      url: `https://fansl.ink/user/${userData?.username}`,
       siteName: 'Fanslink',
       images: [
         {
-          url: userData.openGraph.image,
+          url: userData?.openGraph?.image,
           width: 800,
           height: 600,
         },
         {
-          url: userData.openGraph.image,
+          url: userData.openGraph?.image,
           width: 1800,
           height: 1600,
-          alt: userData.openGraph.title,
+          alt: userData.openGraph?.title,
         },
       ],
       type: 'website',
