@@ -296,6 +296,20 @@
                     }
                 }
 
+                .switchContainer {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-end;
+                    align-items: center;
+                    gap: 1rem;
+
+                    svg {
+                        width: 1rem;
+                        height: 1rem;
+                        fill: $color-off-black;
+                    }
+                }
+
                 .toggleContainer {
                     display: flex;
                     align-items: center;
@@ -351,6 +365,7 @@
         }
 
         .customContainer {
+            position: relative;
             width: 100%;
             height: auto;
             display: flex;
@@ -393,6 +408,13 @@
                         gap: 2rem;
                         width: 100%;
                         height: auto;
+
+                        span {
+                            width: 1rem;
+                            height: 1rem;
+                            color: $color-off-black;
+                            margin-left: 1rem;
+                        }
 
                         .customInputContainerMedia {
                             display: flex;

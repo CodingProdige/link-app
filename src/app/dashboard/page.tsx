@@ -182,12 +182,21 @@ export default function Dashboard() {
         </div>
       )}
 
-      {videos.length > 0 && (
+      {/* {videos.length > 0 && (
         <div className={styles.sectionContainer}>
           <h4>Latest Fanslink Videos</h4>
           <YouTubeCarousel videos={videos} />
         </div>
-      )}
+      )} */}
+
+      <div className={styles.sectionContainer}>
+        <h4>Fanslink Youtube Channel</h4>
+        <div className={styles.socialEmbed}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <YouTubeEmbed url="https://www.youtube.com/watch?v=DdqW8cSaXBk" width={300} height={200} />
+          </div>
+        </div>
+      </div>
 
       <div className={styles.sectionContainer}>
         <h4>Fanslink Creator LinkedIn Profile</h4>
@@ -196,18 +205,9 @@ export default function Dashboard() {
             <LinkedInEmbed 
               url="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7211372776195039234"
               postUrl="https://www.linkedin.com/posts/fanslink-link-in-bio-tool_exclusive-sneak-peek-my-new-link-in-bio-activity-7209537335284142080-K8r6?utm_source=share&utm_medium=member_desktop"
-              width={325}
+              width={300}
               height={570} 
             />
-          </div>
-        </div>
-      </div>
-
-      <div className={styles.sectionContainer}>
-        <h4>Fanslink Youtube Channel</h4>
-        <div className={styles.socialEmbed}>
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <YouTubeEmbed url="https://www.youtube.com/watch?v=DdqW8cSaXBk" width={325} height={220} />
           </div>
         </div>
       </div>

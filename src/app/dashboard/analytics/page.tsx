@@ -5,7 +5,11 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/firebase/auth';
 import { usePrismic } from '@/context/PrismicContext';
-import { fetchUserAnalytics } from '@/utils/firebaseUtils';
+import { 
+  fetchUserAnalytics,
+  checkSubscriptionStatus,
+  fetchUserData,
+ } from '@/utils/firebaseUtils';
 import Loading from '@/components/Loading';
 import AnalyticsChart from '@/components/AnalyticsChart';
 import LinkAnalyticsChart from '@/components/LinkAnalyticsChart';
@@ -21,6 +25,7 @@ export default function Analytics() {
   const router = useRouter();
   const [analyticsData, setAnalyticsData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
     const getAnalyticsData = async () => {
@@ -29,6 +34,9 @@ export default function Analytics() {
       try {
         const data = await fetchUserAnalytics(user.uid);
         setAnalyticsData(data);
+        const userData = await fetchUserData(user.uid);
+        const isSubscribed = userData.premium || await checkSubscriptionStatus(user.uid);
+        setIsSubscribed(isSubscribed);
       } catch (err) {
         console.error('Error fetching analytics data:', err);
       } finally {
@@ -59,18 +67,38 @@ export default function Analytics() {
             <h3>General Analytics</h3>  
             <div className={styles.generalAnalyticsContainer}>
               <div className={styles.analyticsCard}>
+                {!isSubscribed && (
+                  <div className={styles.blurLayer}>
+                    <h3>Upgrade to premium to view detailed analytics</h3>
+                  </div>
+                )}
                 <DailyVisitorChart visits={analyticsData ? analyticsData.visits : []} />
               </div>
 
               <div className={styles.analyticsCard}>
+                {!isSubscribed && (
+                  <div className={styles.blurLayer}>
+                    <h3>Upgrade to premium to view detailed analytics</h3>
+                  </div>
+                )}
                 <DeviceTypeChart visits={analyticsData ? analyticsData.visits : []} />
               </div>
 
               <div className={styles.analyticsCard}>
+                {!isSubscribed && (
+                  <div className={styles.blurLayer}>
+                    <h3>Upgrade to premium to view detailed analytics</h3>
+                  </div>
+                )}
                 <TopLocationsChart locations={analyticsData ? analyticsData.locations : []} />
               </div>
 
               <div className={styles.analyticsCard}>
+                {!isSubscribed && (
+                  <div className={styles.blurLayer}>
+                    <h3>Upgrade to premium to view detailed analytics</h3>
+                  </div>
+                )}
                 <ReferrerChart data={analyticsData ? analyticsData.referers : []} />
               </div>
             </div>
@@ -81,6 +109,11 @@ export default function Analytics() {
             <div className={styles.analyticsLinksContainer}>
               {analyticsData && analyticsData.links ? analyticsData.links.map(link => (
                 <div className={styles.analyticsCard} key={link.id}>
+                  {!isSubscribed && (
+                    <div className={styles.blurLayer}>
+                      <h3>Upgrade to premium to view detailed analytics</h3>
+                    </div>
+                  )}
                   <h3>{link.title || `Link ${link.id}`}</h3>
                   <LinkAnalyticsChart link={link} />
                 </div>

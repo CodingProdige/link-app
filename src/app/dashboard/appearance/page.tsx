@@ -8,13 +8,14 @@ import styles from '@/styles/dashboardAppearance.module.scss';
 import { 
   fetchUserData, updateUserTheme, uploadVideo, uploadImage, 
   updateUserBio, updateUserTitle, updateUserPhotoUrl, 
-  deleteUserPhotoUrl, updateUserShowLogo  
+  deleteUserPhotoUrl, updateUserShowLogo, checkSubscriptionStatus
 } from '@/utils/firebaseUtils';
 import MobilePreview from '@/components/MobilePreview';
 import MobilePreviewSmall from '@/components/MobilePreviewSmall';
 import { THEMES } from '@/lib/constants';
 import Image from 'next/image';
 import { PrismicNextImage } from "@prismicio/next";
+import { is } from 'cheerio/lib/api/traversing';
 
 export default function Appearance() {
   const { user, loading: authLoading } = useAuth();
@@ -35,6 +36,7 @@ export default function Appearance() {
   const [bioCharCount, setBioCharCount] = useState(120);
   const [titleCharCount, setTitleCharCount] = useState(30);
   const [showLogo, setShowLogo] = useState(true);
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   const imageInputRef = useRef(null);
   const videoInputRef = useRef(null);
@@ -78,6 +80,9 @@ export default function Appearance() {
           setBioCharCount(120 - (userData.bio?.length || 0));
           setTitleCharCount(30 - (userData.title?.length || 0));
           setShowLogo(userData.showLogo || false); // Set showLogo from userData
+
+          const isSubscribed = userData.premium || await checkSubscriptionStatus(user.uid);
+          setIsSubscribed(isSubscribed);
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
@@ -584,10 +589,28 @@ export default function Appearance() {
 
                     <div className={styles.mediaContainer}>
                       {theme?.BACKGROUND_MEDIA === 'video' && (
-                        <h4>Video</h4>
+                        <h4>
+                          Video 
+                          {isSubscribed === false && (
+                            <span>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-lock-fill" viewBox="0 0 16 16">
+                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                              </svg>
+                            </span>
+                          )}
+                        </h4>
                       )}
                       {theme?.BACKGROUND_MEDIA === 'image' && (
-                        <h4>Image</h4>
+                        <h4>
+                          Image
+                          {isSubscribed === false && (
+                            <span>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-lock-fill" viewBox="0 0 16 16">
+                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                              </svg>
+                            </span>
+                          )}  
+                        </h4>
                       )}
                       
                       {theme?.BACKGROUND_MEDIA === 'video' &&  (
@@ -612,6 +635,7 @@ export default function Appearance() {
                           <div className={styles.customInputContainer}>
                             <label htmlFor="videoBlur">Video Blur</label>
                             <input
+                              disabled={isSubscribed === false}
                               type="range"
                               id="videoBlur"
                               name="videoBlur"
@@ -624,9 +648,10 @@ export default function Appearance() {
                         )}
                         <button 
                           className={styles.mediaUploadButtons} 
-                          disabled={isUploading}
+                          disabled={isUploading || isSubscribed === false}
                           type="button" 
                           onClick={() => handleButtonClick(videoInputRef)}
+                          style={isSubscribed === false ? { cursor: 'not-allowed' } : {}}
                         >
                           {isUploading ? 'Uploading...' : theme?.BACKGROUND_VIDEO?.videoUrl ? 'Change Background Video' : 'Upload Background Video'}
                         </button>
@@ -661,6 +686,7 @@ export default function Appearance() {
                             <div className={styles.customInputContainer}>
                               <label htmlFor="imageBlur">Image Blur</label>
                               <input
+                                disabled={isSubscribed === false}
                                 type="range"
                                 id="imageBlur"
                                 name="imageBlur"
@@ -673,7 +699,7 @@ export default function Appearance() {
                           )}
                           <button 
                             className={styles.mediaUploadButtons} 
-                            disabled={isUploading}
+                            disabled={isUploading || isSubscribed === false}
                             type="button" 
                             onClick={() => handleButtonClick(imageInputRef)}
                           >
@@ -705,17 +731,24 @@ export default function Appearance() {
                   <div className={styles.navLogoContainer}>
                     <PrismicNextImage field={settings.data.logo} />
                   </div>
-                  <div className={styles.toggleContainer}>
-                    <label className={styles.switch}>
-                      <input
-                        type="checkbox"
-                        checked={showLogo}
-                        onChange={handleShowLogoChange}
-                      />
-                      <span className={styles.slider}></span>
-                    </label>
+                  <div className={styles.switchContainer}>
+                    <div className={styles.toggleContainer}>
+                      <label className={styles.switch}>
+                        <input
+                          disabled={isSubscribed === false}
+                          type="checkbox"
+                          checked={showLogo}
+                          onChange={handleShowLogoChange}
+                        />
+                        <span className={styles.slider}></span>
+                      </label>
+                    </div>
+                    {isSubscribed === false && (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-lock-fill" viewBox="0 0 16 16">
+                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                      </svg>
+                    )}
                   </div>
-
                 </div>
               </div>
             </div>
