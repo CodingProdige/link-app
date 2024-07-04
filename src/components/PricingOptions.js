@@ -51,7 +51,7 @@ export default function PricingOptions({slice}) {
         };
 
         fetchPricingOptions();
-    }, [client]);
+    }, []);
 
     if (!pricingOptions) {
         return <div className={styles.loading}>Loading...</div>;
