@@ -12,6 +12,8 @@ import Loading from "@/components/Loading";
 import Footer from "@/components/Footer";
 import { fetchSettingsAndNavigation } from "@/lib/prismicClient";
 import GoogleTagManager from "@/components/GoogleTagManager";
+import GTMHead from '@/components/GTMHead'; // Import the GTMHead component
+import GTMBody from '@/components/GTMBody'; // Import the GTMBody component
 
 /**
  * @returns {Promise<import("next").Metadata>}
@@ -45,8 +47,10 @@ export default async function RootLayout({ children }) {
         <GoogleAnalytics trackingId={settings?.data?.googleAnalyticsTag} />
         <script defer src="//widget.tagembed.com/embed.min.js" type="text/javascript"></script>
         <GoogleTagManager trackingId="G-Z8FL8Y30PF" />
+        <GTMHead gtmId="GTM-T4MS8SZ6" /> {/* Add the GTMHead component */}
       </head>
       <body>
+        <GTMBody gtmId="GTM-T4MS8SZ6" /> {/* Add the GTMBody component */}
         <AuthProvider>
           <PrismicProvider>
             <ClientHeader settings={settings} navigation={navigation} />
