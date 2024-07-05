@@ -12,7 +12,7 @@ import { Metadata } from 'next'
 export async function generateMetadata() {
   const { settings, navigation, page, footer, faqs } = await fetchSettingsAndNavigation();
   const client = createClient();
-  const pageMetaData = await client.getByUID("page", "home", "settings").catch(() => notFound());
+  const pageMetaData = await client.getByUID("page", "home").catch(() => notFound());
 
   return {
     title: {
