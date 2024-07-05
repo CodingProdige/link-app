@@ -9,6 +9,7 @@ import { fetchSettingsAndNavigation } from '@/lib/prismicClient';
 import { PrismicNextImage } from "@prismicio/next";
 import Link from 'next/link';
 import { IMAGES } from '@/lib/images';
+import { fetchUserData } from '@/utils/firebaseUtils';
 
 function getRandomHumanImage() {
   const humanImages = Object.values(IMAGES.PROFILE.HUMANS);
@@ -31,10 +32,32 @@ async function handleEmailSignUp(email, password, setError, setLoading) {
       username: '',
       title: '',
     };
-    console.log('User Data:', userData); // Log user data before writing to Firestore
 
     await setDoc(doc(db, 'users', user.uid), userData);
+    const fetchedUserData = await fetchUserData(user.uid);
 
+    // Send an email notification
+    const notificationResponse = await fetch('/api/sendEmail', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        to: 'dillonjurgens@gmail.com', // Replace with your email
+        subject: 'New User Signup Notification',
+        message: `A new user has signed up with the following details:\n\nEmail: ${user.email}\nUID: ${user.uid}\nUsername: ${fetchedUserData?.username}\nTitle: ${fetchedUserData?.title}\n\nView user page on Fanslink: https://fansl.ink/user/${fetchedUserData?.username}`
+      })
+    });
+
+    if (notificationResponse.ok) {
+      console.log('Notification email sent successfully.');
+    } else {
+      const errorMessage = await notificationResponse.text();
+      console.error('Failed to send notification email:', errorMessage);
+      setError('Failed to send notification email.');
+    }
+
+    // Generate a custom token and redirect to dashboard
     const response = await fetch('/api/generate-token', {
       method: 'POST',
       headers: {
@@ -49,7 +72,6 @@ async function handleEmailSignUp(email, password, setError, setLoading) {
       window.location.href = '/dashboard';
     } else {
       const error = await response.json();
-      setError('Error generating token: ' + error.error);
       console.error('Error generating token:', error.error);
     }
   } catch (error) {
@@ -66,7 +88,6 @@ async function handleGoogleSignUp(setError, setLoading) {
     const provider = new GoogleAuthProvider();
     const userCredential = await signInWithPopup(auth, provider);
     const user = userCredential.user;
-    console.log('User:', user);
 
     const userData = {
       uid: user.uid,
@@ -77,12 +98,29 @@ async function handleGoogleSignUp(setError, setLoading) {
       username: '',
       title: '',
     };
-    console.log('User Data:', userData); // Log user data before writing to Firestore
 
-    await setDoc(doc(db, 'users', user.uid), userData).catch((error) => {
-      setError('Error setting user document: ' + error.message);
-      console.error('Error setting user document:', error);
+    await setDoc(doc(db, 'users', user.uid), userData);
+    const fetchedUserData = await fetchUserData(user.uid);
+
+    // Send an email notification
+    const notificationResponse = await fetch('/api/sendEmail', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        to: 'dillonjurgens@gmail.com', // Replace with your email
+        subject: 'New User Signup Notification',
+        message: `A new user has signed up with the following details:\n\nEmail: ${user?.email}\nUID: ${user?.uid}\nUsername: ${fetchedUserData?.username}\nTitle: ${fetchedUserData?.title}\n\nView user page on Fanslink: https://fansl.ink/user/${fetchedUserData?.username}`
+      })
     });
+
+    if (notificationResponse.ok) {
+      console.log('Notification email sent successfully.');
+    } else {
+      const errorMessage = await notificationResponse.text();
+      console.error('Failed to send notification email:', errorMessage);
+    }
 
     const response = await fetch('/api/generate-token', {
       method: 'POST',
