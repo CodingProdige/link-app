@@ -47,10 +47,11 @@ export default async function RootLayout({ children }) {
         <GoogleAnalytics trackingId={settings?.data?.googleAnalyticsTag} />
         <script defer src="//widget.tagembed.com/embed.min.js" type="text/javascript"></script>
         <GoogleTagManager trackingId="G-Z8FL8Y30PF" />
-        <GTMHead gtmId="GTM-T4MS8SZ6" /> {/* Add the GTMHead component */}
+        <GoogleTagManager trackingId="AW-16605236491" />
+        <GTMHead gtmId="GTM-T4MS8SZ6" /> 
       </head>
       <body>
-        <GTMBody gtmId="GTM-T4MS8SZ6" /> {/* Add the GTMBody component */}
+        <GTMBody gtmId="GTM-T4MS8SZ6" />
         <AuthProvider>
           <PrismicProvider>
             <ClientHeader settings={settings} navigation={navigation} />
