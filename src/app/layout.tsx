@@ -52,7 +52,6 @@ export default async function RootLayout({ children }) {
         
       </head>
       <body>
-        <GTMBody gtmId="GTM-T4MS8SZ6" />
         <AuthProvider>
           <PrismicProvider>
             <ClientHeader settings={settings} navigation={navigation} />

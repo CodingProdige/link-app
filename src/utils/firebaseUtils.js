@@ -108,14 +108,17 @@ export const isUsernameTaken = async (username) => {
  */
 export const updateUsername = async (uid, username) => {
   try {
+    // Convert the username to lowercase
+    const lowerCaseUsername = username.toLowerCase();
     const userDocRef = doc(db, 'users', uid);
-    await setDoc(userDocRef, { username }, { merge: true });
+    await setDoc(userDocRef, { username: lowerCaseUsername }, { merge: true });
     console.log('Username updated successfully');
   } catch (error) {
     console.error('Error updating username:', error.message);
     throw new Error('Username update failed');
   }
 };
+
 
 /**
  * Update the showLogo field of a user in Firestore.
@@ -339,9 +342,12 @@ export const removeCode = async (code) => {
  */
 export const fetchUserDataByUsername = async (username) => {
   try {
-    // Create a query to find the user by username
+    // Convert the input username to lowercase
+    const lowerCaseUsername = username.toLowerCase();
+
+    // Create a query to find the user by lowercase username
     const usersCollection = collection(db, 'users');
-    const q = query(usersCollection, where('username', '==', username));
+    const q = query(usersCollection, where('username', '==', lowerCaseUsername));
     const querySnapshot = await getDocs(q);
 
     if (!querySnapshot.empty) {
@@ -356,6 +362,7 @@ export const fetchUserDataByUsername = async (username) => {
     return null;
   }
 };
+
 
 // Function to generate a random 10-digit ID
 const generateRandomId = () => {

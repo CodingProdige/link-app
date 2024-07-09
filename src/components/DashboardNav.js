@@ -34,7 +34,8 @@ const DashboardNav = ({ settings }) => {
   const { user: authUser } = useAuth();
   const [userData, setUserData] = useState(null);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
+  const [hasActiveSubscription, setHasActiveSubscription] = useState(true);
+  const [manualPremium, setManualPremium] = useState(false);
   const [startingPortal, setStartingPortal] = useState(false);
 
 
@@ -45,14 +46,21 @@ const DashboardNav = ({ settings }) => {
           const data = await fetchUserData(authUser.uid);
           setUserData(data);
 
+
           if (data.premium === true) {
             setHasActiveSubscription(true);
+          } else {
+            setHasActiveSubscription(false);
           }
 
           const isSubscribed = await checkSubscriptionStatus(authUser.uid);
           if(isSubscribed) {
             setHasActiveSubscription(true);
+          }else {
+            setHasActiveSubscription(false);
+
           }
+      
         } catch (error) {
           console.error('Error fetching user data:', error.message);
         }
@@ -77,7 +85,7 @@ const DashboardNav = ({ settings }) => {
         console.error('Invalid path for prefetching:', path);
       }
     });
-  }, [authUser, router]);
+  }, [authUser, router,]);
 
   const handleProfileMenuToggle = () => setProfileMenuOpen(prevState => !prevState);
   const handleGoPremiumClick = () => router.push('/dashboard/premium');
@@ -165,7 +173,7 @@ const DashboardNav = ({ settings }) => {
 
       <div className={styles.navInnerContainerMobile}>
         {
-          !hasActiveSubscription && (
+          !hasActiveSubscription && !manualPremium && (
             <div className={styles.goPremiumContainer} onClick={ handleGoPremiumClick }>
               <div className={styles.goPremium}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lightning-charge" viewBox="0 0 16 16">

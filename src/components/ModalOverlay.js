@@ -35,9 +35,9 @@ const ModalOverlay = ({ settings, onUsernameUpdate }) => {
     const getUserData = async () => {
       if (user) {
         try {
-          const userData = await fetchUserData(user.uid);
-          setUserData(userData);
-          setTheme(userData.theme);
+          const data = await fetchUserData(user.uid);
+          setUserData(data);
+          setTheme(data.theme);
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
@@ -51,12 +51,13 @@ const ModalOverlay = ({ settings, onUsernameUpdate }) => {
   }, [user]);
 
   const validateUsername = (username) => {
+    // Updated regex to include only URL-safe characters
     const validUsernameRegex = /^[a-zA-Z0-9-_]+$/;
     return validUsernameRegex.test(username);
   };
 
   const handleUsernameChange = async (e) => {
-    const newUsername = e.target.value;
+    const newUsername = e.target.value.toLowerCase();
     setUsername(newUsername);
 
     // Validate the username
@@ -67,7 +68,6 @@ const ModalOverlay = ({ settings, onUsernameUpdate }) => {
       return;
     }
 
-    setSuggestedUsernames([]);
     if (newUsername) {
       try {
         const isTaken = await isUsernameTaken(newUsername);
@@ -78,6 +78,7 @@ const ModalOverlay = ({ settings, onUsernameUpdate }) => {
         } else {
           setUsernameError('');
           setIsUsernameValid(true);
+          setSuggestedUsernames([]);
         }
       } catch (error) {
         setUsernameError('Error checking username');
@@ -86,6 +87,7 @@ const ModalOverlay = ({ settings, onUsernameUpdate }) => {
     } else {
       setUsernameError('');
       setIsUsernameValid(false);
+      setSuggestedUsernames([]);
     }
   };
 
@@ -195,7 +197,7 @@ const ModalOverlay = ({ settings, onUsernameUpdate }) => {
                 userData={userData}
                 theme={theme}
                 setTheme={setTheme}
-                linkPageUrl={`${window.location.origin}/user/${userData.username}`}
+                linkPageUrl={`${window.location.origin}/user/${userData?.username}`}
               />
             </div>
 

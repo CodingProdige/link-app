@@ -35,15 +35,16 @@ export default function Account() {
   }, [user]);
 
   const validateUsername = (username) => {
+    // Updated regex to include only URL-safe characters
     const validUsernameRegex = /^[a-zA-Z0-9-_]+$/;
     return validUsernameRegex.test(username);
   };
 
   const handleUsernameChange = async (e) => {
-    const newUsername = e.target.value;
+    const newUsername = e.target.value.toLowerCase();
     setUsername(newUsername);
 
-    if (newUsername === initialUsername) {
+    if (newUsername === initialUsername.toLowerCase()) {
       setUsernameError('');
       setIsUsernameValid(false);
       setSuggestedUsernames([]);
@@ -76,6 +77,7 @@ export default function Account() {
     } else {
       setUsernameError('');
       setIsUsernameValid(false);
+      setSuggestedUsernames([]);
     }
   };
 
@@ -98,7 +100,7 @@ export default function Account() {
   };
 
   const handleSaveClick = async () => {
-    if (user && user.uid && isUsernameValid && username !== initialUsername) {
+    if (user && user.uid && isUsernameValid && username !== initialUsername.toLowerCase()) {
       try {
         await updateUsername(user.uid, username);
         setInitialUsername(username);
@@ -119,7 +121,6 @@ export default function Account() {
     }
   };
 
-
   const handleResetPassword = async () => {
     if (user && user.email) {
       try {
@@ -135,7 +136,7 @@ export default function Account() {
     return <Loading />;
   }
 
-  const isDataChanged = username !== initialUsername;
+  const isDataChanged = username !== initialUsername.toLowerCase();
 
   return (
     <div className={styles.accountPage}>
