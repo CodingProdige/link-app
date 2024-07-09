@@ -49,6 +49,7 @@ export default async function RootLayout({ children }) {
         <GoogleTagManager trackingId="G-Z8FL8Y30PF" />
         <GoogleTagManager trackingId="AW-16605236491" />
         <GTMHead gtmId="GTM-T4MS8SZ6" /> 
+        
       </head>
       <body>
         <GTMBody gtmId="GTM-T4MS8SZ6" />
