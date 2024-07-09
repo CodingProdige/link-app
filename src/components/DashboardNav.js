@@ -35,7 +35,6 @@ const DashboardNav = ({ settings }) => {
   const [userData, setUserData] = useState(null);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [hasActiveSubscription, setHasActiveSubscription] = useState(false);
-  const [manualPremium, setManualPremium] = useState(false);
   const [startingPortal, setStartingPortal] = useState(false);
 
 
@@ -48,12 +47,12 @@ const DashboardNav = ({ settings }) => {
 
           if (data.premium === true) {
             setHasActiveSubscription(true);
-            setManualPremium(true);
-          } else {
-            const isSubscribed = await checkSubscriptionStatus(user.uid);
-            setHasActiveSubscription(isSubscribed);
           }
-      
+
+          const isSubscribed = await checkSubscriptionStatus(authUser.uid);
+          if(isSubscribed) {
+            setHasActiveSubscription(true);
+          }
         } catch (error) {
           console.error('Error fetching user data:', error.message);
         }
