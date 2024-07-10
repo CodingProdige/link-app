@@ -384,7 +384,7 @@ const UserPage = ({ params: { username } }: UserPageProps) => {
             layout="fill"
             objectFit="cover"
             style={{
-              objectPosition: 'center',
+              objectPosition: 'top center',
               position: 'absolute',
               top: '0',
               left: '0',

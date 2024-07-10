@@ -2,20 +2,23 @@ import React from 'react';
 import ReactEcharts from 'echarts-for-react';
 
 const ReferrerChart = ({ data }) => {
+  // Summing the counts for each referrer
   const referrerCounts = data.reduce((acc, referrerObj) => {
     const referrer = referrerObj.referer;
-    acc[referrer] = (acc[referrer] || 0) + 1;
+    acc[referrer] = (acc[referrer] || 0) + (referrerObj.count || 1);
     return acc;
   }, {});
 
-  let referrerData = Object.keys(referrerCounts).map(key => ({
+  // Converting the referrerCounts object to an array for the chart data
+  const referrerData = Object.keys(referrerCounts).map(key => ({
     name: key,
     value: referrerCounts[key]
   }));
 
-  // Sort the data by value in descending order and slice the top 10
-  referrerData = referrerData.sort((a, b) => b.value - a.value).slice(0, 10);
+  // Sorting the data by value in descending order and slicing the top 10
+  const sortedReferrerData = referrerData.sort((a, b) => b.value - a.value).slice(0, 10);
 
+  // ECharts option configuration
   const option = {
     title: {
       text: 'Top Referrers',
@@ -43,7 +46,7 @@ const ReferrerChart = ({ data }) => {
           show: true,
           formatter: '{b}: {c} ({d}%)'
         },
-        data: referrerData
+        data: sortedReferrerData
       }
     ]
   };

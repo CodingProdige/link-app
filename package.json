@@ -30,6 +30,7 @@
     "clsx": "^2.0.0",
     "echarts": "^5.5.1",
     "echarts-for-react": "^3.0.2",
+    "ejs": "^3.1.10",
     "embed-js": "^5.0.4",
     "firebase": "^10.12.1",
     "firebase-admin": "^12.1.1",

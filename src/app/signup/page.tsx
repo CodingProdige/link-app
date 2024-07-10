@@ -17,6 +17,26 @@ function getRandomHumanImage() {
   return humanImages[randomIndex];
 }
 
+async function sendEmail(to, subject, template, templateData) {
+  const response = await fetch('/api/sendEmail', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      ishtml: true,
+      to,
+      subject,
+      template,
+      templateData
+    })
+  });
+
+  if (!response.ok) {
+    console.error('Failed to send email');
+  }
+}
+
 async function handleEmailSignUp(email, password, setError, setLoading) {
   try {
     setLoading(true);
@@ -35,6 +55,11 @@ async function handleEmailSignUp(email, password, setError, setLoading) {
 
     await setDoc(doc(db, 'users', user.uid), userData);
 
+    // Send welcome email to user
+    await sendEmail(user.email, 'Welcome to Fanslink!', 'welcome', { name: user.displayName || user.email || 'User' });
+
+    // Send new user notification to admin
+    await sendEmail('admin@example.com', 'New User Joined Fanslink!', 'newUserNotification', { name: user.displayName || 'User', email: user.email });
 
     // Generate a custom token and redirect to dashboard
     const response = await fetch('/api/generate-token', {
@@ -80,6 +105,11 @@ async function handleGoogleSignUp(setError, setLoading) {
 
     await setDoc(doc(db, 'users', user.uid), userData);
 
+    // Send welcome email to user
+    await sendEmail(user.email, 'Welcome to Fanslink!', 'welcome', { name: user.displayName || user.email || 'User' });
+
+    // Send new user notification to admin
+    await sendEmail('dillonjurgens@gmail.com', 'New User Joined Fanslink!', 'newUserNotification', { name: user.displayName || 'User', email: user.email });
 
     const response = await fetch('/api/generate-token', {
       method: 'POST',

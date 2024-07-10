@@ -757,7 +757,7 @@ export const trackUserVisit = async (uid, referer) => {
         locations: [],
         mobile: visitData.deviceType === 'mobile' ? 1 : 0,
         desktop: visitData.deviceType === 'desktop' ? 1 : 0,
-        referers: referer ? [visitData] : [],
+        referers: [visitData], // Ensure it contains the visitData
       });
     } else {
       const userData = docSnap.data();
@@ -768,9 +768,7 @@ export const trackUserVisit = async (uid, referer) => {
       filteredVisits.push(visitData);
 
       const referrers = userData.referers || [];
-      if (referer && !referrers.find(r => r.referer === referer)) {
-        referrers.push({ referer, timestamp: visitData.timestamp });
-      }
+      referrers.push({ referer: visitData.referer, timestamp: visitData.timestamp });
 
       const deviceCountUpdate = visitData.deviceType === 'mobile' ? { mobile: increment(1) } : { desktop: increment(1) };
 
@@ -785,6 +783,7 @@ export const trackUserVisit = async (uid, referer) => {
     console.error("Error tracking user visit:", error);
   }
 };
+
 
 export const trackDeviceType = async (userId, deviceType) => {
   const docRef = doc(db, "analytics", userId);
