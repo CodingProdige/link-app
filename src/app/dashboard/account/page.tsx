@@ -35,13 +35,13 @@ export default function Account() {
   }, [user]);
 
   const validateUsername = (username) => {
-    // Updated regex to include only URL-safe characters
+    // Updated regex to include only URL-safe characters and exclude spaces
     const validUsernameRegex = /^[a-zA-Z0-9-_]+$/;
     return validUsernameRegex.test(username);
   };
 
   const handleUsernameChange = async (e) => {
-    const newUsername = e.target.value.toLowerCase();
+    const newUsername = e.target.value.toLowerCase().replace(/\s+/g, ''); // Remove spaces
     setUsername(newUsername);
 
     if (newUsername === initialUsername.toLowerCase()) {
@@ -140,7 +140,7 @@ export default function Account() {
 
   return (
     <div className={styles.accountPage}>
-        <h4>Account</h4>
+      <h4>Account</h4>
       <div className={styles.accountUsernameContainer}>
         <div className={styles.accountUsernameInnerContainer}>
           <div className={styles.field}>

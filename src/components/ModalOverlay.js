@@ -51,13 +51,13 @@ const ModalOverlay = ({ settings, onUsernameUpdate }) => {
   }, [user]);
 
   const validateUsername = (username) => {
-    // Updated regex to include only URL-safe characters
+    // Updated regex to include only URL-safe characters and exclude spaces
     const validUsernameRegex = /^[a-zA-Z0-9-_]+$/;
     return validUsernameRegex.test(username);
   };
 
   const handleUsernameChange = async (e) => {
-    const newUsername = e.target.value.toLowerCase();
+    const newUsername = e.target.value.toLowerCase().replace(/\s+/g, ''); // Remove spaces
     setUsername(newUsername);
 
     // Validate the username
