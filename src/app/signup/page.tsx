@@ -24,7 +24,7 @@ async function sendEmail(to, subject, template, templateData) {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      ishtml: true,
+      ishtml: "true",
       to,
       subject,
       template,

@@ -32,12 +32,12 @@ export const POST = async (req: NextRequest) => {
                 'Content-Type': 'application/json'
             },
             data: {
-                ishtml: ishtml,
+                ishtml: ishtml, // Ensure this is set to true for HTML content
                 sendto: to,
                 name: 'Fanslink',
                 replyTo: 'info@fansl.ink', // assuming this is your reply-to email
                 title: subject,
-                body: emailBody
+                body: emailBody // Set the email body to the rendered HTML
             }
         };
 
