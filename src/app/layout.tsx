@@ -23,11 +23,6 @@ export async function generateMetadata({ username }) {
   
     
     return {
-      title: {
-        template: '%s | Fanslink',
-        default: 'Fanslink', // a default is required when creating a template
-      },
-      description: 'Fanslink is a platform that allows you to create a custom profile page with links to your social media, music, videos, and more.',
       icons: {
         icon: settings?.data?.favicon?.url || "/default-favicon.png",
       },

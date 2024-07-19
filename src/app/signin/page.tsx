@@ -96,6 +96,11 @@ export default function SignInPage() {
 
   return (
     <div className={styles.loginPage}>
+      <head>
+        <title>Sign In to FansLink - Influencers & Content Creators</title>
+        <meta name="description" content="Sign in to your FansLink account to simplify your social media link management. Tailored for influencers and content creators." />
+        <meta name="title" content="FansLink Sign In - Influencer & Creator Access" />
+      </head>
       <div className={styles.imageContainer}>
         {data.navigation && data.navigation.data && data.settings.data && (
           <PrismicNextImage field={data.settings.data.signin_hero_image} />

@@ -160,6 +160,11 @@ export default function SignUpPage() {
 
   return (
     <div className={styles.registerPage}>
+      <head>
+        <title>Sign Up for FansLink - Join Influencers & Content Creators</title>
+        <meta name="description" content="Sign up for FansLink today and streamline your social media presence. Perfect for influencers and content creators looking to manage their links effectively." />
+        <meta name="title" content="FansLink Sign Up - Join Influencers & Creators" />
+      </head>
       <div className={styles.imageContainer}>
         {
           data.navigation && data.navigation.data && data.settings.data && (
