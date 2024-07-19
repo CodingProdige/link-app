@@ -12,7 +12,7 @@
     "lint": "next lint",
     "slicemachine": "start-slicemachine",
     "format": "prettier --write .",
-    "postbuild": "node scripts/next-sitemap.js",
+    "postbuild": "node scripts/next-sitemap.mjs",
     "deploy": "vercel --prod"
   },
   "dependencies": {
