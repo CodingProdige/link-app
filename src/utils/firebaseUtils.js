@@ -585,7 +585,7 @@ export const deleteLinkById = async (userId, linkId) => {
 
       console.log('Analytics link deleted successfully: ', updatedLinks);
     } else {
-      throw new Error('analytics document does not exist');
+      console.log('Analytics document does not exist, continuing...');
     }
 
     if (userDoc.exists()) {
